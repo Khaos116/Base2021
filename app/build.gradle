@@ -45,13 +45,13 @@ android {
   //签名配置
   signingConfigs {
     debug {
-      storeFile file("../base2021.jks")
+      storeFile file("${getProjectDir().getParentFile().getPath()}/base2021.jks")
       storePassword "base2021"
       keyAlias "base2021"
       keyPassword "base2021"
     }
     release {
-      storeFile file("../base2021.jks")
+      storeFile file("${getProjectDir().getParentFile().getPath()}/base2021.jks")
       storePassword "base2021"
       keyAlias "base2021"
       keyPassword "base2021"
@@ -112,7 +112,7 @@ android.applicationVariants.all { variant ->
       //把正式版拷贝到项目APK目录
       if (typeName == "Release" || rootProject.ext.needCreateDebug == "true") {
         //创建APK目录(APK+渠道名称)
-        File apkFile = new File("../APK/${flavorsName}/${typeName}")
+        File apkFile = new File("${getProjectDir().getParentFile().getPath()}/APK/${flavorsName}/${typeName}")
         if (!apkFile.exists()) apkFile.mkdirs()
         project.copy {
           from("${output.outputFile}")
