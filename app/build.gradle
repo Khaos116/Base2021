@@ -1,0 +1,175 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+//解决渠道下DebugImplementation和ReleaseImplementation编译通不过的问题  https://stackoverflow.com/questions/24860659/multi-flavor-app-based-on-multi-flavor-library-in-android-gradle
+configurations {
+  developerPFDebugImplementation
+}
+
+//动态读取app名称
+def appName = "ABase2021"
+//android配置
+android {
+  compileSdkVersion rootProject.ext.sdkVersion
+  defaultConfig {
+    applicationId "com.cc.base2021"
+    minSdkVersion 23
+    targetSdkVersion 29
+    versionCode 1
+    versionName "1.0"
+    resValue "string", "app_name", appName //设置APP名称
+    resValue "string", "build_time", new Date().format("yyyy-MM-dd HH:mm")
+    multiDexEnabled true
+    resConfigs "zh", "en" //保留中文和英文资源
+    ndk { abiFilters 'armeabi-v7a' } //, 'arm64-v8a'
+    //RxHttp需要 https://github.com/liujingxing/okhttp-RxHttp
+    javaCompileOptions {
+      annotationProcessorOptions {
+        arguments = [
+            //必须，告知RxHttp你依赖的okhttp版本，目前已适配 v3.12.0 - v4.7.2版本
+            rxhttp_okhttp: '4.7.2',
+            //使用asXxx方法时必须，告知RxHttp你依赖的rxjava版本，可传入rxjava2、rxjava3
+            rxhttp_rxjava: 'rxjava2'
+        ]
+      }
+    }
+  }
+
+  //lambda表达式需要
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  //签名配置
+  signingConfigs {
+    debug {
+      storeFile file("../base2021.jks")
+      storePassword "base2021"
+      keyAlias "base2021"
+      keyPassword "base2021"
+    }
+    release {
+      storeFile file("../base2021.jks")
+      storePassword "base2021"
+      keyAlias "base2021"
+      keyPassword "base2021"
+    }
+  }
+
+  //正式和测试配置
+  buildTypes {
+    debug {
+      debuggable true
+      zipAlignEnabled false
+      shrinkResources false
+      minifyEnabled false
+      //指定debug使用release的签名(当每个渠道使用了自己的签名时使用)
+      //signingConfig release.signingConfig
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    }
+    release {
+      debuggable false
+      zipAlignEnabled true
+      shrinkResources true
+      minifyEnabled true
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    }
+  }
+
+  //多维度 https://blog.csdn.net/chen_xi_hao/article/details/80526049
+  flavorDimensions "default"
+  //代码差分化打包
+  productFlavors {
+    developerPF {
+      dimension "default"
+      dependencies { developerPFDebugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4' }
+    }
+    releasePF {
+      dimension "default"
+    }
+  }
+}
+
+//打包处理
+android.applicationVariants.all { variant ->
+  variant.outputs.all { output ->
+    //正式版还是测试版
+    String typeName = buildType.name
+    typeName = typeName.substring(0, 1).toUpperCase() + typeName.substring(1).toLowerCase()
+    //版本号
+    String versionName = getVersionName()
+    //渠道名称
+    String flavorsName = variant.productFlavors[0].name
+    //应用名称
+    String apkName = appName
+    //打包完成后的重命名和拷贝
+    assemble.doLast {
+      //编译完成的时间
+      String buildEndTime = "${new Date().format("yyyyMMddHHmm")}"
+      String fileName = "${apkName}${typeName}_${versionName}_${buildEndTime}.apk"
+      //把正式版拷贝到项目APK目录
+      if (typeName == "Release" || rootProject.ext.needCreateDebug == "true") {
+        //创建APK目录(APK+渠道名称)
+        File apkFile = new File("../APK/${flavorsName}/${typeName}")
+        if (!apkFile.exists()) apkFile.mkdirs()
+        project.copy {
+          from("${output.outputFile}")
+          into("${apkFile.path}")
+          rename("${output.outputFile.name}", "${fileName}")
+        }
+      } else {
+        //默认运行生成的apk
+        File apkFileDebug = new File("${getProjectDir().getParentFile().getPath()}/APK/Debug")
+        if (apkFileDebug.exists()) apkFileDebug.deleteDir()
+        apkFileDebug.mkdirs()
+        project.copy {
+          from("${output.outputFile}")
+          into("${apkFileDebug.path}")
+          rename("${output.outputFile.name}", "${fileName}")
+        }
+      }
+    }
+  }
+}
+
+//三方依赖
+dependencies {
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  implementation fileTree(dir: "libs", include: ["*.jar", '*.aar'])
+  implementation project(path: ':base')
+  //系统UI效果 https://maven.aliyun.com/mvn/search
+  implementation(rootProject.ext.depend["core-ktx"])
+  implementation(rootProject.ext.depend["appcompat"]) {
+    exclude module: 'core-runtime'
+    exclude module: 'lifecycle-livedata'
+  }
+  implementation(rootProject.ext.depend["constraint"])
+  //依赖初始化 https://developer.android.google.cn/topic/libraries/app-startup
+  implementation(rootProject.ext.depend["startup"])
+  //工具类 https://github.com/Blankj/AndroidUtilCode/blob/master/lib/utilcode/README-CN.md
+  implementation(rootProject.ext.depend["utilcodex"])
+  //SVGA https://github.com/svga/SVGAPlayer-Android/blob/master/readme.zh.md
+  implementation(rootProject.ext.depend["svga"])
+  //状态栏适配 https://github.com/gyf-dev/ImmersionBar
+  implementation(rootProject.ext.depend["immersionbar"])
+  implementation(rootProject.ext.depend["immersionbar-ktx"])
+  //EventBus https://github.com/JeremyLiao/LiveEventBus
+  implementation(rootProject.ext.depend["eventBus"])
+  //AgentWeb  https://github.com/Justson/AgentWeb
+  implementation(rootProject.ext.depend["agentweb"])
+  //侧滑 https://github.com/luckybilly/SmartSwipe
+  implementation(rootProject.ext.depend["swipe"])
+  implementation(rootProject.ext.depend["swipex"])
+  //OKHttp https://github.com/square/okhttp
+  implementation(rootProject.ext.depend["okhttp"])
+  //RxAndroid https://github.com/ReactiveX/RxAndroid
+  implementation(rootProject.ext.depend["rxandroid"])
+  //Gson https://github.com/google/gson
+  implementation(rootProject.ext.depend["gson"])
+  //MMKV https://github.com/Tencent/MMKV
+  implementation(rootProject.ext.depend["mmkv"])
+  //log打印 https://github.com/JakeWharton/timber
+  implementation(rootProject.ext.depend["timber"])
+}

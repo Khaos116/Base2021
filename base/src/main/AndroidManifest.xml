@@ -1,0 +1,41 @@
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.cc.base">
+
+  <application
+      android:maxAspectRatio="2.4"
+      android:resizeableActivity="true"
+      tools:targetApi="o">
+    <!--https://github.com/gyf-dev/ImmersionBar-->
+    <meta-data
+        android:name="android.max_aspect"
+        android:value="2.4"/>
+    <!--适配华为（huawei）刘海屏-->
+    <meta-data
+        android:name="android.notch_support"
+        android:value="true"/>
+    <!--适配小米（xiaomi）刘海屏-->
+    <meta-data
+        android:name="notch.config"
+        android:value="portrait|landscape"/>
+    <!--https://github.com/JessYanCoding/AndroidAutoSize-->
+    <meta-data
+        android:name="design_width_in_dp"
+        android:value="360"/>
+    <meta-data
+        android:name="design_height_in_dp"
+        android:value="640"/>
+    <!--https://blog.csdn.net/qq_40909351/article/details/106726204-->
+    <provider
+        android:name="androidx.startup.InitializationProvider"
+        android:authorities="${applicationId}.androidx-startup"
+        android:exported="false"
+        tools:node="merge">
+      <meta-data
+          android:name="com.cc.base.startup.UtilsInit"
+          android:value="androidx.startup"/>
+    </provider>
+
+  </application>
+</manifest>

@@ -1,0 +1,34 @@
+//引用公共使用库
+apply from: "config_depend.gradle"
+buildscript {
+  ext.kotlin_version = "1.3.72"
+  ext.sdkVersion = 29
+  repositories {
+    google()
+    jcenter()
+    maven { url 'https://jitpack.io' }
+  }
+  dependencies {
+    classpath "com.android.tools.build:gradle:4.0.1"
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    //更新R8版本，解决正式版无法打包的问题 https://github.com/square/okhttp/issues/4604
+    classpath 'com.android.tools:r8:2.0.99'
+  }
+}
+
+allprojects {
+  repositories {
+    google()
+    jcenter()
+    maven { url 'https://jitpack.io' }
+  }
+
+  tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+  }
+}
+
+task clean(type: Delete) {
+  delete rootProject.buildDir
+}
