@@ -10,6 +10,7 @@ import com.cc.base.ui.BaseFragment
 import com.cc.base2021.R
 import com.cc.base2021.R.layout
 import com.cc.base2021.comm.CommActivity
+import com.cc.base2021.component.main.fragment.HomeFragment
 import com.cc.base2021.component.simple.SimpleFragment
 import com.cc.base2021.dialog.actionDialog
 import kotlinx.android.synthetic.main.activity_main.*
@@ -47,7 +48,7 @@ class MainActivity : CommActivity() {
   //<editor-fold defaultstate="collapsed" desc="初始化View">
   override fun initView() {
     //初始化
-    homeFragment = SimpleFragment.newInstance("A")
+    homeFragment = HomeFragment()
     dynFragment = SimpleFragment.newInstance("B")
     mineFragment = SimpleFragment.newInstance("C")
     //添加
