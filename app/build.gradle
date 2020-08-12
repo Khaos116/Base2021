@@ -14,12 +14,10 @@ def appName = "Base2021"
 android {
   compileSdkVersion rootProject.ext.sdkVersion
   defaultConfig {
-    applicationId "com.cc.base2021"
     minSdkVersion 23
     targetSdkVersion 29
     versionCode 1
     versionName "1.0"
-    resValue "string", "app_name", appName //设置APP名称
     resValue "string", "build_time", new Date().format("yyyy-MM-dd HH:mm")
     multiDexEnabled true
     resConfigs "zh", "en" //保留中文和英文资源
@@ -85,10 +83,14 @@ android {
   productFlavors {
     developerPF {
       dimension "default"
+      applicationId "com.cc.base2021D"
+      resValue "string", "app_name", "${appName}D" //设置APP名称
       dependencies { developerPFDebugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4' }
     }
     releasePF {
       dimension "default"
+      applicationId "com.cc.base2021"
+      resValue "string", "app_name", appName //设置APP名称
     }
   }
 }
