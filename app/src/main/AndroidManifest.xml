@@ -2,6 +2,19 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cc.base2021">
+  <!--SD卡读写权限-->
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <!--网络访问权限-->
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <!--手机信息权限-->
+  <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+  <!--网络状态判断权限-->
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+  <!--地理位置权限-->
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
   <application
       android:name=".app.MyApplication"
