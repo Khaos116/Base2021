@@ -1,3 +1,7 @@
 <resources>
+  <string name="main_home">首页</string>
+  <string name="main_dyn">动态</string>
+  <string name="main_mine">我的</string>
   <string name="action_loading">加载中…</string>
+  <string name="double_exit">再按一次退出</string>
 </resources>

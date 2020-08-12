@@ -7,6 +7,6 @@ import com.cc.base.ui.BaseActivity
  * Date:2020/8/11
  * Time:18:29
  */
-abstract class CommActivity :BaseActivity(){
+abstract class CommActivity : BaseActivity() {
 
 }

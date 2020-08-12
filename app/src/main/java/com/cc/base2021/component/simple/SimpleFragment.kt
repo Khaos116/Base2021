@@ -2,7 +2,7 @@ package com.cc.base2021.component.simple
 
 import com.cc.base.ext.logE
 import com.cc.base2021.R
-import com.cc.base2021.comm.CommActivity
+import com.cc.base2021.comm.CommFragment
 import kotlinx.android.synthetic.main.fragment_simple.simpleTv
 
 /**
@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.fragment_simple.simpleTv
  * Date:2020/8/11
  * Time:20:29
  */
-class SimpleFragment : CommActivity() {
+class SimpleFragment : CommFragment() {
   private var msg = "SimpleFragment"
 
   companion object {
@@ -21,13 +21,10 @@ class SimpleFragment : CommActivity() {
     }
   }
 
-  override fun layoutResId() = R.layout.fragment_simple
+  override val contentXmlId = R.layout.fragment_simple
 
-  override fun initView() {
-    "SimpleFragment(${this.hashCode()})".logE()
+  override fun lazyInit() {
+    "SimpleFragment:(${msg}懒加载)".logE()
     simpleTv.text = msg
-  }
-
-  override fun initData() {
   }
 }

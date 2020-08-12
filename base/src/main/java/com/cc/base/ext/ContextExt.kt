@@ -3,6 +3,7 @@ package com.cc.base.ext
 import android.content.Context
 import android.view.*
 import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
 import com.blankj.utilcode.util.*
 
 /**
@@ -46,4 +47,14 @@ fun Context.inflate(
   attachToRoot: Boolean = false
 ): View {
   return LayoutInflater.from(this).inflate(layoutResource, parent, attachToRoot)
+}
+
+//吐司
+fun Context.toast(@StringRes resId: Int) {
+  StringUtils.getString(resId).toast()
+}
+
+//吐司
+fun Context.toast(msg: String?) {
+  msg?.toast()
 }

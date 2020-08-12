@@ -141,10 +141,10 @@ dependencies {
   implementation project(path: ':base')
   //系统UI效果 https://maven.aliyun.com/mvn/search
   implementation(rootProject.ext.depend["core-ktx"])
-  implementation(rootProject.ext.depend["appcompat"]) {
-    exclude module: 'core-runtime'
-    exclude module: 'lifecycle-livedata'
-  }
+  implementation(rootProject.ext.depend["activity-ktx"])
+  implementation(rootProject.ext.depend["material"])
+  implementation(rootProject.ext.depend["fragment"])
+  implementation(rootProject.ext.depend["appcompat"]) { exclude module: 'fragment' }
   implementation(rootProject.ext.depend["constraint"])
   //依赖初始化 https://developer.android.google.cn/topic/libraries/app-startup
   implementation(rootProject.ext.depend["startup"])
@@ -156,7 +156,7 @@ dependencies {
   implementation(rootProject.ext.depend["immersionbar"])
   implementation(rootProject.ext.depend["immersionbar-ktx"])
   //EventBus https://github.com/JeremyLiao/LiveEventBus
-  implementation(rootProject.ext.depend["eventBus"])
+  implementation(rootProject.ext.depend["eventBus"]) { exclude group: 'androidx.lifecycle' }
   //AgentWeb  https://github.com/Justson/AgentWeb
   implementation(rootProject.ext.depend["agentweb"])
   //侧滑 https://github.com/luckybilly/SmartSwipe

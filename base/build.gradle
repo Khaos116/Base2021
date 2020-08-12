@@ -30,8 +30,10 @@ dependencies {
   //依赖初始化 https://developer.android.google.cn/topic/libraries/app-startup
   implementation(rootProject.ext.depend["startup"])
   //系统UI效果 https://maven.aliyun.com/mvn/search
-  implementation(rootProject.ext.depend["appcompat"]) { exclude module: 'core' }
   implementation(rootProject.ext.depend["core-ktx"])
+  implementation(rootProject.ext.depend["activity-ktx"])
+  implementation(rootProject.ext.depend["fragment"])
+  implementation(rootProject.ext.depend["appcompat"]) { exclude module: 'fragment' }
   //工具类 https://github.com/Blankj/AndroidUtilCode/blob/master/lib/utilcode/README-CN.md
   implementation(rootProject.ext.depend["utilcodex"])
   //状态栏适配 https://github.com/gyf-dev/ImmersionBar
