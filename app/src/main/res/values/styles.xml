@@ -7,6 +7,11 @@
     <item name="colorAccent">@color/colorAccent</item>
   </style>
 
+  <!-- 启动页风格 -->
+  <style name="SplashTheme" parent="BaseAppTheme">
+    <item name="android:windowBackground">@drawable/icon_splash_bg</item>
+  </style>
+
   <!-- 底部弹窗Dialog动画 -->
   <style name="BottomDialogAnimation">
     <item name="android:windowEnterAnimation">@anim/anim_bottom_in</item>
