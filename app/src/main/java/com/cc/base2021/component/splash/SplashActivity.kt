@@ -1,19 +1,22 @@
 package com.cc.base2021.component.splash
 
 import android.Manifest
+import com.blankj.utilcode.util.TimeUtils
 import com.cc.base.ext.*
 import com.cc.base.utils.PermissionUtils
 import com.cc.base2021.R
 import com.cc.base2021.comm.CommActivity
 import com.cc.base2021.component.guide.GuideActivity
-import com.cc.base2021.component.guide.GuideActivity.Companion
 import com.cc.base2021.component.main.MainActivity
+import com.cc.base2021.constants.ImageUrls
+import com.cc.base2021.ext.loadCacheFileFullScreen
 import com.cc.base2021.utils.MMkvUtils
 import com.cc.base2021.utils.RxUtils
 import com.gyf.immersionbar.ktx.immersionBar
 import com.permissionx.guolindev.PermissionX
 import io.reactivex.Flowable
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.activity_splash.splashIv
 import kotlinx.android.synthetic.main.activity_splash.splashTv
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
@@ -25,6 +28,10 @@ import kotlin.math.max
  */
 class SplashActivity : CommActivity() {
   //<editor-fold defaultstate="collapsed" desc="变量">
+  //一个小时变一张图
+  private val randomImg = TimeUtils.millis2String(System.currentTimeMillis())
+    .split(" ")[1].split(":")[0].toInt()
+
   //倒计时
   private var countTime = 3L
 
@@ -76,6 +83,8 @@ class SplashActivity : CommActivity() {
 
   //<editor-fold defaultstate="collapsed" desc="初始化数据">
   override fun initData() {
+    //随机加载图片
+    splashIv.loadCacheFileFullScreen(ImageUrls.instance.getRandomImgUrl(randomImg))
   }
   //</editor-fold>
 
@@ -107,6 +116,7 @@ class SplashActivity : CommActivity() {
   }
   //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="销毁">
   //禁止返回
   override fun onBackPressed() {
   }
