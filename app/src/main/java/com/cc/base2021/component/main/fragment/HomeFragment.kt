@@ -22,6 +22,7 @@ class HomeFragment : CommFragment() {
 
   override val contentXmlId = R.layout.fragment_home
 
+  @Suppress("DEPRECATION")
   override fun lazyInit() {
     if (titles.isEmpty()) {
       titles.add("Girl")
@@ -31,7 +32,7 @@ class HomeFragment : CommFragment() {
         SimpleFragment.newInstance("Article")
       )
     }
-    homePager.adapter = object : FragmentPagerAdapter(childFragmentManager, 0) {
+    homePager.adapter = object : FragmentPagerAdapter(childFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
       override fun getItem(position: Int): Fragment {
         return fragments[position]
       }
