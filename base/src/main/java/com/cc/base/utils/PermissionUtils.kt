@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import com.blankj.utilcode.util.*
+import com.cc.base.ext.logE
 import java.io.File
 
 /**
@@ -32,14 +33,14 @@ class PermissionUtils private constructor() {
   @Synchronized
   fun hasSDPermission(): Boolean {
     val parent = File(PathUtils.getExternalStoragePath())
-    val file = File(parent, "CASE_TEST.txt")
+    val file = File(parent, "permission_test.txt")
     return try {
       if (!parent.exists()) parent.mkdirs()
       if (!file.exists()) file.createNewFile()
       FileUtils.delete(file)
     } catch (e: Exception) {
       e.printStackTrace()
-      LogUtils.e("CASE:SD卡权限异常:${e.message}")
+      "SD卡权限异常:${e.message}".logE()
       false
     }
   }
@@ -61,7 +62,7 @@ class PermissionUtils private constructor() {
     } catch (e: Exception) {
       if (camera != null) camera.release()
       e.printStackTrace()
-      LogUtils.e("CASE:拍照权限异常:${e.message}")
+      "拍照权限异常:${e.message}".logE()
       false
     }
   }
@@ -84,7 +85,7 @@ class PermissionUtils private constructor() {
       )
     } catch (e: Exception) {
       e.printStackTrace()
-      LogUtils.e("CASE:录音权限异常:${e.message}")
+      "录音权限异常:${e.message}".logE()
     }
     if (audioRecord == null) {
       return false
@@ -96,7 +97,7 @@ class PermissionUtils private constructor() {
       e.printStackTrace()
       //可能情况一
       audioRecord.release()
-      LogUtils.e("CASE:录音权限异常:${e.message}")
+      "录音权限异常:${e.message}".logE()
     }
 
     // 检测是否在录音中,6.0以下会返回此状态
@@ -107,7 +108,7 @@ class PermissionUtils private constructor() {
         audioRecord.release()
       } catch (e: Exception) {
         e.printStackTrace()
-        LogUtils.e("CASE:录音权限异常:${e.message}")
+        "录音权限异常:${e.message}".logE()
       }
       return false
     }
@@ -124,7 +125,7 @@ class PermissionUtils private constructor() {
       audioRecord.release()
     } catch (e: Exception) {
       e.printStackTrace()
-      LogUtils.e("CASE:录音权限异常:${e.message}")
+      "录音权限异常:${e.message}".logE()
     }
     return true
   }
@@ -137,20 +138,20 @@ class PermissionUtils private constructor() {
     val permission =
       ActivityCompat.checkSelfPermission(c, Manifest.permission.ACCESS_FINE_LOCATION)
     if (permission < 0) {
-      if (permission == -1) LogUtils.e("定位权限被拒绝")
-      if (permission == -2) LogUtils.e("定位权限被永久拒绝")
+      if (permission == -1) "定位权限被拒绝".logE()
+      if (permission == -2) "定位权限被永久拒绝".logE()
       return false
     }
     val mLocationManager = c.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     return try {
       mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
         ?.let {
-          LogUtils.e("getLastKnownLocation=$it")
+          "getLastKnownLocation=$it".logE()
         }
       true
     } catch (e: Exception) {
       e.printStackTrace()
-      LogUtils.e("CASE:定位权限异常:${e.message}")
+      "定位权限异常:${e.message}".logE()
       false
     }
   }
@@ -162,8 +163,8 @@ class PermissionUtils private constructor() {
     val permission =
       ActivityCompat.checkSelfPermission(c, Manifest.permission.ACCESS_FINE_LOCATION)
     if (permission < 0) {
-      if (permission == -1) LogUtils.e("定位权限被拒绝")
-      if (permission == -2) LogUtils.e("定位权限被永久拒绝")
+      if (permission == -1) "定位权限被拒绝".logE()
+      if (permission == -2) "定位权限被永久拒绝".logE()
       return false
     }
     val mLocationManager = c.getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -181,12 +182,12 @@ class PermissionUtils private constructor() {
     return try {
       mLocationManager.getLastKnownLocation(provider)
         ?.let {
-          LogUtils.e("getLastKnownLocation=$it")
+          "getLastKnownLocation=$it".logE()
         }
       true
     } catch (e: Exception) {
       e.printStackTrace()
-      LogUtils.e("CASE:定位权限异常:${e.message}")
+      "定位权限异常:${e.message}".logE()
       false
     }
   }

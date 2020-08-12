@@ -11,25 +11,25 @@ import timber.log.Timber
  */
 inline fun String?.logE() {
   if (!this.isNullOrBlank()) {
-    Timber.e(this)
+    Timber.e("CASE-$this")
   }
 }
 
 inline fun String?.logW() {
   if (!this.isNullOrBlank()) {
-    Timber.w(this)
+    Timber.w("CASE-$this")
   }
 }
 
 inline fun String?.logI() {
   if (!this.isNullOrBlank()) {
-    Timber.i(this)
+    Timber.i("CASE-$this")
   }
 }
 
 inline fun String?.logD() {
   if (!this.isNullOrBlank()) {
-    Timber.d(this)
+    Timber.d("CASE-$this")
   }
 }
 

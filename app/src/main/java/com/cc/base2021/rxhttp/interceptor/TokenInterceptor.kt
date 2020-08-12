@@ -1,7 +1,7 @@
 package com.cc.base2021.rxhttp.interceptor
 
 import com.blankj.utilcode.util.EncryptUtils
-import com.blankj.utilcode.util.LogUtils
+import com.cc.base.ext.logE
 import com.cc.base2021.config.AppConfig
 import com.cc.base2021.config.GlobalErrorHandle
 import com.cc.base2021.constants.ErrorCode
@@ -114,7 +114,7 @@ class TokenInterceptor : Interceptor {
             .add("username", MMkvUtils.instance.getAccount())
             .add("password", EncryptUtils.encryptMD5ToString(MMkvUtils.instance.getPassword()))
             .execute(SimpleParser.get(String::class.java))
-        LogUtils.e("CASE:自动登录登录刷新Token")
+        "自动登录登录刷新Token".logE()
         SESSION_KEY_REFRESH_TIME = System.currentTimeMillis()
         true
       } catch (e: IOException) {

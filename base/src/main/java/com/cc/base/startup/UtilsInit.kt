@@ -16,7 +16,7 @@ import timber.log.Timber
 class UtilsInit : Initializer<Int> {
   override fun create(context: Context): Int {
     Utils.init(context.applicationContext as Application)
-    "CASE-初始化完成".logI()
+    "初始化完成".logI()
     return 0
   }
 
