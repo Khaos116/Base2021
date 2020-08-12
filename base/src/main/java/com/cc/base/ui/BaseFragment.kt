@@ -2,12 +2,11 @@ package com.cc.base.ui
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
-import com.cc.base.ext.logE
+import com.cc.base.ext.logI
 import com.cc.base.ext.removeParent
 import com.cc.base.utils.CleanLeakUtils
 
@@ -78,7 +77,7 @@ abstract class BaseFragment : Fragment() {
   //<editor-fold defaultstate="collapsed" desc="页面销毁释放输入法">
   override fun onDestroy() {
     CleanLeakUtils.instance.fixInputMethodManagerLeak(mActivity)
-    "${this.javaClass.simpleName}销毁，释放输入法".logE()
+    "${this.javaClass.simpleName}销毁，释放输入法".logI()
     super.onDestroy()
   }
   //</editor-fold>
