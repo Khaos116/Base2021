@@ -1,11 +1,27 @@
 package com.cc.base2021.app
 
+import coil.ImageLoader
+import coil.ImageLoaderFactory
+import coil.util.CoilUtils
 import com.cc.base.app.BaseApplication
+import com.cc.base2021.rxhttp.config.RxHttpConfig
 
 /**
  * Author:case
  * Date:2020/8/11
  * Time:15:05
  */
-class MyApplication:BaseApplication() {
+class MyApplication : BaseApplication(), ImageLoaderFactory {
+  //图片加载配置 https://coil-kt.github.io/coil/getting_started/
+  override fun newImageLoader(): ImageLoader {
+    return ImageLoader.Builder(this)
+      .crossfade(true)
+      .okHttpClient {
+        RxHttpConfig.instance.getOkHttpClient()
+          .cache(CoilUtils.createDefaultCache(this))
+          .build()
+      }
+
+      .build()
+  }
 }

@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 //解决渠道下DebugImplementation和ReleaseImplementation编译通不过的问题  https://stackoverflow.com/questions/24860659/multi-flavor-app-based-on-multi-flavor-library-in-android-gradle
 configurations {
@@ -8,7 +9,7 @@ configurations {
 }
 
 //动态读取app名称
-def appName = "ABase2021"
+def appName = "Base2021"
 //android配置
 android {
   compileSdkVersion rootProject.ext.sdkVersion
@@ -92,6 +93,13 @@ android {
   }
 }
 
+//https://coil-kt.github.io/coil/getting_started/
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+  kotlinOptions {
+    jvmTarget = "1.8"
+  }
+}
+
 //打包处理
 android.applicationVariants.all { variant ->
   variant.outputs.all { output ->
@@ -172,4 +180,11 @@ dependencies {
   implementation(rootProject.ext.depend["mmkv"])
   //log打印 https://github.com/JakeWharton/timber
   implementation(rootProject.ext.depend["timber"])
+  //动态权限请求 https://github.com/guolindev/PermissionX
+  implementation(rootProject.ext.depend["permissionx"])
+  //图片加载 https://github.com/coil-kt/coil
+  implementation(rootProject.ext.depend["imageLoader"])
+  //RxHttp https://github.com/liujingxing/okhttp-RxHttp
+  implementation 'com.ljx.rxhttp:rxhttp:2.3.4'
+  kapt 'com.ljx.rxhttp:rxhttp-compiler:2.3.4' //生成RxHttp类
 }

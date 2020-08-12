@@ -4,4 +4,6 @@
   <string name="main_mine">我的</string>
   <string name="action_loading">加载中…</string>
   <string name="double_exit">再按一次退出</string>
+  <string name="guide_go">立即体验</string>
+  <string name="need_login">登录过期，请重新登录</string>
 </resources>
