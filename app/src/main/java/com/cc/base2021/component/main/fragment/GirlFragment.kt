@@ -1,7 +1,9 @@
 package com.cc.base2021.component.main.fragment
 
+import android.graphics.Color
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.ColorUtils
 import com.cc.base2021.R
 import com.cc.base2021.bean.local.DividerBean
 import com.cc.base2021.comm.CommFragment
@@ -62,7 +64,7 @@ class GirlFragment : CommFragment() {
       val items = ArrayList<Any>()
       list.forEachIndexed { index, gankGirlBean ->
         items.add(gankGirlBean)
-        if (index < list.size - 1) items.add(DividerBean())
+        if (index < list.size - 1) items.add(DividerBean(heightPx = 1,bgColor = Color.RED))
       }
       multiTypeAdapter.items = items
       multiTypeAdapter.notifyDataSetChanged()
