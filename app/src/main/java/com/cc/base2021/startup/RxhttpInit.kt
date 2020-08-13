@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.startup.Initializer
 import com.cc.base.ext.logI
 import com.cc.base.startup.UtilsInit
-import com.cc.base2021.rxhttp.config.RxHttpConfig
+import com.cc.base2021.config.RxHttpConfig
 
 /**
  * Author:case
