@@ -3,12 +3,12 @@ package com.cc.base2021.component.main.fragment
 import android.graphics.Color
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blankj.utilcode.util.ColorUtils
 import com.cc.base2021.R
 import com.cc.base2021.bean.local.DividerBean
 import com.cc.base2021.comm.CommFragment
 import com.cc.base2021.component.main.viewmodel.GirlViewModel
-import com.cc.base2021.item.*
+import com.cc.base2021.item.DividerItemViewBinder
+import com.cc.base2021.item.GirlItemViewBinder
 import com.drakeet.multitype.MultiTypeAdapter
 import kotlinx.android.synthetic.main.fragment_girl.girlRecycler
 
