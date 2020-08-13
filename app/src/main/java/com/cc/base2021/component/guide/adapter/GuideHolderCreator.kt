@@ -3,7 +3,6 @@ package com.cc.base2021.component.guide.adapter
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import coil.api.load
 import com.cc.base.ext.*
 import com.cc.base2021.R
 import com.cc.base2021.component.main.MainActivity
