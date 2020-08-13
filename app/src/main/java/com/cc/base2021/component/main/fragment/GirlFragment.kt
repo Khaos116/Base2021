@@ -1,10 +1,14 @@
 package com.cc.base2021.component.main.fragment
 
 import androidx.lifecycle.Observer
-import com.cc.base.ext.logE
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.cc.base2021.R
+import com.cc.base2021.bean.local.DividerBean
 import com.cc.base2021.comm.CommFragment
 import com.cc.base2021.component.main.viewmodel.GirlViewModel
+import com.cc.base2021.item.*
+import com.drakeet.multitype.MultiTypeAdapter
+import kotlinx.android.synthetic.main.fragment_girl.girlRecycler
 
 /**
  * Author:case
@@ -13,7 +17,11 @@ import com.cc.base2021.component.main.viewmodel.GirlViewModel
  */
 class GirlFragment : CommFragment() {
   //<editor-fold defaultstate="collapsed" desc="变量">
+  //网络请求
   private val mViewModel by lazy { GirlViewModel() }
+
+  //多类型适配器
+  private val multiTypeAdapter = MultiTypeAdapter()
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="XML">
@@ -39,16 +47,27 @@ class GirlFragment : CommFragment() {
         if (mViewModel.girlState.value.isNullOrEmpty()) showErrorView(msg) { mViewModel.refresh() }
       }
     })
-    //监听加载成功
-    mViewModel.girlState.observe(this, Observer { list ->
-      for (bean in list) {
-        bean.images?.firstOrNull()?.logE()
-      }
-    })
+    //注册多类型
+    multiTypeAdapter.register(DividerItemViewBinder())
+    multiTypeAdapter.register(GirlItemViewBinder())
+    //设置适配器
+    girlRecycler.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
+    girlRecycler.adapter = multiTypeAdapter
   }
 
   //初始数据
   override fun lazyInitDta() {
+    //监听加载成功
+    mViewModel.girlState.observe(this, Observer { list ->
+      val items = ArrayList<Any>()
+      list.forEachIndexed { index, gankGirlBean ->
+        items.add(gankGirlBean)
+        if (index < list.size - 1) items.add(DividerBean())
+      }
+      multiTypeAdapter.items = items
+      multiTypeAdapter.notifyDataSetChanged()
+    })
+    //请求数据
     mViewModel.refresh()
   }
   //</editor-fold>

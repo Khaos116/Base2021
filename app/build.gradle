@@ -186,10 +186,10 @@ dependencies {
   implementation(rootProject.ext.depend["permissionx"])
   //图片加载 https://github.com/coil-kt/coil
   implementation(rootProject.ext.depend["imageLoader"])
+  //多类型适配器 https://github.com/drakeet/MultiType
+  implementation(rootProject.ext.depend["multitype"])
   //RxHttp https://github.com/liujingxing/okhttp-RxHttp
   implementation 'com.ljx.rxhttp:rxhttp:2.3.4'
   kapt 'com.ljx.rxhttp:rxhttp-compiler:2.3.4' //生成RxHttp类
   implementation 'com.ljx.rxlife:rxlife-coroutine:2.0.0' //管理协程生命周期，页面销毁，关闭请求
-  //适配器 https://github.com/mikepenz/FastAdapter
-  implementation "com.mikepenz:fastadapter:5.2.2"
 }

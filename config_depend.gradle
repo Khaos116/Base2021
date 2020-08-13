@@ -37,5 +37,7 @@ ext {
       "permissionx": "com.permissionx.guolindev:permissionx:1.3.0",
       //https://github.com/coil-kt/coil
       "imageLoader": "io.coil-kt:coil:0.11.0",
+      //https://github.com/drakeet/MultiType
+      "multitype": "com.drakeet.multitype:multitype:4.2.0",
   ]
 }
