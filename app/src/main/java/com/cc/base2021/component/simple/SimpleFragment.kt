@@ -23,8 +23,11 @@ class SimpleFragment : CommFragment() {
 
   override val contentXmlId = R.layout.fragment_simple
 
-  override fun lazyInit() {
+  override fun lazyInitView() {
     "SimpleFragment:(${msg}懒加载)".logE()
     simpleTv.text = msg
+  }
+
+  override fun lazyInitDta() {
   }
 }

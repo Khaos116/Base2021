@@ -4,22 +4,22 @@ import android.content.Context
 import androidx.startup.Initializer
 import com.cc.base.ext.logI
 import com.cc.base.startup.UtilsInit
-import com.tencent.mmkv.MMKV
+import com.cc.base2021.rxhttp.config.RxHttpConfig
 
 /**
  * Author:case
- * Date:2020/8/12
- * Time:16:08
+ * Date:2020/8/13
+ * Time:13:36
  */
-class MMkvInit : Initializer<Int> {
+class RxhttpInit :Initializer<Int>{
   override fun create(context: Context): Int {
-    MMKV.initialize(context)
+    RxHttpConfig.instance.init()
     "初始化完成".logI()
     return 0
   }
 
   override fun dependencies(): MutableList<Class<out Initializer<*>>> {
-    return mutableListOf(RxhttpInit::class.java)
+    return mutableListOf(UtilsInit::class.java)
   }
 
 }

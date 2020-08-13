@@ -22,7 +22,7 @@ ext {
       "swipe": "com.billy.android:smart-swipe:1.1.2",
       "swipex": "com.billy.android:smart-swipe-x:1.1.0",
       //https://github.com/square/okhttp
-      "okhttp": "com.squareup.okhttp3:okhttp:4.7.2",
+      "okhttp": "com.squareup.okhttp3:okhttp:4.8.1",
       //https://github.com/ReactiveX/RxAndroid
       "rxandroid": "io.reactivex.rxjava2:rxandroid:2.1.1",
       //https://github.com/google/gson

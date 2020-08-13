@@ -1,10 +1,10 @@
 package com.cc.base2021.rxhttp.repository
 
 import androidx.annotation.IntRange
+import com.blankj.utilcode.constant.TimeConstants
 import com.cc.base2021.bean.base.BasePageList
 import com.cc.base2021.bean.wan.ArticleBean
 import com.cc.base2021.bean.wan.BannerBean
-import com.cc.base2021.constants.TimeConstants
 import com.cc.base2021.constants.WanUrls
 import com.cc.base2021.utils.RxUtils
 import io.reactivex.Observable
@@ -29,8 +29,8 @@ class WanRepository private constructor() {
   fun banner(readCache: Boolean = true): Observable<MutableList<BannerBean>> {
     return RxHttp.get(WanUrls.Home.BANNER)
       .setDomainToWanIfAbsent()
-      .setCacheValidTime(TimeConstants.HOME_CACHE) //设置缓存时长
-      .setCacheMode(if (readCache) CacheMode.READ_CACHE_FAILED_REQUEST_NETWORK else CacheMode.ONLY_NETWORK) //先读取缓存，失败再请求数据
+      .setCacheValidTime(TimeConstants.DAY.toLong()) //设置缓存时长
+      .setCacheMode(if (readCache) CacheMode.REQUEST_NETWORK_FAILED_READ_CACHE else CacheMode.ONLY_NETWORK) //请求数据失败读取缓存
       .asResponseWanList(BannerBean::class.java)
       .compose(RxUtils.instance.rx2SchedulerHelperODelay())
   }
@@ -42,11 +42,8 @@ class WanRepository private constructor() {
   ): Observable<BasePageList<ArticleBean>> {
     return RxHttp.get(String.format(WanUrls.Home.ARTICLE, page))
       .setDomainToWanIfAbsent()
-      .setCacheValidTime(TimeConstants.HOME_CACHE) //设置缓存时长
-      .setCacheMode(
-        if (readCache) CacheMode.READ_CACHE_FAILED_REQUEST_NETWORK
-        else CacheMode.ONLY_NETWORK
-      ) //先读取缓存，失败再请求数据
+      .setCacheValidTime(TimeConstants.DAY.toLong()) //设置缓存时长
+      .setCacheMode(if (readCache) CacheMode.REQUEST_NETWORK_FAILED_READ_CACHE else CacheMode.ONLY_NETWORK) //请求数据失败读取缓存
       .asResponseWanBasePageList(ArticleBean::class.java)
       .compose(RxUtils.instance.rx2SchedulerHelperODelay())
   }

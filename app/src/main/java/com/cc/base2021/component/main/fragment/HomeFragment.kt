@@ -23,12 +23,12 @@ class HomeFragment : CommFragment() {
   override val contentXmlId = R.layout.fragment_home
 
   @Suppress("DEPRECATION")
-  override fun lazyInit() {
+  override fun lazyInitView() {
     if (titles.isEmpty()) {
       titles.add("Girl")
       titles.add("Article")
       fragments = mutableListOf(
-        SimpleFragment.newInstance("Girl"),
+        GirlFragment(),
         SimpleFragment.newInstance("Article")
       )
     }
@@ -66,5 +66,8 @@ class HomeFragment : CommFragment() {
       .setTextTransY(3f) //tab文字偏移量
       .setScrollOffset(120) //滚动偏移量
       .setViewPager(homePager)
+  }
+
+  override fun lazyInitDta() {
   }
 }

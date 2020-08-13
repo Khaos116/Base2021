@@ -19,6 +19,7 @@ abstract class BaseFragment : Fragment() {
   //<editor-fold defaultstate="collapsed" desc="变量">
   //是否已经懒加载
   private var isLoaded = false
+  private var isFirst = true
 
   //页面基础信息
   lateinit var mContext: Activity
@@ -60,7 +61,9 @@ abstract class BaseFragment : Fragment() {
   override fun onResume() {
     super.onResume()
     if (!isLoaded && !isHidden) {
-      lazyInit()
+      lazyInitView()
+      if (isFirst) lazyInitDta()
+      isFirst = false
       isLoaded = true
     }
   }
@@ -87,6 +90,7 @@ abstract class BaseFragment : Fragment() {
   protected abstract val contentXmlId: Int
 
   //懒加载初始化
-  protected abstract fun lazyInit()
+  protected abstract fun lazyInitView()
+  protected abstract fun lazyInitDta()
   //</editor-fold>
 }
