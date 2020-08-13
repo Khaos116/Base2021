@@ -4,7 +4,7 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.util.CoilUtils
 import com.cc.base.app.BaseApplication
-import com.cc.base2021.rxhttp.config.RxHttpConfig
+import com.cc.base2021.config.RxHttpConfig
 
 /**
  * Author:case

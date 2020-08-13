@@ -1,8 +1,7 @@
-package com.cc.base2021.rxhttp.config
+package com.cc.base2021.config
 
 import com.blankj.utilcode.util.Utils
 import com.cc.base2021.BuildConfig
-import com.cc.base2021.config.HeaderManger
 import com.cc.base2021.rxhttp.interceptor.TokenInterceptor
 import com.cc.base2021.utils.CharlesUtils
 import okhttp3.OkHttpClient
