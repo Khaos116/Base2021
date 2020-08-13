@@ -5,7 +5,9 @@
 
   <application
       android:maxAspectRatio="2.4"
+      android:networkSecurityConfig="@xml/network_security_config"
       android:resizeableActivity="true"
+      android:usesCleartextTraffic="true"
       tools:targetApi="o">
     <!--https://github.com/gyf-dev/ImmersionBar-->
     <meta-data

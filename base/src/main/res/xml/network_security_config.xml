@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config
+    xmlns:tools="http://schemas.android.com/tools">
+  <base-config
+      cleartextTrafficPermitted="true"
+      tools:ignore="InsecureBaseConfiguration"
+      >
+    <trust-anchors>
+      <certificates
+          overridePins="true"
+          src="system"
+          /> <!--信任系统证书-->
+      <certificates
+          overridePins="true"
+          src="user" tools:ignore="AcceptsUserCertificates"
+          /> <!--信任用户证书-->
+    </trust-anchors>
+  </base-config>
+  <!--AndroidVideoCache9.0缓存http问题-->
+  <domain-config cleartextTrafficPermitted="true">
+    <domain includeSubdomains="true">127.0.0.1</domain>
+  </domain-config>
+</network-security-config>
