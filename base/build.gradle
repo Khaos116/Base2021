@@ -3,11 +3,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-  compileSdkVersion rootProject.ext.sdkVersion
+  compileSdkVersion Versions.sdkTarget
 
   defaultConfig {
-    minSdkVersion 23
-    targetSdkVersion 29
+    minSdkVersion Versions.sdkMin
+    targetSdkVersion Versions.sdkTarget
     versionCode 1
     versionName "1.0"
 
@@ -24,25 +24,17 @@ android {
 
 dependencies {
   implementation fileTree(dir: "libs", include: ["*.jar", '*.aar'])
-  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  //分包 https://developer.android.google.cn/studio/build/multidex?hl=zh_cn#mdex-gradle
-  implementation("androidx.multidex:multidex:2.0.1")
-  //依赖初始化 https://developer.android.google.cn/topic/libraries/app-startup
-  implementation(rootProject.ext.depend["startup"])
-  //系统UI效果 https://maven.aliyun.com/mvn/search
-  implementation(rootProject.ext.depend["core-ktx"])
-  implementation(rootProject.ext.depend["activity-ktx"])
-  implementation(rootProject.ext.depend["fragment"])
-  implementation(rootProject.ext.depend["appcompat"]) { exclude module: 'fragment' }
-  //工具类 https://github.com/Blankj/AndroidUtilCode/blob/master/lib/utilcode/README-CN.md
-  implementation(rootProject.ext.depend["utilcodex"])
-  //状态栏适配 https://github.com/gyf-dev/ImmersionBar
-  implementation(rootProject.ext.depend["immersionbar"])
-  implementation(rootProject.ext.depend["immersionbar-ktx"])
-  //UI适配 https://github.com/JessYanCoding/AndroidAutoSize
-  implementation 'me.jessyan:autosize:1.2.1'
-  //log打印 https://github.com/JakeWharton/timber
-  implementation(rootProject.ext.depend["timber"])
-  //RxAndroid https://github.com/ReactiveX/RxAndroid
-  implementation(rootProject.ext.depend["rxandroid"])
+  implementation Deps.kotlin_stdlib
+  implementation Deps.multidex
+  implementation Deps.startup
+  implementation Deps.core_ktx
+  implementation Deps.activity_ktx
+  implementation Deps.fragment
+  implementation(Deps.appcompat) { exclude module: 'fragment' }
+  implementation Deps.utilcodex
+  implementation Deps.immersionbar
+  implementation Deps.immersionbar_ktx
+  implementation Deps.autosize
+  implementation Deps.timber
+  implementation Deps.rxandroid
 }
