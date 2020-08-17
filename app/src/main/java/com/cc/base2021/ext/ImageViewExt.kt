@@ -2,6 +2,7 @@ package com.cc.base2021.ext
 
 import android.widget.ImageView
 import coil.Coil
+import coil.api.clear
 import coil.api.load
 import coil.request.LoadRequest
 import coil.util.CoilUtils
@@ -24,6 +25,7 @@ import java.io.IOException
 //普通加载
 fun ImageView.loadImg(url: String?) {
   if (url.isNullOrBlank()) {
+    this.clear()
     this.setImageResource(R.drawable.error_square)
   } else {
     this.load(url) {
@@ -37,6 +39,7 @@ fun ImageView.loadImg(url: String?) {
 //全屏加载
 fun ImageView.loadFullScreen(url: String?) {
   if (url.isNullOrBlank()) {
+    this.clear()
     this.setImageResource(R.drawable.error_720p)
   } else {
     this.load(url) {
@@ -50,6 +53,7 @@ fun ImageView.loadFullScreen(url: String?) {
 //加载缓存文件
 fun ImageView.loadCacheFileFullScreen(url: String?) {
   if (url.isNullOrBlank()) {
+    this.clear()
     this.setImageResource(R.drawable.error_720p)
   } else {
     url.toHttpUrlOrNull()?.let { u ->
@@ -58,17 +62,17 @@ fun ImageView.loadCacheFileFullScreen(url: String?) {
         this.load(f)
       } else { //文件不存在，进行下载
         Coil.imageLoader(Utils.getApp()).execute(
-          LoadRequest.Builder(Utils.getApp()).data(u).target(
-            onStart = {
-              "缓存图片开始下载".logE()
-            },
-            onSuccess = {
-              "缓存图片下载成功".logE()
-            },
-            onError = {
-              "缓存图片下载失败:${u}".logE()
-            }
-          ).build()
+            LoadRequest.Builder(Utils.getApp()).data(u).target(
+                onStart = {
+                  "缓存图片开始下载".logE()
+                },
+                onSuccess = {
+                  "缓存图片下载成功".logE()
+                },
+                onError = {
+                  "缓存图片下载失败:${u}".logE()
+                }
+            ).build()
         )
       }
     }
@@ -78,7 +82,10 @@ fun ImageView.loadCacheFileFullScreen(url: String?) {
 //加载Gank的图片
 fun ImageView.loadGank(url: String?) {
   when {
-    url.isNullOrBlank() -> this.setImageResource(R.drawable.error_720p)
+    url.isNullOrBlank() -> {
+      this.clear()
+      this.setImageResource(R.drawable.error_720p)
+    }
     !MMkvUtils.instance.getGankImageUrl(url).isNullOrBlank() -> {
       this.setTag(R.id.gank_img_url, url)
       //取消之前的请求
@@ -93,6 +100,7 @@ fun ImageView.loadGank(url: String?) {
       //取消之前的请求
       val tagCall = iv.getTag(R.id.gank_img_call)
       if (tagCall != null) (tagCall as Call).cancel()
+      iv.clear()
       iv.setImageResource(R.drawable.loading_720p)
       //请求真正的加载地址
       val request = Request.Builder().url(url).build()
@@ -103,7 +111,10 @@ fun ImageView.loadGank(url: String?) {
       call.enqueue(object : Callback {
         override fun onFailure(call: Call, e: IOException) {
           //不是自动取消才加载失败的图
-          if (!call.isCanceled()) GlobalScope.launch(Dispatchers.Main) { iv.setImageResource(R.drawable.error_720p) }
+          if (!call.isCanceled()) GlobalScope.launch(Dispatchers.Main) {
+            iv.clear()
+            iv.setImageResource(R.drawable.error_720p)
+          }
         }
 
         override fun onResponse(call: Call, response: Response) {

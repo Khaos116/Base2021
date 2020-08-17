@@ -14,6 +14,7 @@ import com.cc.base2021.config.RxHttpConfig
 class MyApplication : BaseApplication(), ImageLoaderFactory {
   //图片加载配置 https://coil-kt.github.io/coil/getting_started/
   override fun newImageLoader(): ImageLoader {
+    //当使用load加载图片时，如果需要setImageResource/setImageDrawable则应该先调用clear
     return ImageLoader.Builder(this)
       .crossfade(true)
       .okHttpClient {
