@@ -31,18 +31,20 @@ class TokenInterceptor : Interceptor {
     //响应
     val originalResponse = chain.proceed(request)
     //Cookies
-    val cookies = originalResponse.headers.toMultimap()
-        .filter { it.key.contains("cookie", true) }
+    val cookies = originalResponse.headers.toMultimap().filter { it.key.contains("cookie", true) }
     //需要重新登录的判断
     originalResponse.body?.source()?.apply { request(Long.MAX_VALUE) }?.buffer?.let { buffer ->
-      val jsonObject = JSONObject(buffer.clone().readString(Charset.forName("UTF-8")))
-      //需要的登录
-      if (jsonObject.has("errorCode") && jsonObject.optInt("errorCode") == ErrorCode.NO_LOGIN) {
-        if (AppConfig.NEE_AUTO_LOGIN) {
-          originalResponse.close()
-          return handleTokenInvalid(chain, request)
-        } else {
-          GlobalErrorHandle.instance.dealGlobalErrorCode(jsonObject.optInt("errorCode"))
+      val result = buffer.clone().readString(Charset.forName("UTF-8"))
+      if (result.startsWith("{") && result.endsWith("}")) {
+        val jsonObject = JSONObject(result)
+        //需要的登录
+        if (jsonObject.has("errorCode") && jsonObject.optInt("errorCode") == ErrorCode.NO_LOGIN) {
+          if (AppConfig.NEE_AUTO_LOGIN) {
+            originalResponse.close()
+            return handleTokenInvalid(chain, request)
+          } else {
+            GlobalErrorHandle.instance.dealGlobalErrorCode(jsonObject.optInt("errorCode"))
+          }
         }
       }
     }
@@ -111,9 +113,9 @@ class TokenInterceptor : Interceptor {
       return if (requestTime <= SESSION_KEY_REFRESH_TIME) true else try {
         //获取到最新的token，这里需要同步请求token,千万不能异步  5、根据自己的业务修改
         RxHttp.postForm(WanUrls.User.LOGIN)
-            .add("username", MMkvUtils.instance.getAccount())
-            .add("password", EncryptUtils.encryptMD5ToString(MMkvUtils.instance.getPassword()))
-            .execute(SimpleParser.get(String::class.java))
+          .add("username", MMkvUtils.instance.getAccount())
+          .add("password", EncryptUtils.encryptMD5ToString(MMkvUtils.instance.getPassword()))
+          .execute(SimpleParser.get(String::class.java))
         "自动登录登录刷新Token".logE()
         SESSION_KEY_REFRESH_TIME = System.currentTimeMillis()
         true
