@@ -34,13 +34,13 @@ class SimpleFragment : CommFragment() {
     if (msg == "C") {
       simpleTv.append("\n\n系统开机时间:${RxTimeUtils.instance.getOpenTime()}")
       RxTimeUtils.instance.firstTimeState.observe(this, Observer {
-        simpleTv.append("\n\n响应最快的时间\n$it")
+        simpleTv.append("\n\n并发取响应最快的时间\n$it")
       })
       RxTimeUtils.instance.allTimeStateByRequest.observe(this, Observer {
-        simpleTv.append("\n\n按请求顺序全部拿到后返回的时间\n$it")
+        simpleTv.append("\n\n串行请求获取时间\n$it")
       })
       RxTimeUtils.instance.allTimeStateByResponse.observe(this, Observer {
-        simpleTv.append("\n\n按照响应顺序排序后拿到的时间\n$it")
+        simpleTv.append("\n\n并发请求获取时间\n$it")
       })
       RxTimeUtils.instance.getFirstResponseTime()
       RxTimeUtils.instance.getAllTimeByRequest()
