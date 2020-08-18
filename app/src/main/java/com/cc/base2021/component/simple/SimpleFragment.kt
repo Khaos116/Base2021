@@ -27,12 +27,7 @@ class SimpleFragment : CommFragment() {
 
   override fun lazyInitView() {
     "SimpleFragment:(${msg}懒加载)".logE()
-  }
-
-  override fun lazyInitDta() {
-    simpleTv.text = msg
-    if (msg == "C") {
-      simpleTv.append("\n\n系统开机时间:${RxTimeUtils.instance.getOpenTime()}")
+    if (msg == "C") { //不要多次注册监听，所以放到lazyInitView
       RxTimeUtils.instance.firstTimeState.observe(this, Observer {
         simpleTv.append("\n\n并发取响应最快的时间\n$it")
       })
@@ -42,6 +37,13 @@ class SimpleFragment : CommFragment() {
       RxTimeUtils.instance.allTimeStateByResponse.observe(this, Observer {
         simpleTv.append("\n\n并发请求获取时间\n$it")
       })
+    }
+  }
+
+  override fun lazyInitDta() { //可能会重新加载,所以不能在这注册监听
+    simpleTv.text = msg
+    if (msg == "C") {
+      simpleTv.append("\n\n系统开机时间:${RxTimeUtils.instance.getOpenTime()}")
       RxTimeUtils.instance.getFirstResponseTime()
       RxTimeUtils.instance.getAllTimeByRequest()
       RxTimeUtils.instance.getAllTimeByResponse()

@@ -5,12 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.TimeUtils
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.selects.select
 import org.json.JSONObject
 import rxhttp.*
+import rxhttp.wrapper.cahce.CacheMode
 import rxhttp.wrapper.param.RxHttp
 import timber.log.Timber
-import java.lang.StringBuilder
 
 /**
  * Author:case
@@ -36,6 +37,11 @@ class RxTimeUtils private constructor() {
   private val firstTime = MutableLiveData<String>()
   private val allTimeByRequest = MutableLiveData<String>()
   private val allTimeByResponse = MutableLiveData<String>()
+
+  //判断是否在请求
+  private var isRequestFirst = false
+  private var isRequestByRequest = false
+  private var isRequestByResponse = false
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="单利">
@@ -73,6 +79,8 @@ class RxTimeUtils private constructor() {
 
   //获取响应速度最快的北京时间(协程Select方法)
   fun getFirstResponseTime() {
+    if (isRequestFirst) return
+    isRequestFirst = true
     GlobalScope.launch(Dispatchers.Main) {
       val suNingDeferred = async { getTimeFromSuNing() }
       val jingDongDeferred = async { getTimeFromJingDong() }
@@ -84,10 +92,14 @@ class RxTimeUtils private constructor() {
         taoBaoDeferred.onAwait { it }
         tencentDeferred.onAwait { it }
       }
+      isRequestFirst = false
     }
   }
 
+  //串行请求
   fun getAllTimeByRequest() {
+    if (isRequestByRequest) return
+    isRequestByRequest = true
     GlobalScope.launch(Dispatchers.Main) {
       val sb = StringBuilder()
       sb.append(getTimeFromSuNing()).append("\n")
@@ -95,10 +107,14 @@ class RxTimeUtils private constructor() {
         .append(getTimeFromTaoBao()).append("\n")
         .append(getTimeFromTencent())
       allTimeByRequest.value = sb.toString()
+      isRequestByRequest = false
     }
   }
 
+  //并行请求
   fun getAllTimeByResponse() {
+    if (isRequestByResponse) return
+    isRequestByResponse = true
     val sb = StringBuilder()
     GlobalScope.launch(Dispatchers.Main) {
       sb.append(getTimeFromSuNing())
@@ -122,6 +138,7 @@ class RxTimeUtils private constructor() {
   private fun checkSb(sb: StringBuilder) {
     if (sb.count { c -> c.toString() == "\n" } == 3) {
       allTimeByResponse.value = sb.toString()
+      isRequestByResponse = false
     } else {
       sb.append("\n")
     }
@@ -133,6 +150,7 @@ class RxTimeUtils private constructor() {
   //从苏宁获取时间
   private suspend fun getTimeFromSuNing(): String {
     return RxHttp.get(suNing)
+      .setCacheMode(CacheMode.ONLY_NETWORK)
       .toStr()
       .map { s ->
         val js = JSONObject(s)
@@ -140,18 +158,19 @@ class RxTimeUtils private constructor() {
       }
       .map { t ->
         if (t == 0L) {
-          "苏宁获取时间失败"
+          "苏宁解析时间失败"
         } else {
           "苏宁时间:${TimeUtils.millis2String(t)}"
         }
       }
-      .onErrorReturnItem("苏宁获取时间失败")
+      .onErrorReturn { return@onErrorReturn it.message ?: "exception = null" }
       .await()
   }
 
   //从京东获取时间
   private suspend fun getTimeFromJingDong(): String {
     return RxHttp.get(jingDong)
+      .setCacheMode(CacheMode.ONLY_NETWORK)
       .toStr()
       .map { s ->
         val js = JSONObject(s)
@@ -159,18 +178,19 @@ class RxTimeUtils private constructor() {
       }
       .map { t ->
         if (t == 0L) {
-          "京东获取时间失败"
+          "京东解析时间失败"
         } else {
           "京东时间:${TimeUtils.millis2String(t)}"
         }
       }
-      .onErrorReturnItem("京东获取时间失败")
+      .onErrorReturn { return@onErrorReturn it.message ?: "exception = null" }
       .await()
   }
 
   //从淘宝获取时间
   private suspend fun getTimeFromTaoBao(): String {
     return RxHttp.get(taoBao)
+      .setCacheMode(CacheMode.ONLY_NETWORK)
       .toStr()
       .map { s ->
         val js = JSONObject(s)
@@ -180,18 +200,19 @@ class RxTimeUtils private constructor() {
       }
       .map { t ->
         if (t == 0L) {
-          "淘宝获取时间失败"
+          "淘宝解析时间失败"
         } else {
           "淘宝时间:${TimeUtils.millis2String(t)}"
         }
       }
-      .onErrorReturnItem("淘宝获取时间失败")
+      .onErrorReturn { return@onErrorReturn it.message ?: "exception = null" }
       .await()
   }
 
   //从腾讯获取时间
   private suspend fun getTimeFromTencent(): String {
     return RxHttp.get(tencent)
+      .setCacheMode(CacheMode.ONLY_NETWORK)
       .toStr()
       .map { s ->
         val index1 = s.indexOf("{")
@@ -201,12 +222,12 @@ class RxTimeUtils private constructor() {
       }
       .map { t ->
         if (t == 0L) {
-          "腾讯获取时间失败"
+          "腾讯解析时间失败"
         } else {
           "腾讯时间:${TimeUtils.millis2String(t)}"
         }
       }
-      .onErrorReturnItem("腾讯获取时间失败")
+      .onErrorReturn { return@onErrorReturn it.message ?: "exception = null" }
       .await()
   }
   //</editor-fold>
