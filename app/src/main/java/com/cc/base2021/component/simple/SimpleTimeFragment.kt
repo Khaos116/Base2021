@@ -13,8 +13,12 @@ import kotlinx.android.synthetic.main.fragment_simple_time.simpleTimeTv
  * Time:14:48
  */
 class SimpleTimeFragment : CommFragment() {
-  private var msg = "北京时间获取"
 
+  //<editor-fold defaultstate="collapsed" desc="变量">
+  private var msg = "北京时间获取"
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="外部获取实例">
   companion object {
     fun newInstance(msg: String? = ""): SimpleTimeFragment {
       val fragment = SimpleTimeFragment()
@@ -22,9 +26,13 @@ class SimpleTimeFragment : CommFragment() {
       return fragment
     }
   }
+  //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="XML">
   override val contentXmlId = R.layout.fragment_simple_time
+  //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="初始化View">
   override fun lazyInitViewXTime(isFirst: Boolean) {
     simpleTimeTv.text = msg
     simpleTimeTv.append("\n\n系统开机时间:${RxTimeUtils.instance.getOpenTime()}")
@@ -37,7 +45,9 @@ class SimpleTimeFragment : CommFragment() {
     RxTimeUtils.instance.allTimeStateByRequest.observe(this, observerByRequest)
     RxTimeUtils.instance.allTimeStateByResponse.observe(this, observerByResponse)
   }
+  //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="LiveData数据监听">
   //监听最快返回
   private var observerFirst = Observer<String> {
     simpleTimeTv?.append("\n\n并发取响应最快的时间\n$it")
@@ -52,11 +62,14 @@ class SimpleTimeFragment : CommFragment() {
   private var observerByResponse = Observer<String> {
     simpleTimeTv?.append("\n\n并发请求获取时间\n$it")
   }
+  //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="初始化Data">
   override fun lazyInitData1Time() {
     //发起网络请求
     RxTimeUtils.instance.getFirstResponseTime()
     RxTimeUtils.instance.getAllTimeByRequest()
     RxTimeUtils.instance.getAllTimeByResponse()
   }
+  //</editor-fold>
 }
