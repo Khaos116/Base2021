@@ -49,7 +49,7 @@ abstract class CommFragment : BaseFragment() {
       }
     }
     if (msg.isNotBlank()) errorView?.text = msg
-    if (retry != null) errorView?.click { retry?.invoke() }
+    if (retry != null) errorView?.click { retry.invoke() }
     else errorView?.setOnClickListener(null)
     mRootView?.addView(errorView, ViewGroup.LayoutParams(-1, -1))
   }
