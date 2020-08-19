@@ -61,10 +61,10 @@ abstract class BaseFragment : Fragment() {
   override fun onResume() {
     super.onResume()
     if (!isLoaded && !isHidden) {
-      "Fragment:懒加载UI：${this.javaClass.simpleName}".logI()
-      lazyInitViewXTime()
+      "Fragment:懒加载UI：${this}".logI()
+      lazyInitViewXTime(isFirst)
       if (isFirst) {
-        "Fragment:懒加载数据：${this.javaClass.simpleName}".logI()
+        "Fragment:懒加载数据：${this}".logI()
         lazyInitData1Time()
       }
       isFirst = false
@@ -77,7 +77,7 @@ abstract class BaseFragment : Fragment() {
   override fun onDestroyView() {
     super.onDestroyView()
     isLoaded = false
-    "Fragment:UI销毁：${this.javaClass.simpleName}".logI()
+    "Fragment:UI销毁：${this}".logI()
   }
 
   //</editor-fold>
@@ -85,7 +85,7 @@ abstract class BaseFragment : Fragment() {
   //<editor-fold defaultstate="collapsed" desc="页面销毁释放输入法">
   override fun onDestroy() {
     CleanLeakUtils.instance.fixInputMethodManagerLeak(mActivity)
-    "Fragment完全销毁，释放输入法：${this.javaClass.simpleName}".logI()
+    "Fragment完全销毁，释放输入法：${this}".logI()
     super.onDestroy()
   }
   //</editor-fold>
@@ -95,7 +95,7 @@ abstract class BaseFragment : Fragment() {
   protected abstract val contentXmlId: Int
 
   //懒加载初始化
-  protected abstract fun lazyInitViewXTime() //可能加载多次，如果View销毁，则重新初始化
+  protected abstract fun lazyInitViewXTime(isFirst: Boolean) //可能加载多次，如果View销毁，则重新初始化
   protected abstract fun lazyInitData1Time() //只要页面存在，哪怕View销毁也只请求一次
   //</editor-fold>
 }
