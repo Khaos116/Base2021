@@ -61,8 +61,6 @@ class GirlFragment : CommFragment() {
     //下拉刷新
     mSmartSwipeRefresh?.dataLoader = object : SmartSwipeRefreshDataLoader {
       override fun onLoadMore(ssr: SmartSwipeRefresh?) {
-        //停止惯性滚动
-        girlRecycler.stopInertiaRolling()
         mViewModel.loadMore()
       }
 
@@ -96,6 +94,8 @@ class GirlFragment : CommFragment() {
     })
     //监听加载成功
     mViewModel.girlState.observe(this, Observer { list ->
+      //停止惯性滚动
+      girlRecycler.stopInertiaRolling()
       val items = ArrayList<Any>()
       list.forEachIndexed { index, gankGirlBean ->
         items.add(gankGirlBean)
