@@ -2,6 +2,7 @@ package com.cc.base2021.startup
 
 import android.app.Application
 import android.content.Context
+import android.graphics.Color
 import androidx.startup.Initializer
 import com.billy.android.swipe.SmartSwipeBack
 import com.billy.android.swipe.SmartSwipeRefresh
@@ -36,10 +37,12 @@ class SwipeInit : Initializer<Int> {
         SmartSwipeRefresh.SmartSwipeRefreshViewCreator {
         override fun createRefreshHeader(context: Context): SmartSwipeRefresh.SmartSwipeRefreshHeader {
           return com.billy.android.swipe.refresh.ClassicHeader(context)
+            .apply { setBackgroundColor(Color.parseColor("#f3f3f3")) }
         }
 
         override fun createRefreshFooter(context: Context): SmartSwipeRefresh.SmartSwipeRefreshFooter {
           return com.cc.base2021.widget.swipe.ClassicFooter(context)
+            .apply { setBackgroundColor(Color.parseColor("#f3f3f3")) }
         }
       })
     }
