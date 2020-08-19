@@ -4,6 +4,8 @@ import android.graphics.Color
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.billy.android.swipe.SmartSwipeRefresh
+import com.billy.android.swipe.SmartSwipeRefresh.SmartSwipeRefreshDataLoader
+import com.billy.android.swipe.consumer.SlidingConsumer
 import com.cc.base2021.R
 import com.cc.base2021.bean.local.DividerBean
 import com.cc.base2021.comm.CommFragment
@@ -43,6 +45,28 @@ class GirlFragment : CommFragment() {
 
   //<editor-fold defaultstate="collapsed" desc="初始化">
   override fun lazyInit() {
+    //下拉刷新(translateMode和下面SlidingConsumer对应)
+    mSmartSwipeRefresh = SmartSwipeRefresh.translateMode(girlRecycler, false)
+    mSmartSwipeRefresh?.swipeConsumer?.let {
+      if (it is SlidingConsumer) { //https://qibilly.com/SmartSwipe-tutorial/pages/SmartSwipeRefresh.html
+        it.setOverSwipeFactor(1f) //超过最大拖动距离的比例，0不允许超出
+        it.relativeMoveFactor = 1f //视差效果(0-1)，1没有视差
+      }
+    }
+    mSmartSwipeRefresh?.disableRefresh()
+    mSmartSwipeRefresh?.isNoMoreData = true
+    //下拉刷新
+    mSmartSwipeRefresh?.dataLoader = object : SmartSwipeRefreshDataLoader {
+      override fun onLoadMore(ssr: SmartSwipeRefresh?) {
+        //停止惯性滚动
+        girlRecycler.stopScroll()
+        mViewModel.loadMore()
+      }
+
+      override fun onRefresh(ssr: SmartSwipeRefresh?) {
+        mViewModel.refresh()
+      }
+    }
     //设置适配器
     girlRecycler.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
     girlRecycler.adapter = multiTypeAdapter
@@ -53,15 +77,18 @@ class GirlFragment : CommFragment() {
     mViewModel.uiListState.observe(this, Observer { state ->
       //加载中和加载结束
       if (state.isLoading) {
-        showLoadingView()
+        if (multiTypeAdapter.items.isNullOrEmpty()) showLoadingView()
       } else {
         dismissLoadingView()
+        if (!multiTypeAdapter.items.isNullOrEmpty()) mSmartSwipeRefresh?.swipeConsumer?.enableTop()
+        //请求完成
+        mSmartSwipeRefresh?.finished(state.suc)
+        //是否有更多
+        mSmartSwipeRefresh?.isNoMoreData = !state.hasMore
       }
-      //是否有更多
-      state.hasMore
       //加载失败的处理
-      state.errorMsg?.let { msg ->
-        if (mViewModel.girlState.value.isNullOrEmpty()) showErrorView(msg) { mViewModel.refresh() }
+      state.exc?.let { e ->
+        if (mViewModel.girlState.value.isNullOrEmpty()) showErrorView(e.message) { mViewModel.refresh() }
       }
     })
     //监听加载成功
