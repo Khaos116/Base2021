@@ -91,4 +91,8 @@ abstract class BaseFragment : Fragment() {
   //懒加载初始化
   protected abstract fun lazyInit()
   //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="子类公共方法">
+  open fun scroll2Top() {}
+  //</editor-fold>
 }
