@@ -5,13 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.TimeUtils
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.selects.select
 import org.json.JSONObject
 import rxhttp.*
 import rxhttp.wrapper.cahce.CacheMode
 import rxhttp.wrapper.param.RxHttp
-import timber.log.Timber
 
 /**
  * Author:case
@@ -117,30 +116,20 @@ class RxTimeUtils private constructor() {
     isRequestByResponse = true
     val sb = StringBuilder()
     GlobalScope.launch(Dispatchers.Main) {
-      sb.append(getTimeFromSuNing())
-      checkSb(sb)
-    }
-    GlobalScope.launch(Dispatchers.Main) {
-      sb.append(getTimeFromJingDong())
-      checkSb(sb)
-    }
-    GlobalScope.launch(Dispatchers.Main) {
-      sb.append(getTimeFromTaoBao())
-      checkSb(sb)
-    }
-    GlobalScope.launch(Dispatchers.Main) {
-      sb.append(getTimeFromTencent())
-      checkSb(sb)
-    }
-  }
-
-  //判断是否请求完成
-  private fun checkSb(sb: StringBuilder) {
-    if (sb.count { c -> c.toString() == "\n" } == 3) {
-      allTimeByResponse.value = sb.toString()
+      val channel = Channel<String>(Channel.RENDEZVOUS)
+      val requestCount = 4 //请求数量
+      var responseCount = 0 //响应数量
+      GlobalScope.launch { channel.send(getTimeFromSuNing()) }
+      GlobalScope.launch { channel.send(getTimeFromJingDong()) }
+      GlobalScope.launch { channel.send(getTimeFromTaoBao()) }
+      GlobalScope.launch { channel.send(getTimeFromTencent()) }
+      for (s in channel) {
+        responseCount++
+        sb.append(s)
+        if (requestCount == responseCount) channel.close() else sb.append("\n")
+      }
       isRequestByResponse = false
-    } else {
-      sb.append("\n")
+      allTimeByResponse.value = sb.toString()
     }
   }
   //</editor-fold>
