@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.fragment_simple.simpleTv
  * Time:20:29
  */
 class SimpleFragment : CommFragment() {
+
   private var msg = "SimpleFragment"
 
   companion object {
@@ -23,10 +24,7 @@ class SimpleFragment : CommFragment() {
 
   override val contentXmlId = R.layout.fragment_simple
 
-  override fun lazyInitViewXTime(isFirst: Boolean) {
+  override fun lazyInit() {
     simpleTv.text = msg
-  }
-
-  override fun lazyInitData1Time() {
   }
 }

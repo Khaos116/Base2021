@@ -3,6 +3,7 @@ package com.cc.base2021.component.main.fragment
 import android.graphics.Color
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.billy.android.swipe.SmartSwipeRefresh
 import com.cc.base2021.R
 import com.cc.base2021.bean.local.DividerBean
 import com.cc.base2021.comm.CommFragment
@@ -24,6 +25,15 @@ class GirlFragment : CommFragment() {
 
   //多类型适配器
   private val multiTypeAdapter = MultiTypeAdapter()
+
+  //页面销毁时的位置
+  private var lastPosition = 0
+
+  //页面销毁时的偏移量
+  private var lastPositionOff = 0
+
+  //下拉刷新
+  private var mSmartSwipeRefresh: SmartSwipeRefresh? = null
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="XML">
@@ -32,8 +42,13 @@ class GirlFragment : CommFragment() {
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化">
-  //初始化View
-  override fun lazyInitView() {
+  override fun lazyInit() {
+    //设置适配器
+    girlRecycler.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
+    girlRecycler.adapter = multiTypeAdapter
+    //注册多类型
+    multiTypeAdapter.register(DividerItemViewBinder())
+    multiTypeAdapter.register(GirlItemViewBinder())
     //监听加载状态
     mViewModel.uiListState.observe(this, Observer { state ->
       //加载中和加载结束
@@ -49,28 +64,31 @@ class GirlFragment : CommFragment() {
         if (mViewModel.girlState.value.isNullOrEmpty()) showErrorView(msg) { mViewModel.refresh() }
       }
     })
-    //注册多类型
-    multiTypeAdapter.register(DividerItemViewBinder())
-    multiTypeAdapter.register(GirlItemViewBinder())
-    //设置适配器
-    girlRecycler.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
-    girlRecycler.adapter = multiTypeAdapter
-  }
-
-  //初始数据
-  override fun lazyInitDta() {
     //监听加载成功
     mViewModel.girlState.observe(this, Observer { list ->
       val items = ArrayList<Any>()
       list.forEachIndexed { index, gankGirlBean ->
         items.add(gankGirlBean)
-        if (index < list.size - 1) items.add(DividerBean(heightPx = 1,bgColor = Color.RED))
+        if (index < list.size - 1) items.add(DividerBean(heightPx = 1, bgColor = Color.RED))
       }
       multiTypeAdapter.items = items
       multiTypeAdapter.notifyDataSetChanged()
     })
     //请求数据
     mViewModel.refresh()
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="生命周期">
+  override fun onDestroyView() {
+    super.onDestroyView()
+    (girlRecycler.layoutManager as LinearLayoutManager).let { manager ->
+      lastPosition = manager.findFirstVisibleItemPosition()
+      if (girlRecycler.childCount > 0) {
+        lastPositionOff = girlRecycler.getChildAt(0).top
+      }
+    }
+
   }
   //</editor-fold>
 }

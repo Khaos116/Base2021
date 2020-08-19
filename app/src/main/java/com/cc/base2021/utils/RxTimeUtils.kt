@@ -116,7 +116,7 @@ class RxTimeUtils private constructor() {
     isRequestByResponse = true
     val sb = StringBuilder()
     GlobalScope.launch(Dispatchers.Main) {
-      val channel = Channel<String>(Channel.RENDEZVOUS)
+      val channel = Channel<String>(Channel.BUFFERED)
       val requestCount = 4 //请求数量
       var responseCount = 0 //响应数量
       GlobalScope.launch { channel.send(getTimeFromSuNing()) }

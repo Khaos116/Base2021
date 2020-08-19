@@ -17,17 +17,22 @@ import kotlinx.android.synthetic.main.fragment_home.homePager
  * Time:20:50
  */
 class HomeFragment : CommFragment() {
+  //<editor-fold defaultstate="collapsed" desc="变量">
 
+  //子Fragment
   private var fragments: MutableList<Fragment> = mutableListOf()
+
+  //子Fragment标题
   private var titles: MutableList<String> = mutableListOf()
+  //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="XML">
   override val contentXmlId = R.layout.fragment_home
+  //</editor-fold>
 
-  override fun lazyInitViewXTime(isFirst: Boolean) {
-  }
-
+  //<editor-fold defaultstate="collapsed" desc="初始化">
   @Suppress("DEPRECATION")
-  override fun lazyInitData1Time() {
+  override fun lazyInit() {
     if (titles.isEmpty()) {
       titles.add("Girl")
       titles.add("Article")
@@ -73,4 +78,5 @@ class HomeFragment : CommFragment() {
       .setScrollOffset(120) //滚动偏移量
       .setViewPager(homePager)
   }
+  //</editor-fold>
 }
