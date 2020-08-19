@@ -95,7 +95,7 @@ class GirlFragment : CommFragment() {
     //监听加载成功
     mViewModel.girlState.observe(this, Observer { list ->
       //停止惯性滚动
-      girlRecycler.stopInertiaRolling()
+      if (!multiTypeAdapter.items.isNullOrEmpty()) girlRecycler.stopInertiaRolling()
       val items = ArrayList<Any>()
       list.forEachIndexed { index, gankGirlBean ->
         items.add(gankGirlBean)
