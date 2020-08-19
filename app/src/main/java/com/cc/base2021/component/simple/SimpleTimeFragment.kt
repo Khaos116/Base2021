@@ -1,0 +1,58 @@
+package com.cc.base2021.component.simple
+
+import androidx.lifecycle.Observer
+import com.cc.base2021.R
+import com.cc.base2021.comm.CommFragment
+import com.cc.base2021.utils.RxTimeUtils
+import kotlinx.android.synthetic.main.fragment_simple_time.simpleTimeTv
+
+/**
+ * 获取北京时间展示的Fragment
+ * Author:case
+ * Date:2020/8/19
+ * Time:14:48
+ */
+class SimpleTimeFragment : CommFragment() {
+  private var msg = "北京时间获取"
+
+  companion object {
+    fun newInstance(msg: String? = ""): SimpleTimeFragment {
+      val fragment = SimpleTimeFragment()
+      if (!msg.isNullOrBlank()) fragment.msg = msg
+      return fragment
+    }
+  }
+
+  override val contentXmlId = R.layout.fragment_simple_time
+
+  override fun lazyInitViewXTime(isFirst: Boolean) {
+    simpleTimeTv.text = msg
+    simpleTimeTv.append("\n\n系统开机时间:${RxTimeUtils.instance.getOpenTime()}")
+    //当使用了相同的Observer时，可以避免注册多次的问题
+    RxTimeUtils.instance.firstTimeState.observe(this, observerFirst)
+    RxTimeUtils.instance.allTimeStateByRequest.observe(this, observerByRequest)
+    RxTimeUtils.instance.allTimeStateByResponse.observe(this, observerByResponse)
+  }
+
+  //监听最快返回
+  private var observerFirst = Observer<String> {
+    simpleTimeTv?.append("\n\n并发取响应最快的时间2\n$it")
+  }
+
+  //监听串行返回
+  private var observerByRequest = Observer<String> {
+    simpleTimeTv?.append("\n\n串行请求获取时间\n$it")
+  }
+
+  //监听并发返回
+  private var observerByResponse = Observer<String> {
+    simpleTimeTv?.append("\n\n并发请求获取时间\n$it")
+  }
+
+  override fun lazyInitData1Time() {
+    //发起网络请求
+    RxTimeUtils.instance.getFirstResponseTime()
+    RxTimeUtils.instance.getAllTimeByRequest()
+    RxTimeUtils.instance.getAllTimeByResponse()
+  }
+}
