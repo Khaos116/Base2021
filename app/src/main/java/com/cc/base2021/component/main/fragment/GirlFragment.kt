@@ -1,6 +1,7 @@
 package com.cc.base2021.component.main.fragment
 
 import android.graphics.Color
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.billy.android.swipe.SmartSwipeRefresh
@@ -47,9 +48,10 @@ class GirlFragment : CommFragment() {
   override fun lazyInit() {
     //下拉刷新(translateMode和下面SlidingConsumer对应)
     mSmartSwipeRefresh = SmartSwipeRefresh.translateMode(girlRecycler, false)
+    (girlRecycler.parent as View).setBackgroundColor(Color.parseColor("#f3f3f3"))
     mSmartSwipeRefresh?.swipeConsumer?.let {
       if (it is SlidingConsumer) { //https://qibilly.com/SmartSwipe-tutorial/pages/SmartSwipeRefresh.html
-        it.setOverSwipeFactor(1f) //超过最大拖动距离的比例，0不允许超出
+        it.setOverSwipeFactor(0f) //超过最大拖动距离的比例，0不允许超出
         it.relativeMoveFactor = 1f //视差效果(0-1)，1没有视差
       }
     }
