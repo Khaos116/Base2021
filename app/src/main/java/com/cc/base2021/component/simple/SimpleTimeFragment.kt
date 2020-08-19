@@ -28,7 +28,11 @@ class SimpleTimeFragment : CommFragment() {
   override fun lazyInitViewXTime(isFirst: Boolean) {
     simpleTimeTv.text = msg
     simpleTimeTv.append("\n\n系统开机时间:${RxTimeUtils.instance.getOpenTime()}")
-    //当使用了相同的Observer时，可以避免注册多次的问题
+    //先移除，防止复用时不会直接获取数据
+    RxTimeUtils.instance.firstTimeState.removeObserver(observerFirst)
+    RxTimeUtils.instance.allTimeStateByRequest.removeObserver(observerByRequest)
+    RxTimeUtils.instance.allTimeStateByResponse.removeObserver(observerByResponse)
+    //使用Observer变量是为了移除时好用
     RxTimeUtils.instance.firstTimeState.observe(this, observerFirst)
     RxTimeUtils.instance.allTimeStateByRequest.observe(this, observerByRequest)
     RxTimeUtils.instance.allTimeStateByResponse.observe(this, observerByResponse)
@@ -36,7 +40,7 @@ class SimpleTimeFragment : CommFragment() {
 
   //监听最快返回
   private var observerFirst = Observer<String> {
-    simpleTimeTv?.append("\n\n并发取响应最快的时间2\n$it")
+    simpleTimeTv?.append("\n\n并发取响应最快的时间\n$it")
   }
 
   //监听串行返回
