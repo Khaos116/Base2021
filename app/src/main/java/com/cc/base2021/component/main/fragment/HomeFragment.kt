@@ -4,10 +4,13 @@ import android.graphics.Color
 import android.graphics.Typeface
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.cc.base.ui.BaseFragment
 import com.cc.base2021.R
 import com.cc.base2021.comm.CommFragment
 import com.cc.base2021.component.simple.SimpleFragment
 import com.cc.base2021.component.simple.SimpleTimeFragment
+import kotlinx.android.synthetic.main.fragment_girl.girlRecycler
 import kotlinx.android.synthetic.main.fragment_home.homeIndicator
 import kotlinx.android.synthetic.main.fragment_home.homePager
 
@@ -20,7 +23,7 @@ class HomeFragment : CommFragment() {
   //<editor-fold defaultstate="collapsed" desc="变量">
 
   //子Fragment
-  private var fragments: MutableList<Fragment> = mutableListOf()
+  private var fragments: MutableList<BaseFragment> = mutableListOf()
 
   //子Fragment标题
   private var titles: MutableList<String> = mutableListOf()
@@ -77,6 +80,12 @@ class HomeFragment : CommFragment() {
       .setTextTransY(3f) //tab文字偏移量
       .setScrollOffset(120) //滚动偏移量
       .setViewPager(homePager)
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="公共方法调用">
+  override fun scroll2Top() {
+    fragments[homePager.currentItem].scroll2Top()
   }
   //</editor-fold>
 }
