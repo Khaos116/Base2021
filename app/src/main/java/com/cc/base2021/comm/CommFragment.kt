@@ -38,7 +38,7 @@ abstract class CommFragment : BaseFragment() {
     loadingView?.removeParent()
   }
 
-  protected fun showErrorView(msg: String = "", retry: (() -> Unit)? = null) {
+  protected fun showErrorView(msg: String? = "", retry: (() -> Unit)? = null) {
     loadingView?.removeParent()
     if (errorView == null) {
       errorView = TextView(mContext)
@@ -48,7 +48,7 @@ abstract class CommFragment : BaseFragment() {
         setTextColor(ColorUtils.getColor(R.color.gray_444444))
       }
     }
-    if (msg.isNotBlank()) errorView?.text = msg
+    if (!msg.isNullOrBlank()) errorView?.text = msg
     if (retry != null) errorView?.click { retry.invoke() }
     else errorView?.setOnClickListener(null)
     mRootView?.addView(errorView, ViewGroup.LayoutParams(-1, -1))
