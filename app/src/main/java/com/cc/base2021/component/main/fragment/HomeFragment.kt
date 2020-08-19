@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.cc.base2021.R
 import com.cc.base2021.comm.CommFragment
 import com.cc.base2021.component.simple.SimpleFragment
+import com.cc.base2021.component.simple.SimpleTimeFragment
 import kotlinx.android.synthetic.main.fragment_home.homeIndicator
 import kotlinx.android.synthetic.main.fragment_home.homePager
 
@@ -22,14 +23,19 @@ class HomeFragment : CommFragment() {
 
   override val contentXmlId = R.layout.fragment_home
 
+  override fun lazyInitViewXTime(isFirst: Boolean) {
+  }
+
   @Suppress("DEPRECATION")
-  override fun lazyInitView() {
+  override fun lazyInitData1Time() {
     if (titles.isEmpty()) {
       titles.add("Girl")
       titles.add("Article")
+      titles.add("Time")
       fragments = mutableListOf(
         GirlFragment(),
-        SimpleFragment.newInstance("Article")
+        SimpleFragment.newInstance("Article"),
+        SimpleTimeFragment.newInstance()
       )
     }
     homePager.adapter = object : FragmentPagerAdapter(childFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
@@ -66,8 +72,5 @@ class HomeFragment : CommFragment() {
       .setTextTransY(3f) //tab文字偏移量
       .setScrollOffset(120) //滚动偏移量
       .setViewPager(homePager)
-  }
-
-  override fun lazyInitDta() {
   }
 }
