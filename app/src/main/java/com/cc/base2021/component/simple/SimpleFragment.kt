@@ -1,13 +1,11 @@
 package com.cc.base2021.component.simple
 
-import androidx.lifecycle.Observer
-import com.cc.base.ext.logE
 import com.cc.base2021.R
 import com.cc.base2021.comm.CommFragment
-import com.cc.base2021.utils.RxTimeUtils
 import kotlinx.android.synthetic.main.fragment_simple.simpleTv
 
 /**
+ * 简单Fragment，方便使用时占位
  * Author:case
  * Date:2020/8/11
  * Time:20:29
@@ -25,28 +23,10 @@ class SimpleFragment : CommFragment() {
 
   override val contentXmlId = R.layout.fragment_simple
 
-  override fun lazyInitView() {
-    "SimpleFragment:(${msg}懒加载)".logE()
-    if (msg == "C") { //不要多次注册监听，所以放到lazyInitView
-      RxTimeUtils.instance.firstTimeState.observe(this, Observer {
-        simpleTv.append("\n\n并发取响应最快的时间\n$it")
-      })
-      RxTimeUtils.instance.allTimeStateByRequest.observe(this, Observer {
-        simpleTv.append("\n\n串行请求获取时间\n$it")
-      })
-      RxTimeUtils.instance.allTimeStateByResponse.observe(this, Observer {
-        simpleTv.append("\n\n并发请求获取时间\n$it")
-      })
-    }
+  override fun lazyInitViewXTime(isFirst: Boolean) {
+    simpleTv.text = msg
   }
 
-  override fun lazyInitDta() { //可能会重新加载,所以不能在这注册监听
-    simpleTv.text = msg
-    if (msg == "C") {
-      simpleTv.append("\n\n系统开机时间:${RxTimeUtils.instance.getOpenTime()}")
-      RxTimeUtils.instance.getFirstResponseTime()
-      RxTimeUtils.instance.getAllTimeByRequest()
-      RxTimeUtils.instance.getAllTimeByResponse()
-    }
+  override fun lazyInitData1Time() {
   }
 }
