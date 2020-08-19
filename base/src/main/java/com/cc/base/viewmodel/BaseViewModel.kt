@@ -13,13 +13,13 @@ open class BaseViewModel : ViewModel() {
 
   open class SimpleUiState(
     val isLoading: Boolean = false,
-    val errorMsg: String? = null,
+    val suc: Boolean = false,
     var exc: Throwable? = null
   )
 
   open class ListUiState(
     val isLoading: Boolean = false,
-    val errorMsg: String? = null,
+    val suc: Boolean = false,
     var exc: Throwable? = null,
     val hasMore: Boolean = true
   )
