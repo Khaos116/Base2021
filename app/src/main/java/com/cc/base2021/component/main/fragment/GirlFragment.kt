@@ -120,4 +120,14 @@ class GirlFragment : CommFragment() {
 
   }
   //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="公共方法调用">
+  override fun scroll2Top() {
+    girlRecycler.layoutManager?.let { manager ->
+      val firstPosition = (manager as LinearLayoutManager).findFirstVisibleItemPosition()
+      if (firstPosition > 5) girlRecycler.scrollToPosition(5)
+      girlRecycler.smoothScrollToPosition(0)
+    }
+  }
+  //</editor-fold>
 }
