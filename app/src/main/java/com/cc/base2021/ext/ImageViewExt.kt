@@ -7,8 +7,7 @@ import coil.api.load
 import coil.request.LoadRequest
 import coil.util.CoilUtils
 import com.blankj.utilcode.util.Utils
-import com.cc.base.ext.logE
-import com.cc.base.ext.logI
+import com.cc.base.ext.*
 import com.cc.base2021.R
 import com.cc.base2021.config.RxHttpConfig
 import com.cc.base2021.utils.MMkvUtils
@@ -92,7 +91,7 @@ fun ImageView.loadGank(url: String?) {
       val tagCall = this.getTag(R.id.gank_img_call)
       if (tagCall != null) (tagCall as Call).cancel()
       val sendUrl = MMkvUtils.instance.getGankImageUrl(url)
-      "无需重定向直接加载图片:$sendUrl".logI()
+      "无需重定向直接加载图片:$sendUrl".logD()
       this.loadFullScreen(sendUrl)
     }
     else -> {
