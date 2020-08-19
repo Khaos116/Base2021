@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import androidx.fragment.app.FragmentHostCallback
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.Utils
 import com.cc.base.app.BaseApplication
 
@@ -23,6 +24,18 @@ fun FragmentManager.getContext(): Context? {
   } catch (e: Exception) {
     e.printStackTrace()
     null
+  }
+}
+
+//停止惯性滚动
+fun RecyclerView.stopInertiaRolling() {
+  try {
+    val field = this.javaClass.getDeclaredMethod("cancelScroll")
+    field.isAccessible = true
+    field.invoke(this)
+  } catch (e: Exception) {
+    e.printStackTrace()
+    "RecyclerView惯性滚动停止失败:${e.message}".logI()
   }
 }
 

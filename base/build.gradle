@@ -29,6 +29,7 @@ dependencies {
   implementation Deps.startup
   implementation Deps.core_ktx
   implementation Deps.activity_ktx
+  implementation Deps.material
   implementation Deps.fragment
   implementation(Deps.appcompat) { exclude module: 'fragment' }
   implementation Deps.utilcodex
