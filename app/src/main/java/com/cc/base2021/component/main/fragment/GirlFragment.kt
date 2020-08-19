@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.billy.android.swipe.SmartSwipeRefresh
 import com.billy.android.swipe.SmartSwipeRefresh.SmartSwipeRefreshDataLoader
 import com.billy.android.swipe.consumer.SlidingConsumer
+import com.cc.base.ext.stopInertiaRolling
 import com.cc.base2021.R
 import com.cc.base2021.bean.local.DividerBean
 import com.cc.base2021.comm.CommFragment
@@ -61,7 +62,7 @@ class GirlFragment : CommFragment() {
     mSmartSwipeRefresh?.dataLoader = object : SmartSwipeRefreshDataLoader {
       override fun onLoadMore(ssr: SmartSwipeRefresh?) {
         //停止惯性滚动
-        girlRecycler.stopScroll()
+        girlRecycler.stopInertiaRolling()
         mViewModel.loadMore()
       }
 
