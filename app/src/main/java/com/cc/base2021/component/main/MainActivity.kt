@@ -74,7 +74,10 @@ class MainActivity : CommActivity() {
     //需要显示的fragment
     val f = fragmentList[index]
     //和当前选中的一样，则不再处理
-    if (currentFragment == f) return
+    if (currentFragment == f) {
+      f.scroll2Top()
+      return
+    }
     //先关闭之前显示的
     currentFragment?.let { FragmentUtils.hide(it) }
     //设置现在需要显示的
