@@ -68,6 +68,9 @@
       <meta-data
           android:name="com.cc.base2021.startup.MMkvInit"
           android:value="androidx.startup"/>
+      <meta-data
+          android:name="com.cc.base2021.startup.SwipeInit"
+          android:value="androidx.startup"/>
     </provider>
   </application>
 
