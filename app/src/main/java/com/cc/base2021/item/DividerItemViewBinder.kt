@@ -24,5 +24,5 @@ class DividerItemViewBinder : ItemViewBinder<DividerBean, ViewHolder>() {
     holder.itemView.setBackgroundColor(item.bgColor)
   }
 
-  class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView!!)
+  class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 }

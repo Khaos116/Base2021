@@ -25,5 +25,5 @@ class GirlItemViewBinder : ItemViewBinder<GankGirlBean, ViewHolder>() {
     holder.itemView.itemGirlIv.loadGank(item.images?.firstOrNull())
   }
 
-  class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView!!)
+  class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 }
