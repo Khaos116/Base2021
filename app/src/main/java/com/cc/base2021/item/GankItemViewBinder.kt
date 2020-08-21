@@ -59,7 +59,7 @@ class GankItemViewBinder(
       rv.layoutManager = GridLayoutManager(holder.itemView.context, count)
       rv.addItemDecoration(GridSpaceItemDecoration(spaceItem))
       val multiTypeAdapter = MultiTypeAdapter()
-      multiTypeAdapter.register(NineImgViewBinder())
+      multiTypeAdapter.register(NineImgViewBinder(onItemImgClick))
       multiTypeAdapter.items = item.imagesNoNull()
       rv.adapter = multiTypeAdapter
     }
