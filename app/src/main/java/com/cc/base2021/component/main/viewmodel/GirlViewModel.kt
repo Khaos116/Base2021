@@ -40,7 +40,7 @@ class GirlViewModel : BaseViewModel() {
       //协程代码块
       val result = GankRepository.instance.girlList(page = page, size = pageSize)
       //可以直接更新UI
-      girlList.value = if (page == 1) result else ((girlList.value ?: mutableListOf<GankGirlBean>()) + result).toMutableList()
+      girlList.value = if (page == 1) result else ((girlList.value ?: mutableListOf()) + result).toMutableList()
       currentPage = page
       hasMore = result.size == pageSize
       uiListState.value = ListUiState(suc = true, hasMore = hasMore)

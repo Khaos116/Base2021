@@ -22,6 +22,15 @@ import kotlinx.android.synthetic.main.fragment_girl.girlRecycler
  * Time:20:48
  */
 class GirlFragment : CommFragment() {
+  //<editor-fold defaultstate="collapsed" desc="外部获取实例">
+  companion object {
+    fun newInstance(): GirlFragment {
+      val fragment = GirlFragment()
+      return fragment
+    }
+  }
+  //</editor-fold>
+
   //<editor-fold defaultstate="collapsed" desc="变量">
   //网络请求
   private val mViewModel by lazy { GirlViewModel() }
