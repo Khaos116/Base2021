@@ -11,9 +11,45 @@
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:contentDescription="@null"
-      android:scaleType="centerCrop"
+      android:scaleType="fitCenter"
       app:layout_constraintDimensionRatio="1:1"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
+      />
+  <!--上-->
+  <View
+      android:layout_width="0dp"
+      android:layout_height="1px"
+      android:background="@color/red_FF4500"
+      app:layout_constraintEnd_toEndOf="@id/itemNineImgTv"
+      app:layout_constraintStart_toStartOf="@id/itemNineImgTv"
+      app:layout_constraintTop_toTopOf="@id/itemNineImgTv"
+      />
+  <!--下-->
+  <View
+      android:layout_width="0dp"
+      android:layout_height="1px"
+      android:background="@color/red_FF4500"
+      app:layout_constraintBottom_toBottomOf="@id/itemNineImgTv"
+      app:layout_constraintEnd_toEndOf="@id/itemNineImgTv"
+      app:layout_constraintStart_toStartOf="@id/itemNineImgTv"
+      />
+  <!--左-->
+  <View
+      android:layout_width="1px"
+      android:layout_height="0dp"
+      android:background="@color/red_FF4500"
+      app:layout_constraintBottom_toBottomOf="@id/itemNineImgTv"
+      app:layout_constraintStart_toStartOf="@id/itemNineImgTv"
+      app:layout_constraintTop_toTopOf="@id/itemNineImgTv"
+      />
+  <!--右-->
+  <View
+      android:layout_width="1px"
+      android:layout_height="0dp"
+      android:background="@color/red_FF4500"
+      app:layout_constraintBottom_toBottomOf="@id/itemNineImgTv"
+      app:layout_constraintEnd_toEndOf="@id/itemNineImgTv"
+      app:layout_constraintTop_toTopOf="@id/itemNineImgTv"
       />
 </androidx.constraintlayout.widget.ConstraintLayout>
