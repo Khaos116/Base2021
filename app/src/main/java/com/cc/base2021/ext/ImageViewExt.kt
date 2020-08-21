@@ -92,7 +92,7 @@ fun ImageView.loadGank(url: String?, full: Boolean = false) {
       if (tagCall != null) (tagCall as Call).cancel()
       val sendUrl = MMkvUtils.instance.getGankImageUrl(url)
       "无需重定向直接加载图片:$sendUrl".logD()
-      this.loadFullScreen(sendUrl)
+      if (full) this.loadFullScreen(sendUrl) else this.loadImg(sendUrl)
     }
     else -> {
       val iv = this
@@ -122,7 +122,7 @@ fun ImageView.loadGank(url: String?, full: Boolean = false) {
           val tag = iv.getTag(R.id.gank_img_url)
           if (tag != null && tag == url) {
             "重定向前:${url},重定向后加载图片:${response.request.url.toString()}".logI()
-            iv.loadFullScreen(response.request.url.toString())
+            if (full) iv.loadFullScreen(response.request.url.toString()) else iv.loadImg(response.request.url.toString())
           }
           response.close()
         }
