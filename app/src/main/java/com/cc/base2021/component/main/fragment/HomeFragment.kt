@@ -41,8 +41,8 @@ class HomeFragment : CommFragment() {
       titles.add("Article")
       titles.add("Time")
       fragments = mutableListOf(
-        GirlFragment(),
-        SimpleFragment.newInstance("Article"),
+        GirlFragment.newInstance(),
+        GankFragment.newInstance(),
         SimpleTimeFragment.newInstance()
       )
     }
