@@ -7,4 +7,7 @@
   <string name="double_exit">再按一次退出</string>
   <string name="guide_go">立即体验</string>
   <string name="need_login">登录过期，请重新登录</string>
+  <string name="gank_see_counts">浏览数:</string>
+  <string name="gank_praise_counts">点赞数:</string>
+  <string name="gank_store_counts">收藏数:</string>
 </resources>
