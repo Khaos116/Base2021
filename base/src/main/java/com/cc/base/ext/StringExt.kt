@@ -1,5 +1,6 @@
 package com.cc.base.ext
 
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.ToastUtils
 import timber.log.Timber
 
@@ -34,7 +35,7 @@ inline fun String?.logD() {
 }
 
 inline fun String?.toast() {
-  if (!this.isNullOrBlank()) {
+  if (!this.isNullOrBlank() && AppUtils.isAppForeground()) {
     ToastUtils.showShort(this)
   }
 }
