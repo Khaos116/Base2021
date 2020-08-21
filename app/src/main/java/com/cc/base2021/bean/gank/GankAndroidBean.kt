@@ -14,7 +14,7 @@ data class GankAndroidBean(
   val category: String? = null, //"GanHuo",
   val createdAt: String? = null, //"2020-04-21 13:11:23",
   val desc: String? = null, //"This project will help in getting started with Kotlin Coroutines for Android Development and mastering it.",
-  val images: MutableList<String?>? = null, //["https://gank.io/images/b4bdf5edd058417d8e78d1a2aa75fd95"],
+  var images: MutableList<String?>? = null, //["https://gank.io/images/b4bdf5edd058417d8e78d1a2aa75fd95"],
   val likeCounts: Int = 0, //0,
   val publishedAt: String? = null, //"2020-04-21 13:11:23",
   val stars: Int = 0, //1,
@@ -34,8 +34,8 @@ data class GankAndroidBean(
     get() {
       if (field.isNullOrEmpty() && !images.isNullOrEmpty()) {
         field = mutableListOf()
-        images.forEach { url ->
-          if (!url.isNullOrBlank()) field.add(PicBean(url = url))
+        images?.filterNotNull()?.forEach { url ->
+          if (url.isNotBlank()) field.add(PicBean(url = url))
         }
       }
       return field
@@ -46,8 +46,8 @@ data class GankAndroidBean(
     get() {
       if (field.isNullOrEmpty() && !images.isNullOrEmpty()) {
         field = mutableListOf()
-        images.forEach { url ->
-          if (!url.isNullOrBlank()) field.add(ImageData(url))
+        images?.filterNotNull()?.forEach { url ->
+          if (url.isNotBlank()) field.add(ImageData(url))
         }
       }
       return field

@@ -12,7 +12,7 @@ import com.cc.base2021.rxhttp.repository.GankRepository
  */
 class GankViewModel : BaseViewModel() {
   //<editor-fold defaultstate="collapsed" desc="外部访问">
-  val androidState: LiveData<MutableList<GankAndroidBean>>
+  val androidState: LiveData<ListUiState<MutableList<GankAndroidBean>>>
     get() = androidList
 
   //刷新
@@ -28,8 +28,9 @@ class GankViewModel : BaseViewModel() {
   }
 
   //</editor-fold>
+
   //<editor-fold defaultstate="collapsed" desc="内部处理">
-  private val androidList = MutableLiveData<MutableList<GankAndroidBean>>()
+  private val androidList = MutableLiveData<ListUiState<MutableList<GankAndroidBean>>>()
   private var isRequest = false
   private var currentPage = 1
   private var pageSize = 10
@@ -38,16 +39,28 @@ class GankViewModel : BaseViewModel() {
     rxLifeScope.launch({
       //协程代码块
       val result = GankRepository.instance.androidList(page = page, size = pageSize)
-      //可以直接更新UI
-      androidList.value = if (page == 1) result else ((androidList.value ?: mutableListOf()) + result).toMutableList()
       currentPage = page
       hasMore = result.size == pageSize
-      uiListState.value = ListUiState(suc = true, hasMore = hasMore)
+      //加载成功先关闭弹窗,再设置数据，方便填充空View的情况
+      //可以直接更新UI
+      androidList.value = ListUiState(
+        suc = true,
+        hasMore = hasMore,
+        data = if (page == 1) result else ((androidList.value?.data ?: mutableListOf()) + result).toMutableList()
+      )
     }, { e -> //异常回调，这里可以拿到Throwable对象
-      uiListState.value = ListUiState(exc = e, hasMore = hasMore)
+      androidList.value = ListUiState(
+        exc = e,
+        hasMore = hasMore,
+        data = androidList.value?.data ?: mutableListOf()
+      )
     }, { //开始回调，可以开启等待弹窗
       isRequest = true
-      uiListState.value = ListUiState(isLoading = true)
+      androidList.value = ListUiState(
+        isLoading = true,
+        hasMore = hasMore,
+        data = androidList.value?.data ?: mutableListOf()
+      )
     }, { //结束回调，可以销毁等待弹窗
       isRequest = false
     })

@@ -9,7 +9,6 @@ import androidx.lifecycle.*
  */
 open class BaseViewModel : ViewModel() {
   val uiSimpleState = MutableLiveData<SimpleUiState>()
-  val uiListState = MutableLiveData<ListUiState>()
 
   open class SimpleUiState(
     val isLoading: Boolean = false,
@@ -17,10 +16,11 @@ open class BaseViewModel : ViewModel() {
     var exc: Throwable? = null
   )
 
-  open class ListUiState(
+  open class ListUiState<T>(
     val isLoading: Boolean = false,
     val suc: Boolean = false,
     var exc: Throwable? = null,
-    val hasMore: Boolean = true
+    val hasMore: Boolean = true,
+    val data: T? = null
   )
 }

@@ -13,7 +13,7 @@ import com.cc.base2021.rxhttp.repository.GankRepository
  */
 class GirlViewModel : BaseViewModel() {
   //<editor-fold defaultstate="collapsed" desc="外部访问">
-  val girlState: LiveData<MutableList<GankGirlBean>>
+  val girlState: LiveData<ListUiState<MutableList<GankGirlBean>>>
     get() = girlList
 
   //刷新
@@ -30,7 +30,7 @@ class GirlViewModel : BaseViewModel() {
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="内部处理">
-  private val girlList = MutableLiveData<MutableList<GankGirlBean>>()
+  private val girlList = MutableLiveData<ListUiState<MutableList<GankGirlBean>>>()
   private var isRequest = false
   private var currentPage = 1
   private var pageSize = 10
@@ -38,17 +38,28 @@ class GirlViewModel : BaseViewModel() {
   private fun requestGirlList(page: Int) {
     rxLifeScope.launch({
       //协程代码块
-      val result = GankRepository.instance.girlList(page = page, size = pageSize)
-      //可以直接更新UI
-      girlList.value = if (page == 1) result else ((girlList.value ?: mutableListOf()) + result).toMutableList()
+      val result = GankRepository.instance.girlList(page = page, size = pageSize, readCache = false)
       currentPage = page
       hasMore = result.size == pageSize
-      uiListState.value = ListUiState(suc = true, hasMore = hasMore)
+      //可以直接更新UI
+      girlList.value = ListUiState(
+        suc = true,
+        hasMore = hasMore,
+        data = if (page == 1) result else ((girlList.value?.data ?: mutableListOf()) + result).toMutableList()
+      )
     }, { e -> //异常回调，这里可以拿到Throwable对象
-      uiListState.value = ListUiState(exc = e, hasMore = hasMore)
+      girlList.value = ListUiState(
+        exc = e,
+        hasMore = hasMore,
+        data = girlList.value?.data ?: mutableListOf()
+      )
     }, { //开始回调，可以开启等待弹窗
       isRequest = true
-      uiListState.value = ListUiState(isLoading = true)
+      girlList.value = ListUiState(
+        isLoading = true,
+        hasMore = hasMore,
+        data = girlList.value?.data ?: mutableListOf()
+      )
     }, { //结束回调，可以销毁等待弹窗
       isRequest = false
     })

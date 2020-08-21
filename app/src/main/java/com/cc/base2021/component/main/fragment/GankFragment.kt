@@ -1,16 +1,18 @@
 package com.cc.base2021.component.main.fragment
 
 import android.graphics.Color
+import android.widget.ImageView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.billy.android.swipe.SmartSwipeRefresh
 import com.billy.android.swipe.SmartSwipeRefresh.SmartSwipeRefreshDataLoader
 import com.billy.android.swipe.consumer.SlidingConsumer
+import com.blankj.utilcode.util.StringUtils
 import com.cc.base.ext.stopInertiaRolling
 import com.cc.base.ext.toast
 import com.cc.base2021.R
 import com.cc.base2021.bean.gank.GankAndroidBean
-import com.cc.base2021.bean.local.DividerBean
+import com.cc.base2021.bean.local.*
 import com.cc.base2021.comm.CommFragment
 import com.cc.base2021.component.main.viewmodel.GankViewModel
 import com.cc.base2021.component.web.WebActivity
@@ -59,6 +61,7 @@ class GankFragment : CommFragment() {
       }
     }
     mSmartSwipeRefresh?.disableRefresh()
+    mSmartSwipeRefresh?.disableLoadMore()
     mSmartSwipeRefresh?.isNoMoreData = true
     //下拉刷新
     mSmartSwipeRefresh?.dataLoader = object : SmartSwipeRefreshDataLoader {
@@ -74,36 +77,38 @@ class GankFragment : CommFragment() {
     androidRecycler.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
     androidRecycler.adapter = multiTypeAdapter
     //注册多类型
+    multiTypeAdapter.register(LoadingItemViewBinder())
     multiTypeAdapter.register(DividerItemViewBinder())
+    multiTypeAdapter.register(EmptyErrorItemViewBinder() { mViewModel.refresh() })
     multiTypeAdapter.register(GankItemViewBinder(onItemClick))
     multiTypeAdapter.register(NineGridViewBinder(onItemImgClick))
-    //监听加载状态
-    mViewModel.uiListState.observe(this, Observer { state ->
-      //加载中和加载结束
-      if (state.isLoading) {
-        if (multiTypeAdapter.items.isNullOrEmpty()) showLoadingView()
-      } else {
-        dismissLoadingView()
-        if (!multiTypeAdapter.items.isNullOrEmpty()) mSmartSwipeRefresh?.swipeConsumer?.enableTop()
-        //请求完成
-        mSmartSwipeRefresh?.finished(state.suc)
-        //是否有更多
-        mSmartSwipeRefresh?.isNoMoreData = !state.hasMore
-      }
-      //加载失败的处理
-      state.exc?.let { e ->
-        if (mViewModel.androidState.value.isNullOrEmpty()) showErrorView(e.message) { mViewModel.refresh() }
-      }
-    })
-    //监听加载成功
+    //监听加载结果
     mViewModel.androidState.observe(this, Observer { list ->
+      //处理下拉和上拉
+      if (list.suc || list.exc != null) {
+        mSmartSwipeRefresh?.finished(list.suc)
+        mSmartSwipeRefresh?.swipeConsumer?.enableTop()
+        mSmartSwipeRefresh?.isNoMoreData = !list.hasMore
+        if (list.hasMore) mSmartSwipeRefresh?.swipeConsumer?.enableBottom()
+      } else if (!list.isLoading) {
+        return@Observer
+      }
       //停止惯性滚动
       if (!multiTypeAdapter.items.isNullOrEmpty()) androidRecycler.stopInertiaRolling()
+      //正常数据处理
       val items = ArrayList<Any>()
-      list.forEachIndexed { index, androidBean ->
+      list.data?.forEachIndexed { index, androidBean ->
         items.add(androidBean) //文章
         if (androidBean.imagesNoNull().isNotEmpty()) items.add(androidBean.imagesNoNull()) //图片
-        if (index < list.size - 1) items.add(DividerBean(heightPx = 1, bgColor = Color.RED)) //分割线
+        if (index < (list.data?.size ?: 0) - 1) items.add(DividerBean(heightPx = 1, bgColor = Color.RED)) //分割线
+      }
+      //如果没有，判断是否要显示异常布局
+      if (items.isEmpty()) {
+        when {
+          list.isLoading -> items.add(LoadingBean()) //加载中
+          list.suc -> items.add(EmptyErrorBean(isEmpty = true, isError = false)) //如果请求成功没有数据
+          list.exc != null -> items.add(EmptyErrorBean()) //如果是请求异常没有数据
+        }
       }
       multiTypeAdapter.items = items
       multiTypeAdapter.notifyDataSetChanged()
@@ -124,12 +129,16 @@ class GankFragment : CommFragment() {
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="点击事件">
+  //文章item点击事件
   private var onItemClick: ((bean: GankAndroidBean, position: Int) -> Unit)? = { bean, _ ->
     bean.url?.let { u -> WebActivity.startActivity(mActivity, u) }
   }
-  private var onItemImgClick: ((bean: String, position: Int) -> Unit)? = { url, p ->
-    "position=${p},url=${url}".toast()
-  }
+
+  //九宫图片点击事件
+  private var onItemImgClick: ((url: String, position: Int, iv: ImageView, list: MutableList<String>) -> Unit)? =
+    { url, position, iv, list ->
+      "position=${position},url=${url}".toast()
+    }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="生命周期">

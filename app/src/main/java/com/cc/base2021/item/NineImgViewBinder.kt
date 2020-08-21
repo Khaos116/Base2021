@@ -1,6 +1,7 @@
 package com.cc.base2021.item
 
 import android.view.*
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.cc.base.ext.*
 import com.cc.base2021.R
@@ -16,7 +17,7 @@ import kotlinx.android.synthetic.main.item_nine_img.view.itemNineImgTv
  * Time:14:55
  */
 class NineImgViewBinder(
-  private val onItemClick: ((item: String, position: Int) -> Unit)? = null
+  private val onItemClick: ((item: String, position: Int, iv: ImageView) -> Unit)? = null
 ) : ItemViewBinder<String, ViewHolder>() {
   //<editor-fold defaultstate="collapsed" desc="XML">
   override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): ViewHolder {
@@ -34,7 +35,7 @@ class NineImgViewBinder(
     }
     if (onItemClick != null) {
       holder.itemView.pressEffectAlpha(0.95f)
-      holder.itemView.click { onItemClick.invoke(item, holder.layoutPosition) }
+      holder.itemView.click { onItemClick.invoke(item, holder.layoutPosition, holder.itemView.itemNineImgTv) }
     } else {
       holder.itemView.setOnClickListener(null)
       holder.itemView.pressEffectDisable()

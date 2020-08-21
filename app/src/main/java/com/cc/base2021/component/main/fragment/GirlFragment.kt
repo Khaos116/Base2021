@@ -6,13 +6,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.billy.android.swipe.SmartSwipeRefresh
 import com.billy.android.swipe.SmartSwipeRefresh.SmartSwipeRefreshDataLoader
 import com.billy.android.swipe.consumer.SlidingConsumer
+import com.blankj.utilcode.util.StringUtils
 import com.cc.base.ext.stopInertiaRolling
 import com.cc.base2021.R
-import com.cc.base2021.bean.local.DividerBean
+import com.cc.base2021.bean.local.*
 import com.cc.base2021.comm.CommFragment
 import com.cc.base2021.component.main.viewmodel.GirlViewModel
-import com.cc.base2021.item.DividerItemViewBinder
-import com.cc.base2021.item.GirlItemViewBinder
+import com.cc.base2021.item.*
 import com.drakeet.multitype.MultiTypeAdapter
 import kotlinx.android.synthetic.main.fragment_girl.girlRecycler
 
@@ -58,6 +58,7 @@ class GirlFragment : CommFragment() {
       }
     }
     mSmartSwipeRefresh?.disableRefresh()
+    mSmartSwipeRefresh?.disableLoadMore()
     mSmartSwipeRefresh?.isNoMoreData = true
     //下拉刷新
     mSmartSwipeRefresh?.dataLoader = object : SmartSwipeRefreshDataLoader {
@@ -73,34 +74,36 @@ class GirlFragment : CommFragment() {
     girlRecycler.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
     girlRecycler.adapter = multiTypeAdapter
     //注册多类型
+    multiTypeAdapter.register(LoadingItemViewBinder())
     multiTypeAdapter.register(DividerItemViewBinder())
+    multiTypeAdapter.register(EmptyErrorItemViewBinder() { mViewModel.refresh() })
     multiTypeAdapter.register(GirlItemViewBinder())
-    //监听加载状态
-    mViewModel.uiListState.observe(this, Observer { state ->
-      //加载中和加载结束
-      if (state.isLoading) {
-        if (multiTypeAdapter.items.isNullOrEmpty()) showLoadingView()
-      } else {
-        dismissLoadingView()
-        if (!multiTypeAdapter.items.isNullOrEmpty()) mSmartSwipeRefresh?.swipeConsumer?.enableTop()
-        //请求完成
-        mSmartSwipeRefresh?.finished(state.suc)
-        //是否有更多
-        mSmartSwipeRefresh?.isNoMoreData = !state.hasMore
-      }
-      //加载失败的处理
-      state.exc?.let { e ->
-        if (mViewModel.girlState.value.isNullOrEmpty()) showErrorView(e.message) { mViewModel.refresh() }
-      }
-    })
-    //监听加载成功
+    //监听加载结果
     mViewModel.girlState.observe(this, Observer { list ->
+      //处理下拉和上拉
+      if (list.suc || list.exc != null) {
+        mSmartSwipeRefresh?.finished(list.suc)
+        mSmartSwipeRefresh?.swipeConsumer?.enableTop()
+        mSmartSwipeRefresh?.isNoMoreData = !list.hasMore
+        if (list.hasMore) mSmartSwipeRefresh?.swipeConsumer?.enableBottom()
+      } else if (!list.isLoading) {
+        return@Observer
+      }
       //停止惯性滚动
       if (!multiTypeAdapter.items.isNullOrEmpty()) girlRecycler.stopInertiaRolling()
+      //正常数据处理
       val items = ArrayList<Any>()
-      list.forEachIndexed { index, gankGirlBean ->
+      list.data?.forEachIndexed { index, gankGirlBean ->
         items.add(gankGirlBean)
-        if (index < list.size - 1) items.add(DividerBean(heightPx = 1, bgColor = Color.RED))
+        if (index < (list.data?.size ?: 0) - 1) items.add(DividerBean(heightPx = 1, bgColor = Color.RED))
+      }
+      //如果没有，判断是否要显示异常布局
+      if (items.isEmpty()) {
+        when {
+          list.isLoading -> items.add(LoadingBean()) //加载中
+          list.suc -> items.add(EmptyErrorBean(isEmpty = true, isError = false)) //如果请求成功没有数据
+          list.exc != null -> items.add(EmptyErrorBean()) //如果是请求异常没有数据
+        }
       }
       multiTypeAdapter.items = items
       multiTypeAdapter.notifyDataSetChanged()

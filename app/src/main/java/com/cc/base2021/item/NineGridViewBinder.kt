@@ -1,6 +1,7 @@
 package com.cc.base2021.item
 
 import android.view.*
+import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
@@ -17,8 +18,8 @@ import kotlinx.android.synthetic.main.item_nine_grid.view.itemNineGridRecycler
  * Time:14:51
  */
 class NineGridViewBinder(
-  private val onItemImgClick: ((bean: String, position: Int) -> Unit)? = null
-) : ItemViewBinder<List<String>, ViewHolder>() {
+  private val onItemImgClick: ((url: String, position: Int, iv: ImageView, list: MutableList<String>) -> Unit)? = null
+) : ItemViewBinder<MutableList<String>, ViewHolder>() {
 
   //<editor-fold defaultstate="collapsed" desc="变量">
   //Item间距
@@ -33,13 +34,13 @@ class NineGridViewBinder(
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="数据填充">
-  override fun onBindViewHolder(holder: ViewHolder, item: List<String>) {
+  override fun onBindViewHolder(holder: ViewHolder, item: MutableList<String>) {
     val recyclerView = holder.itemView.itemNineGridRecycler
     val count = if (item.size == 1) 1 else if (item.size == 2 || item.size == 4) 2 else 3
     recyclerView.layoutManager = GridLayoutManager(holder.itemView.context, count)
     if (recyclerView.itemDecorationCount == 0) recyclerView.addItemDecoration(GridSpaceItemDecoration(spaceItem))
     val multiTypeAdapter = MultiTypeAdapter()
-    multiTypeAdapter.register(NineImgViewBinder(onItemImgClick))
+    multiTypeAdapter.register(NineImgViewBinder { url, position, iv -> onItemImgClick?.invoke(url, position, iv, item) })
     recyclerView.adapter = multiTypeAdapter
     multiTypeAdapter.items = item
     multiTypeAdapter.notifyDataSetChanged()

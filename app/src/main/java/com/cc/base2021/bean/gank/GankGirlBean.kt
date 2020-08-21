@@ -11,7 +11,7 @@ data class GankGirlBean(
   var category: String?, //"Girl",
   var createdAt: String?, //"2020-05-23 08:00:00",
   var desc: String?, //"\u966a\u4f34\u672c\u6765\u5c31\u662f\u8fd9\u4e16\u754c\u4e0a\u6700\u4e86\u4e0d\u8d77\u7684\u5b89\u6170\u200b\u3002",
-  var images: MutableList<String>?, //[],
+  var images: MutableList<String?>?, //[],
   var likeCounts: Int = 0, //0,
   var publishedAt: String?, //"2020-05-23 08:00:00",
   var stars: Int = 0, //1,

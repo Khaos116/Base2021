@@ -5,9 +5,9 @@ import com.blankj.utilcode.constant.TimeConstants
 import com.cc.base2021.bean.gank.GankAndroidBean
 import com.cc.base2021.bean.gank.GankGirlBean
 import com.cc.base2021.constants.GankUrls
-import com.cc.base2021.utils.RxUtils
-import io.reactivex.Observable
+import com.cc.base2021.utils.MMkvUtils
 import rxhttp.delay
+import rxhttp.map
 import rxhttp.wrapper.cahce.CacheMode
 import rxhttp.wrapper.param.RxHttp
 import rxhttp.wrapper.param.toResponseGank
@@ -37,6 +37,20 @@ class GankRepository private constructor() {
       .setCacheValidTime(TimeConstants.DAY.toLong()) //设置缓存时长
       .setCacheMode(if (readCache) CacheMode.REQUEST_NETWORK_FAILED_READ_CACHE else CacheMode.ONLY_NETWORK) //请求数据失败读取缓存
       .toResponseGank<MutableList<GankAndroidBean>>()
+      .map { list ->
+        //寻找缓存图片地址,过滤掉空地址
+        for (bean in list) {
+          val images = mutableListOf<String?>()
+          bean.images?.filterNotNull()?.forEach { url ->
+            if (url.isNotBlank()) {
+              val newUrl = MMkvUtils.instance.getGankImageUrl(url)
+              if (newUrl.isNullOrBlank()) images.add(url) else images.add(newUrl)
+            }
+          }
+          bean.images = images
+        }
+        list
+      }
       .delay(if (page == 1) 500L else 0L) //为了防止请求太快
       .await()
   }
@@ -52,6 +66,20 @@ class GankRepository private constructor() {
       .setCacheValidTime(TimeConstants.DAY.toLong()) //设置缓存时长
       .setCacheMode(if (readCache) CacheMode.REQUEST_NETWORK_FAILED_READ_CACHE else CacheMode.ONLY_NETWORK) //请求数据失败读取缓存
       .toResponseGank<MutableList<GankGirlBean>>()
+      .map { list ->
+        //寻找缓存图片地址,过滤掉空地址
+        for (bean in list) {
+          val images = mutableListOf<String?>()
+          bean.images?.filterNotNull()?.forEach { url ->
+            if (url.isNotBlank()) {
+              val newUrl = MMkvUtils.instance.getGankImageUrl(url)
+              if (newUrl.isNullOrBlank()) images.add(url) else images.add(newUrl)
+            }
+          }
+          bean.images = images
+        }
+        list
+      }
       .delay(if (page == 1) 500L else 0L) //为了防止请求太快
       .await()
   }
