@@ -1,0 +1,3 @@
+<resources>
+  <string name="net_error">似乎与网络断开连接</string>
+</resources>
