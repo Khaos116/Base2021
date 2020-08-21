@@ -129,4 +129,15 @@
       app:layout_constraintTop_toTopOf="@id/itemGankPraiseHint"
       tools:text="1222"
       />
+
+  <FrameLayout
+      android:id="@+id/itemGankNineRecyclerParent"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingStart="12dp"
+      android:paddingTop="5dp"
+      android:paddingEnd="12dp"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/itemGankSeeHint"
+      />
 </androidx.constraintlayout.widget.ConstraintLayout>
