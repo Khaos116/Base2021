@@ -23,7 +23,8 @@
       android:icon="@mipmap/ic_launcher"
       android:label="@string/app_name"
       android:supportsRtl="true"
-      android:theme="@style/AppTheme">
+      android:theme="@style/AppTheme"
+      tools:ignore="AllowBackup">
     <!--启动页-->
     <activity
         android:name=".component.splash.SplashActivity"
@@ -55,6 +56,13 @@
     <!--登录页-->
     <activity
         android:name=".component.login.LoginActivity"
+        android:configChanges="screenLayout|orientation"
+        android:launchMode="singleTop"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustPan|stateHidden"/>
+    <!--WEB页-->
+    <activity
+        android:name=".component.web.WebActivity"
         android:configChanges="screenLayout|orientation"
         android:launchMode="singleTop"
         android:screenOrientation="portrait"
