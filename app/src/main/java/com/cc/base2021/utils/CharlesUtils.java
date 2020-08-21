@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import com.blankj.utilcode.util.Utils;
+import com.cc.base.utils.PermissionUtils;
 import java.io.*;
 import java.security.KeyStore;
 import java.security.cert.*;
@@ -51,10 +52,7 @@ public class CharlesUtils {
       Log.e("CharlesUtils", "没有使用代理，不用抓包");
       return null;
     }
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-        Utils.getApp().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-            == PackageManager.PERMISSION_GRANTED
-    ) {
+    if (PermissionUtils.Companion.getInstance().hasSDPermission()) {
       try {
         File pemFile = new File(Environment.getExternalStorageDirectory(), sdRootPemName);
         if (pemFile.exists()) {
