@@ -22,7 +22,7 @@ class GirlItemViewBinder : ItemViewBinder<GankGirlBean, ViewHolder>() {
   }
 
   override fun onBindViewHolder(holder: ViewHolder, item: GankGirlBean) {
-    holder.itemView.itemGirlIv.loadGank(item.images?.firstOrNull())
+    holder.itemView.itemGirlIv.loadGank(item.images?.firstOrNull(), true)
   }
 
   class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)

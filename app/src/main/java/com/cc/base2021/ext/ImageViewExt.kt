@@ -61,17 +61,17 @@ fun ImageView.loadCacheFileFullScreen(url: String?) {
         this.load(f)
       } else { //文件不存在，进行下载
         Coil.imageLoader(Utils.getApp()).execute(
-            LoadRequest.Builder(Utils.getApp()).data(u).target(
-                onStart = {
-                  "缓存图片开始下载".logE()
-                },
-                onSuccess = {
-                  "缓存图片下载成功".logE()
-                },
-                onError = {
-                  "缓存图片下载失败:${u}".logE()
-                }
-            ).build()
+          LoadRequest.Builder(Utils.getApp()).data(u).target(
+            onStart = {
+              "缓存图片开始下载".logE()
+            },
+            onSuccess = {
+              "缓存图片下载成功".logE()
+            },
+            onError = {
+              "缓存图片下载失败:${u}".logE()
+            }
+          ).build()
         )
       }
     }
@@ -79,11 +79,11 @@ fun ImageView.loadCacheFileFullScreen(url: String?) {
 }
 
 //加载Gank的图片
-fun ImageView.loadGank(url: String?) {
+fun ImageView.loadGank(url: String?, full: Boolean = false) {
   when {
     url.isNullOrBlank() -> {
       this.clear()
-      this.setImageResource(R.drawable.error_720p)
+      this.setImageResource(if (full) R.drawable.error_720p else R.drawable.error_square)
     }
     !MMkvUtils.instance.getGankImageUrl(url).isNullOrBlank() -> {
       this.setTag(R.id.gank_img_url, url)
@@ -100,7 +100,7 @@ fun ImageView.loadGank(url: String?) {
       val tagCall = iv.getTag(R.id.gank_img_call)
       if (tagCall != null) (tagCall as Call).cancel()
       iv.clear()
-      iv.setImageResource(R.drawable.loading_720p)
+      iv.setImageResource(if (full) R.drawable.loading_720p else R.drawable.loading_square)
       //请求真正的加载地址
       val request = Request.Builder().url(url).build()
       val call = RxHttpConfig.instance.getOkHttpClient().build().newCall(request)
@@ -112,7 +112,7 @@ fun ImageView.loadGank(url: String?) {
           //不是自动取消才加载失败的图
           if (!call.isCanceled()) GlobalScope.launch(Dispatchers.Main) {
             iv.clear()
-            iv.setImageResource(R.drawable.error_720p)
+            iv.setImageResource(if (full) R.drawable.error_720p else R.drawable.error_square)
           }
         }
 
