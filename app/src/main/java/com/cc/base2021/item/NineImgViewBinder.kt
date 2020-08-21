@@ -9,7 +9,6 @@ import com.cc.base2021.ext.loadImg
 import com.cc.base2021.item.NineImgViewBinder.ViewHolder
 import com.drakeet.multitype.ItemViewBinder
 import kotlinx.android.synthetic.main.item_nine_img.view.itemNineImgTv
-import java.net.URLConnection
 
 /**
  * Author:case

@@ -4,13 +4,10 @@ import android.graphics.Color
 import android.graphics.Typeface
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.cc.base.ui.BaseFragment
 import com.cc.base2021.R
 import com.cc.base2021.comm.CommFragment
-import com.cc.base2021.component.simple.SimpleFragment
 import com.cc.base2021.component.simple.SimpleTimeFragment
-import kotlinx.android.synthetic.main.fragment_girl.girlRecycler
 import kotlinx.android.synthetic.main.fragment_home.homeIndicator
 import kotlinx.android.synthetic.main.fragment_home.homePager
 

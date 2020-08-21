@@ -1,8 +1,6 @@
 package com.cc.base2021.item
 
-import android.util.Size
 import android.view.*
-import android.widget.ScrollView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils

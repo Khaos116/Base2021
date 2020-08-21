@@ -3,8 +3,8 @@ package com.cc.base2021.component.main
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.IntRange
-import com.blankj.utilcode.util.*
-import com.cc.base.ext.click
+import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.FragmentUtils
 import com.cc.base.ext.toast
 import com.cc.base.ui.BaseFragment
 import com.cc.base2021.R
@@ -12,9 +12,8 @@ import com.cc.base2021.R.layout
 import com.cc.base2021.comm.CommActivity
 import com.cc.base2021.component.main.fragment.HomeFragment
 import com.cc.base2021.component.simple.SimpleFragment
-import com.cc.base2021.dialog.actionDialog
-import kotlinx.android.synthetic.main.activity_main.*
-import timber.log.Timber
+import kotlinx.android.synthetic.main.activity_main.mainContainer
+import kotlinx.android.synthetic.main.activity_main.mainNavigation
 
 class MainActivity : CommActivity() {
   //<editor-fold defaultstate="collapsed" desc="外部跳转">
