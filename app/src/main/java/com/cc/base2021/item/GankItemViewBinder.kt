@@ -2,8 +2,7 @@ package com.cc.base2021.item
 
 import android.view.*
 import androidx.recyclerview.widget.RecyclerView
-import com.cc.base.ext.click
-import com.cc.base.ext.setNumberNo00
+import com.cc.base.ext.*
 import com.cc.base2021.R.layout
 import com.cc.base2021.bean.gank.GankAndroidBean
 import com.cc.base2021.item.GankItemViewBinder.ViewHolder
@@ -15,14 +14,18 @@ import kotlinx.android.synthetic.main.item_gank.view.*
  * Date:2020/8/21
  * Time:10:23
  */
-class GankItemViewBinder(val onItemClick: ((item: GankAndroidBean) -> Unit)? = null) :
-  ItemViewBinder<GankAndroidBean, ViewHolder>() {
+class GankItemViewBinder(
+  private val onItemClick: ((item: GankAndroidBean, position: Int) -> Unit)? = null
+) : ItemViewBinder<GankAndroidBean, ViewHolder>() {
 
+  //<editor-fold defaultstate="collapsed" desc="绑定XML">
   override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): ViewHolder {
     val root = inflater.inflate(layout.item_gank, parent, false)
     return ViewHolder(root)
   }
+  //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="填充数据">
   override fun onBindViewHolder(holder: ViewHolder, item: GankAndroidBean) {
     holder.itemView.itemGankTime.text = item.publishedAt
     holder.itemView.itemGankTitle.text = item.title
@@ -31,11 +34,16 @@ class GankItemViewBinder(val onItemClick: ((item: GankAndroidBean) -> Unit)? = n
     holder.itemView.itemGankStoreCounts.setNumberNo00(item.stars.toDouble())
     holder.itemView.itemGankPraiseCounts.setNumberNo00(item.likeCounts.toDouble())
     if (onItemClick != null) {
-      holder.itemView.click { onItemClick?.invoke(item) }
+      holder.itemView.pressEffectBgColor()
+      holder.itemView.click { onItemClick.invoke(item, getPosition(holder)) }
     } else {
       holder.itemView.setOnClickListener(null)
+      holder.itemView.pressEffectDisable()
     }
   }
+  //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="默认ViewHolder">
   class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+  //</editor-fold>
 }

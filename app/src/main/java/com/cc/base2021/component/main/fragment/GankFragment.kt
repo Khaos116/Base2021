@@ -122,8 +122,8 @@ class GankFragment : CommFragment() {
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="点击事件">
-  private var onItemClick: ((bean: GankAndroidBean) -> Unit)? = { gab ->
-    gab.url?.let { u -> WebActivity.startActivity(mActivity, u) }
+  private var onItemClick: ((bean: GankAndroidBean, position: Int) -> Unit)? = { bean, _ ->
+    bean.url?.let { u -> WebActivity.startActivity(mActivity, u) }
   }
   //</editor-fold>
 
