@@ -1,7 +1,6 @@
 package com.cc.base2021.component.main.fragment
 
 import android.graphics.Color
-import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.billy.android.swipe.SmartSwipeRefresh
@@ -30,12 +29,6 @@ class GirlFragment : CommFragment() {
   //多类型适配器
   private val multiTypeAdapter = MultiTypeAdapter()
 
-  //页面销毁时的位置
-  private var lastPosition = 0
-
-  //页面销毁时的偏移量
-  private var lastPositionOff = 0
-
   //下拉刷新
   private var mSmartSwipeRefresh: SmartSwipeRefresh? = null
   //</editor-fold>
@@ -49,7 +42,6 @@ class GirlFragment : CommFragment() {
   override fun lazyInit() {
     //下拉刷新(translateMode和下面SlidingConsumer对应)
     mSmartSwipeRefresh = SmartSwipeRefresh.translateMode(girlRecycler, false)
-    (girlRecycler.parent as View).setBackgroundColor(Color.parseColor("#f3f3f3"))
     mSmartSwipeRefresh?.swipeConsumer?.let {
       if (it is SlidingConsumer) { //https://qibilly.com/SmartSwipe-tutorial/pages/SmartSwipeRefresh.html
         it.setOverSwipeFactor(0f) //超过最大拖动距离的比例，0不允许超出
@@ -106,19 +98,6 @@ class GirlFragment : CommFragment() {
     })
     //请求数据
     mViewModel.refresh()
-  }
-  //</editor-fold>
-
-  //<editor-fold defaultstate="collapsed" desc="生命周期">
-  override fun onDestroyView() {
-    super.onDestroyView()
-    (girlRecycler.layoutManager as LinearLayoutManager).let { manager ->
-      lastPosition = manager.findFirstVisibleItemPosition()
-      if (girlRecycler.childCount > 0) {
-        lastPositionOff = girlRecycler.getChildAt(0).top
-      }
-    }
-
   }
   //</editor-fold>
 
