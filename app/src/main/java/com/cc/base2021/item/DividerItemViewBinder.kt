@@ -14,15 +14,21 @@ import com.drakeet.multitype.ItemViewBinder
  */
 class DividerItemViewBinder : ItemViewBinder<DividerBean, ViewHolder>() {
 
+  //<editor-fold defaultstate="collapsed" desc="XML">
   override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): ViewHolder {
     val root = inflater.inflate(layout.item_divider, parent, false)
     return ViewHolder(root)
   }
+  //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="数据填充">
   override fun onBindViewHolder(holder: ViewHolder, item: DividerBean) {
     holder.itemView.layoutParams.height = item.heightPx
     holder.itemView.setBackgroundColor(item.bgColor)
   }
+  //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="ViewHolder">
   class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+  //</editor-fold>
 }

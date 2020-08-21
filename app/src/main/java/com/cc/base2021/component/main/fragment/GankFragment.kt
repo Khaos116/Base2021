@@ -7,14 +7,14 @@ import com.billy.android.swipe.SmartSwipeRefresh
 import com.billy.android.swipe.SmartSwipeRefresh.SmartSwipeRefreshDataLoader
 import com.billy.android.swipe.consumer.SlidingConsumer
 import com.cc.base.ext.stopInertiaRolling
+import com.cc.base.ext.toast
 import com.cc.base2021.R
 import com.cc.base2021.bean.gank.GankAndroidBean
 import com.cc.base2021.bean.local.DividerBean
 import com.cc.base2021.comm.CommFragment
 import com.cc.base2021.component.main.viewmodel.GankViewModel
 import com.cc.base2021.component.web.WebActivity
-import com.cc.base2021.item.DividerItemViewBinder
-import com.cc.base2021.item.GankItemViewBinder
+import com.cc.base2021.item.*
 import com.drakeet.multitype.MultiTypeAdapter
 import kotlinx.android.synthetic.main.fragment_gank.androidRecycler
 
@@ -76,6 +76,7 @@ class GankFragment : CommFragment() {
     //注册多类型
     multiTypeAdapter.register(DividerItemViewBinder())
     multiTypeAdapter.register(GankItemViewBinder(onItemClick))
+    multiTypeAdapter.register(NineGridViewBinder(onItemImgClick))
     //监听加载状态
     mViewModel.uiListState.observe(this, Observer { state ->
       //加载中和加载结束
@@ -100,8 +101,9 @@ class GankFragment : CommFragment() {
       if (!multiTypeAdapter.items.isNullOrEmpty()) androidRecycler.stopInertiaRolling()
       val items = ArrayList<Any>()
       list.forEachIndexed { index, androidBean ->
-        items.add(androidBean)
-        if (index < list.size - 1) items.add(DividerBean(heightPx = 1, bgColor = Color.RED))
+        items.add(androidBean) //文章
+        if (androidBean.imagesNoNull().isNotEmpty()) items.add(androidBean.imagesNoNull()) //图片
+        if (index < list.size - 1) items.add(DividerBean(heightPx = 1, bgColor = Color.RED)) //分割线
       }
       multiTypeAdapter.items = items
       multiTypeAdapter.notifyDataSetChanged()
@@ -125,11 +127,15 @@ class GankFragment : CommFragment() {
   private var onItemClick: ((bean: GankAndroidBean, position: Int) -> Unit)? = { bean, _ ->
     bean.url?.let { u -> WebActivity.startActivity(mActivity, u) }
   }
+  private var onItemImgClick: ((bean: String, position: Int) -> Unit)? = { url, p ->
+    "position=${p},url=${url}".toast()
+  }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="生命周期">
   override fun onDestroy() {
     onItemClick = null
+    onItemImgClick = null
     super.onDestroy()
   }
   //</editor-fold>

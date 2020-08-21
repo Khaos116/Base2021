@@ -16,14 +16,20 @@ import kotlinx.android.synthetic.main.item_girl.view.itemGirlIv
  */
 class GirlItemViewBinder : ItemViewBinder<GankGirlBean, ViewHolder>() {
 
+  //<editor-fold defaultstate="collapsed" desc="XML">
   override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): ViewHolder {
     val root = inflater.inflate(layout.item_girl, parent, false)
     return ViewHolder(root)
   }
+  //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="数据填充">
   override fun onBindViewHolder(holder: ViewHolder, item: GankGirlBean) {
     holder.itemView.itemGirlIv.loadGank(item.images?.firstOrNull(), true)
   }
+  //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="ViewHolder">
   class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+  //</editor-fold>
 }
