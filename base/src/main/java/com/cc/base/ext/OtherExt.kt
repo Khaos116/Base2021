@@ -14,19 +14,6 @@ import com.cc.base.app.BaseApplication
  * Date:2020/8/11
  * Time:17:46
  */
-//通过FragmentManager获取Context
-fun FragmentManager.getContext(): Context? {
-  return try {
-    val field = this.javaClass.getDeclaredField("mHost")
-    field.isAccessible = true
-    val temp = field.get(this) as FragmentHostCallback<*>
-    temp.onGetLayoutInflater().context as Activity
-  } catch (e: Exception) {
-    e.printStackTrace()
-    null
-  }
-}
-
 //停止惯性滚动
 fun RecyclerView.stopInertiaRolling() {
   try {
