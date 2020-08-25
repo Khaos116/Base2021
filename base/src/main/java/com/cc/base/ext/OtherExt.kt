@@ -1,10 +1,6 @@
 package com.cc.base.ext
 
-import android.app.Activity
-import android.content.Context
 import android.graphics.Color
-import androidx.fragment.app.FragmentHostCallback
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.Utils
 import com.cc.base.app.BaseApplication
