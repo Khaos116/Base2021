@@ -1,4 +1,4 @@
-package cc.ab.base.widget.discretescrollview
+package com.cc.base2021.widget.discretescrollview
 
 import android.animation.Animator
 import android.animation.ValueAnimator

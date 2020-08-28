@@ -6,7 +6,6 @@ import android.util.AttributeSet
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import cc.ab.base.widget.discretescrollview.DotsIndicator
 import com.cc.base2021.widget.discretescrollview.adapter.DiscretePageAdapter
 import com.cc.base2021.widget.discretescrollview.holder.DiscreteHolder
 import com.cc.base2021.widget.discretescrollview.holder.DiscreteHolderCreator
@@ -19,11 +18,11 @@ import com.cc.base2021.R
  * @date: 2019/10/14 11:44
  */
 class DiscreteBanner<T> @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0,
-    defStyleRes: Int = 0
-                                                 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
+  context: Context,
+  attrs: AttributeSet? = null,
+  defStyleAttr: Int = 0,
+  defStyleRes: Int = 0
+) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
   //横向还是竖向
   private var orientation = DSVOrientation.HORIZONTAL.ordinal
 
@@ -62,7 +61,7 @@ class DiscreteBanner<T> @JvmOverloads constructor(
     if (attrs != null) {
       val ta = getContext().obtainStyledAttributes(attrs, R.styleable.DiscreteBanner)
       this.orientation =
-          ta.getInt(R.styleable.DiscreteBanner_dsv_orientation, DSVOrientation.HORIZONTAL.ordinal)
+        ta.getInt(R.styleable.DiscreteBanner_dsv_orientation, DSVOrientation.HORIZONTAL.ordinal)
       ta.recycle()
     }
     initPager()
@@ -82,9 +81,9 @@ class DiscreteBanner<T> @JvmOverloads constructor(
       }
       mIndicator.setDotSelection(position)
     }
-    if (orientation == DSVOrientation.HORIZONTAL.ordinal) {//横向
+    if (orientation == DSVOrientation.HORIZONTAL.ordinal) { //横向
       mPager.setOrientation(DSVOrientation.HORIZONTAL)
-    } else {//竖向
+    } else { //竖向
       mPager.setOrientation(DSVOrientation.VERTICAL)
     }
     //添加View
@@ -110,11 +109,11 @@ class DiscreteBanner<T> @JvmOverloads constructor(
       }
     }
     val indicatorParam = LayoutParams(-2, -2)
-    if (orientation == DSVOrientation.HORIZONTAL.ordinal) {//横向
+    if (orientation == DSVOrientation.HORIZONTAL.ordinal) { //横向
       mIndicator.orientation = LinearLayout.HORIZONTAL
       indicatorParam.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
       mIndicator.translationY = -defaultOffset
-    } else {//竖向
+    } else { //竖向
       mIndicator.orientation = LinearLayout.VERTICAL
       indicatorParam.gravity = Gravity.END or Gravity.CENTER_VERTICAL
       mIndicator.translationX = -defaultOffset
@@ -126,13 +125,13 @@ class DiscreteBanner<T> @JvmOverloads constructor(
   fun setOrientation(orientation: DSVOrientation): DiscreteBanner<T> {
     this.orientation = orientation.ordinal
     mPager.setOrientation(orientation)
-    if (orientation == DSVOrientation.HORIZONTAL) {//横向
+    if (orientation == DSVOrientation.HORIZONTAL) { //横向
       mIndicator.orientation = LinearLayout.HORIZONTAL
       (mIndicator.layoutParams as LayoutParams).gravity =
-          Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
+        Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
       mIndicator.translationX = 0f
       mIndicator.translationY = -defaultOffset
-    } else {//竖向
+    } else { //竖向
       mIndicator.orientation = LinearLayout.VERTICAL
       (mIndicator.layoutParams as LayoutParams).gravity = Gravity.END or Gravity.CENTER_VERTICAL
       mIndicator.translationX = -defaultOffset
@@ -193,9 +192,9 @@ class DiscreteBanner<T> @JvmOverloads constructor(
   //设置数据
   @Suppress("UNCHECKED_CAST")
   fun setPages(
-      holderCreator: DiscreteHolderCreator,
-      datas: List<T>
-              ): DiscreteBanner<T> {
+    holderCreator: DiscreteHolderCreator,
+    datas: List<T>
+  ): DiscreteBanner<T> {
     stopPlay()
     this.mData = datas
     this.mPagerAdapter = DiscretePageAdapter(holderCreator, mData)
@@ -279,8 +278,8 @@ class DiscreteBanner<T> @JvmOverloads constructor(
           }
           stopPlay()
         } else if (action == MotionEvent.ACTION_UP ||
-            action == MotionEvent.ACTION_CANCEL ||
-            action == MotionEvent.ACTION_OUTSIDE
+          action == MotionEvent.ACTION_CANCEL ||
+          action == MotionEvent.ACTION_OUTSIDE
         ) {
           startPlay()
         } else {
