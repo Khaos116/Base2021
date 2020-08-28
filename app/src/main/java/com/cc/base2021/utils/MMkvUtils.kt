@@ -83,20 +83,4 @@ class MMkvUtils private constructor() {
     MMKV.defaultMMKV().removeValueForKey(USER_TOKEN)
   }
   //</editor-fold>
-
-  //<editor-fold defaultstate="collapsed" desc="Gank图片信息">
-  fun saveGankImageUrl(key: String, url: String) {
-    MMKV.mmkvWithID("GankImage")
-      .encode(key, url)
-  }
-
-  //判断是否是图片地址
-  private val imgPattern: Pattern = Pattern.compile(".*?(gif|jpeg|png|jpg|bmp)")
-
-  fun getGankImageUrl(key: String): String? {
-    //如果已经是可以下载的图片地址，则直接返回
-    if (key.startsWith("http", true) && imgPattern.matcher(key).matches()) return key
-    return MMKV.mmkvWithID("GankImage").decodeString(key)
-  }
-  //</editor-fold>
 }
