@@ -80,4 +80,7 @@ object Deps {
 
   //SVGA动画 https://github.com/svga/SVGAPlayer-Android/blob/master/readme.zh.md
   const val svga = "com.github.yyued:SVGAPlayer-Android:2.5.9"
+
+  //图片选择器 https://github.com/LuckSiege/PictureSelector
+  const val pic_select = "com.github.yyued:SVGAPlayer-Android:2.5.9"
 }
