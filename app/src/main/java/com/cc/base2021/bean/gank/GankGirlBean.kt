@@ -17,6 +17,5 @@ data class GankGirlBean(
   var stars: Int = 0, //1,
   var title: String?, //"\u7b2c94\u671f",
   var type: String?, //"Girl",
-  var url: String?, //"http://gank.io/images/6b2efa591564475fb8bc32291fb0007c",
   var views: Int = 0 //1995
 )
