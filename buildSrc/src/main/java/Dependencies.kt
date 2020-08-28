@@ -84,5 +84,5 @@ object Deps {
   const val svga = "com.github.yyued:SVGAPlayer-Android:2.5.9"
 
   //图片选择器 https://github.com/LuckSiege/PictureSelector
-  const val pic_select = "com.github.yyued:SVGAPlayer-Android:2.5.9"
+  const val pic_select = "com.github.LuckSiege.PictureSelector:picture_library:v2.5.8"
 }
