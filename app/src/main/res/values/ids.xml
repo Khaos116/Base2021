@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <item name="gank_img_call" type="id"/>
-  <item name="gank_img_url" type="id"/>
+  <item name="suc_img" type="id"/>
 </resources>

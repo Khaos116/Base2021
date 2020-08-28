@@ -25,10 +25,13 @@ fun ImageView.loadImg(url: String?) {
     this.clear()
     this.setImageResource(R.drawable.error_square)
   } else {
-    this.load(url) {
+    if (getTag(R.id.suc_img) == url) return
+    val iv = this
+    iv.load(url) {
       crossfade(true)
       placeholder(R.drawable.loading_square)
       error(R.drawable.error_square)
+      listener { _, _ -> iv.setTag(R.id.suc_img, url) }
     }
   }
 }
@@ -39,10 +42,13 @@ fun ImageView.loadFullScreen(url: String?) {
     this.clear()
     this.setImageResource(R.drawable.error_720p)
   } else {
-    this.load(url) {
+    if (getTag(R.id.suc_img) == url) return
+    val iv = this
+    iv.load(url) {
       crossfade(true)
       placeholder(R.drawable.loading_720p)
       error(R.drawable.error_720p)
+      listener { _, _ -> iv.setTag(R.id.suc_img, url) }
     }
   }
 }
