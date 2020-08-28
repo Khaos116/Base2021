@@ -3,6 +3,7 @@ package com.cc.base.ext
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.ToastUtils
 import timber.log.Timber
+import java.util.regex.Pattern
 
 /**
  * inline报警告暂不处理，否则打印的地方始终是StringExt不好根据log找到相应的类
@@ -37,5 +38,15 @@ inline fun String?.logD() {
 inline fun String?.toast() {
   if (!this.isNullOrBlank() && AppUtils.isAppForeground()) {
     ToastUtils.showShort(this)
+  }
+}
+
+inline fun String?.isNetImageUrl(): Boolean {
+  return if (this.isNullOrEmpty()) {
+    false
+  } else if (!this.startsWith("http", true)) {
+    false
+  } else {
+    Pattern.compile(".*?(gif|jpeg|png|jpg|bmp)").matcher(this).matches()
   }
 }
