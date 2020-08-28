@@ -19,7 +19,7 @@
       android:layout_width="150dp"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal|bottom"
-      android:layout_marginBottom="40dp"
+      android:layout_marginBottom="60dp"
       android:background="@drawable/shape_half_dark_green"
       android:gravity="center"
       android:padding="12dp"
