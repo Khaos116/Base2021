@@ -63,13 +63,13 @@ class HomeFragment : CommFragment() {
       .setIndicatorHeight(2) //indicator高度
       .setShowUnderline(true, Color.parseColor("#eeeeee"), 1f) //设置是否展示underline，默认不展示
       //.setShowDivider(false, getResColor(R.color.c_a28dff), 10, 1) //设置是否展示分隔线，默认不展示
-      .setTabTextSize(15) //文字大小
+      .setTabTextSize(16) //文字大小
       .setTabTextColor(Color.parseColor("#999999")) //文字颜色
       .setTabTypeface(null) //字体
       .setTabTypefaceStyle(Typeface.BOLD) //字体样式：粗体、斜体等
       .setTabBackgroundResId(0) //设置tab的背景
       .setTabPadding(16) //设置tab的左右padding
-      .setSelectedTabTextSize(15) //被选中的文字大小
+      .setSelectedTabTextSize(16) //被选中的文字大小
       .setSelectedTabTextColor(Color.parseColor("#AF2121")) //被选中的文字颜色
       .setSelectedTabTypeface(null)
       .setSelectedTabTypefaceStyle(Typeface.BOLD)
