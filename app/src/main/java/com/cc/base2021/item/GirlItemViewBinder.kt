@@ -33,7 +33,7 @@ class GirlItemViewBinder(
       holder.itemView.setOnClickListener(null)
     } else {
       holder.itemView.pressEffectAlpha(0.95f)
-      holder.itemView.click { onItemClick?.invoke(item, holder.layoutPosition) }
+      holder.itemView.click { onItemClick.invoke(item, holder.layoutPosition) }
     }
     holder.itemView.itemGirlIv.loadGank(item.images?.firstOrNull(), true)
   }
