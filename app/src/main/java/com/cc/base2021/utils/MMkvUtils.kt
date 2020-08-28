@@ -1,6 +1,7 @@
 package com.cc.base2021.utils
 
 import com.tencent.mmkv.MMKV
+import java.util.regex.Pattern
 
 /**
  * Author:case
@@ -89,7 +90,12 @@ class MMkvUtils private constructor() {
       .encode(key, url)
   }
 
+  //判断是否是图片地址
+  private val imgPattern: Pattern = Pattern.compile(".*?(gif|jpeg|png|jpg|bmp)")
+
   fun getGankImageUrl(key: String): String? {
+    //如果已经是可以下载的图片地址，则直接返回
+    if (key.startsWith("http", true) && imgPattern.matcher(key).matches()) return key
     return MMKV.mmkvWithID("GankImage").decodeString(key)
   }
   //</editor-fold>
