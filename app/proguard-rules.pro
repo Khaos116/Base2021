@@ -1,4 +1,5 @@
 #-------1.基本指令-------
+#noinspection ShrinkerUnresolvedReference
 # 设置混淆的压缩比率 0 ~ 7
 -optimizationpasses 5
 # 混淆时不使用大小写混合，混淆后的类名为小写
@@ -109,6 +110,7 @@
 }
 #-------14.避免Parcelable混淆-------
 -keep class * implements android.os.Parcelable {
+  #noinspection ShrinkerUnresolvedReference
   public static final android.os.Parcelable$Creator *;
 }
 #-------15.Serializable接口的子类中指定的某些成员变量和方法混淆-------
@@ -130,6 +132,7 @@
     public boolean *(android.webkit.WebView, java.lang.String);
 }
 -keepclassmembers class * extends android.webkit.webViewClient {
+    #noinspection ShrinkerUnresolvedReference
     public void *(android.webkit.webView, jav.lang.String);
 }
 #############################################
@@ -152,19 +155,80 @@
 #......
 
 #-----------处理第三方依赖库---------
+
 #SVGA https://github.com/svga/SVGAPlayer-Android/blob/master/readme.zh.md
+#====================================================================⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓
 -keep class com.squareup.wire.** { *; }
 -keep class com.opensource.svgaplayer.proto.** { *; }
+#====================================================================⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑
+
 #EventBus https://github.com/JeremyLiao/LiveEventBus
+#====================================================================⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓
 -dontwarn com.jeremyliao.liveeventbus.**
 -keep class com.jeremyliao.liveeventbus.** { *; }
 -keep class androidx.lifecycle.** { *; }
 -keep class androidx.arch.core.** { *; }
-#状态栏适配 https://github.com/gyf-dev/ImmersionBar
+#====================================================================⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑
+
+#ImmersionBar https://github.com/gyf-dev/ImmersionBar
+#====================================================================⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓
 -keep class com.gyf.immersionbar.* {*;}
 -dontwarn com.gyf.immersionbar.**
+#====================================================================⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑
 
+#Rxhttp https://github.com/liujingxing/okhttp-RxHttp
+#====================================================================⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓
 # okhttp 4.7.0及以上版本混淆规则
 -keepclassmembers class okhttp3.internal.Util {
     public static java.lang.String userAgent;
 }
+# okhttp 4.7.0以下版本混淆规则
+-keepclassmembers class okhttp3.internal.Version {
+    # 4.0.0<=version<4.7.0
+    public static java.lang.String userAgent;
+    # version<4.0.0
+    public static java.lang.String userAgent();
+}
+# okhttp 4.0.0以下版本混淆规则
+-keepclassmembers class okhttp3.internal.http.StatusLine {
+    public static okhttp3.internal.http.StatusLine parse(java.lang.String);
+}
+#====================================================================⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑
+
+#PictureSelector https://github.com/LuckSiege/PictureSelector/blob/master/README_CN.md
+#====================================================================⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓
+#PictureSelector 2.0
+-keep class com.luck.picture.lib.** { *; }
+#Ucrop
+-dontwarn com.yalantis.ucrop**
+-keep class com.yalantis.ucrop** { *; }
+-keep interface com.yalantis.ucrop** { *; }
+#Okio
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+#====================================================================⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑
+
+#AgentWeb https://github.com/Justson/AgentWeb
+#====================================================================⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓
+-keep class com.just.agentweb.** {
+    *;
+}
+-dontwarn com.just.agentweb.**
+#====================================================================⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑
+
+#====================================================================⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓
+#====================================================================⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑
+
+#====================================================================⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓
+#====================================================================⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑
+
+#====================================================================⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓
+#====================================================================⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑
+
+#====================================================================⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓
+#====================================================================⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑
+
+#====================================================================⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓
+#====================================================================⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑
+
+#====================================================================⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓
+#====================================================================⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑
