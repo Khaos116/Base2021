@@ -118,10 +118,10 @@ class GirlFragment : CommFragment() {
 
   //<editor-fold defaultstate="collapsed" desc="监听Item点击事件">
   private var itemClick: ((bean: GankGirlBean, position: Int) -> Unit)? = { item, _ ->
-    //获取到图片列表
-    multiTypeAdapter.items.filterIsInstance<GankGirlBean>().mapNotNull { it.url }.let { list -> //取对应类型且图片地址不为空的数据
+    //获取到图片列表(取对应类型且第一张图片地址不为空的数据)
+    multiTypeAdapter.items.filterIsInstance<GankGirlBean>().mapNotNull { it.images?.firstOrNull() }.let { list ->
       val tempList = mutableListOf<LocalMedia>()
-      val position = if (item.url.isNullOrBlank()) 0 else list.indexOf(item.url ?: "")
+      val position = if (item.images?.firstOrNull().isNullOrBlank()) 0 else list.indexOf(item.images?.firstOrNull() ?: "")
       list.forEach { s -> tempList.add(LocalMedia().also { it.path = s }) }
       //开始预览
       PictureSelector.create(this)
