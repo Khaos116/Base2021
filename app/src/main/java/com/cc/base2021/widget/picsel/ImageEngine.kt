@@ -45,18 +45,15 @@ class ImageEngine : com.luck.picture.lib.engine.ImageEngine {
           imageView.visible()
           imageView.clear()
           imageView.setImageResource(R.drawable.loading_720p)
-          callback?.onShowLoading()
         },
         onSuccess = { resource ->
           loadNetImage(resource.toBitmap(), imageView, longImageView)
-          callback?.onHideLoading()
         },
         onError = {
           longImageView?.gone()
           imageView.visible()
           imageView.clear()
           imageView.setImageResource(R.drawable.error_720p)
-          callback?.onHideLoading()
         }
       ).build()
     )
