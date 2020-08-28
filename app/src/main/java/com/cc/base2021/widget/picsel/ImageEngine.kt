@@ -3,21 +3,17 @@ package com.cc.base2021.widget.picsel
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.PointF
-import android.net.Uri
 import android.view.View
 import android.widget.ImageView
 import androidx.core.graphics.drawable.toBitmap
 import coil.Coil
 import coil.request.ImageRequest
-import coil.util.CoilUtils
 import com.blankj.utilcode.util.Utils
 import com.cc.base2021.ext.loadFullScreen
 import com.cc.base2021.ext.loadImg
 import com.luck.picture.lib.listener.OnImageCompleteCallback
 import com.luck.picture.lib.tools.MediaUtils
 import com.luck.picture.lib.widget.longimage.*
-import okhttp3.Cache
-import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 /**
  * Author:case
@@ -38,16 +34,8 @@ class ImageEngine : com.luck.picture.lib.engine.ImageEngine {
     longImageView: SubsamplingScaleImageView?,
     callback: OnImageCompleteCallback?
   ) {
-    var newUrl = url
-    //先判断是否有缓存
-    url.toHttpUrlOrNull()?.let { u ->
-      val f = CoilUtils.createDefaultCache(Utils.getApp()).directory.listFiles().orEmpty().find { it.name.contains(Cache.key(u)) }
-      if (f?.exists() == true) { //文件存在直接加载
-        newUrl = Uri.fromFile(f).toString()
-      }
-    }
     Coil.imageLoader(Utils.getApp()).enqueue(
-      ImageRequest.Builder(Utils.getApp()).data(newUrl).target(
+      ImageRequest.Builder(Utils.getApp()).data(url).target(
         onStart = {
           callback?.onShowLoading()
         },
