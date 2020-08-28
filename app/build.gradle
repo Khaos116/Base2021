@@ -165,6 +165,7 @@ dependencies {
   implementation Deps.constraint
   implementation Deps.startup
   implementation Deps.utilcodex
+  implementation Deps.proguardx
   implementation Deps.svga
   implementation Deps.immersionbar
   implementation Deps.immersionbar_ktx
@@ -183,4 +184,5 @@ dependencies {
   implementation Deps.rxhttp
   kapt Deps.rxhttp_kapt
   implementation Deps.rxlife
+  implementation Deps.pic_select
 }

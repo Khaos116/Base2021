@@ -31,6 +31,8 @@ object Deps {
 
   //工具类 https://github.com/Blankj/AndroidUtilCode/blob/master/lib/utilcode/README-CN.md
   const val utilcodex = "com.blankj:utilcodex:1.29.0"
+  //防止混淆 https://github.com/Blankj/FreeProGuard
+  const val proguardx = "com.blankj:free-proguard:1.0.2"
 
   //log打印 https://github.com/JakeWharton/timber
   const val timber = "com.jakewharton.timber:timber:4.7.1"
