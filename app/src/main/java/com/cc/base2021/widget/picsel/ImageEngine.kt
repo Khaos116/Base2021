@@ -7,8 +7,12 @@ import android.view.View
 import android.widget.ImageView
 import androidx.core.graphics.drawable.toBitmap
 import coil.Coil
+import coil.clear
 import coil.request.ImageRequest
 import com.blankj.utilcode.util.Utils
+import com.cc.base.ext.gone
+import com.cc.base.ext.visible
+import com.cc.base2021.R
 import com.cc.base2021.ext.loadFullScreen
 import com.cc.base2021.ext.loadImg
 import com.luck.picture.lib.listener.OnImageCompleteCallback
@@ -37,6 +41,10 @@ class ImageEngine : com.luck.picture.lib.engine.ImageEngine {
     Coil.imageLoader(Utils.getApp()).enqueue(
       ImageRequest.Builder(Utils.getApp()).data(url).target(
         onStart = {
+          longImageView?.gone()
+          imageView.visible()
+          imageView.clear()
+          imageView.setImageResource(R.drawable.loading_720p)
           callback?.onShowLoading()
         },
         onSuccess = { resource ->
@@ -44,6 +52,10 @@ class ImageEngine : com.luck.picture.lib.engine.ImageEngine {
           callback?.onHideLoading()
         },
         onError = {
+          longImageView?.gone()
+          imageView.visible()
+          imageView.clear()
+          imageView.setImageResource(R.drawable.error_720p)
           callback?.onHideLoading()
         }
       ).build()
