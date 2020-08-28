@@ -1,10 +1,8 @@
 package com.cc.base2021.ext
 
 import android.widget.ImageView
-import coil.Coil
-import coil.api.clear
-import coil.api.load
-import coil.request.LoadRequest
+import coil.*
+import coil.request.ImageRequest
 import coil.util.CoilUtils
 import com.blankj.utilcode.util.Utils
 import com.cc.base.ext.*
@@ -60,8 +58,8 @@ fun ImageView.loadCacheFileFullScreen(url: String?) {
       if (f?.exists() == true) { //文件存在直接加载
         this.load(f)
       } else { //文件不存在，进行下载
-        Coil.imageLoader(Utils.getApp()).execute(
-          LoadRequest.Builder(Utils.getApp()).data(u).target(
+        Coil.imageLoader(Utils.getApp()).enqueue(
+          ImageRequest.Builder(Utils.getApp()).data(u).target(
             onStart = {
               "缓存图片开始下载".logE()
             },
