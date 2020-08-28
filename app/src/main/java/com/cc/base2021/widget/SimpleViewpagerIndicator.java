@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import com.cc.base.ext.ContextExtKt;
+import com.cc.base.ext.StringExtKt;
 
 /**
  * description: 自定义ViewPager指示器.
@@ -230,7 +231,7 @@ public class SimpleViewpagerIndicator extends HorizontalScrollView {
     tab.setPadding(tabPadding, 0, tabPadding, 0);
     tab.setOnClickListener(v -> {
       if (position == mNoClickPosition) {
-        ContextExtKt.toast(tab.getContext(), mNoClickMsg);
+        StringExtKt.toast(mNoClickMsg);
       } else {
         viewPager.setCurrentItem(position);
       }
