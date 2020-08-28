@@ -87,7 +87,7 @@ class GirlFragment : CommFragment() {
           .themeStyle(R.style.picture_default_style)
           .isNotPreviewDownload(true)
           .imageEngine(ImageEngine())
-          .openExternalPreview(1, mutableListOf(temp))
+          .openExternalPreview(0, mutableListOf(temp))
       }
     })
     //监听加载结果
