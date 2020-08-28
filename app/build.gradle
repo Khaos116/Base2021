@@ -177,7 +177,7 @@ dependencies {
   implementation Deps.gson
   implementation Deps.mmkv
   implementation Deps.timber
-  implementation Deps.permissionx
+  implementation Deps.permissions
   implementation Deps.coil
   implementation Deps.multitype
   implementation Deps.rxhttp
