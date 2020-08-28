@@ -7,7 +7,7 @@
   <solid android:color="@color/style_Accent"/>
 
   <size
-      android:width="7dp"
-      android:height="7dp"
+      android:width="40dp"
+      android:height="40dp"
       />
 </shape>
