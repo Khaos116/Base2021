@@ -12,19 +12,37 @@ import com.cc.base2021.R
 
 class DotsIndicator : LinearLayout {
 
-  private var selection: Int = 0
-  private var dotsCount: Int = 0
-  var dotSize: Int = SizeUtils.dp2px(7f)
-  var lastDotSize: Int = SizeUtils.dp2px(14f)
-  var marginsBetweenDots: Int = SizeUtils.dp2px(8f)
+  //<editor-fold defaultstate="collapsed" desc="外部可设置的变量">
+  //选中后的缩放比
   var selectedDotScaleFactor: Float = 1.4f
+
+  //正常圆点大小
+  var dotSize: Int = SizeUtils.dp2px(7f)
+
+  //最后一个图标大小
+  var lastDotSize: Int = SizeUtils.dp2px(14f)
+
+  //选中的圆点
   var selectedDotResource: Int = R.drawable.circle_accent
+
+  //未选中的圆点
   var unselectedDotResource: Int = R.drawable.circle_primary
-  var firstSelectedDotResource: Int = R.drawable.ic_home_white_24dp
-  var firstUnselectedDotResource: Int = R.drawable.ic_home_gray_24dp
-  var needSpecial: Boolean = false//是否需要特殊处理最后一个
+
+  //最后一个选中的图标
+  var lastSelDotResource: Int = R.drawable.ic_home_light_40dp
+
+  //最后一个未选中的图标
+  var lastUnselDotResource: Int = R.drawable.ic_home_dark_40dp
+
+  //是否需要最后一个图标为不同图标
+  var needSpecial: Boolean = false //是否需要特殊处理最后一个
 
   var onSelectListener: ((position: Int) -> Unit)? = null
+  //</editor-fold>
+
+  private var selection: Int = 0
+  private var dotsCount: Int = 0
+  private var marginsBetweenDots: Int = SizeUtils.dp2px(4f)
 
   constructor(context: Context?) : super(context) {
     layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
@@ -38,48 +56,37 @@ class DotsIndicator : LinearLayout {
     layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
     gravity = Gravity.CENTER
 
-    val ta = getContext().obtainStyledAttributes(
-        attrs,
-        R.styleable.DotsIndicator, 0, 0
-    )
+    val ta = getContext().obtainStyledAttributes(attrs, R.styleable.DotsIndicator, 0, 0)
     dotsCount = ta.getInt(R.styleable.DotsIndicator_dots_count, 3)
 
-    selectedDotScaleFactor =
-      ta.getFloat(R.styleable.DotsIndicator_selected_dot_scale_factor, 1.4f)
+    selectedDotScaleFactor = ta.getFloat(R.styleable.DotsIndicator_selected_dot_scale_factor, 1.4f)
 
-    selectedDotResource =
-      ta.getResourceId(R.styleable.DotsIndicator_selected_dot_resource, selectedDotResource)
+    selectedDotResource = ta.getResourceId(R.styleable.DotsIndicator_selected_dot_resource, selectedDotResource)
 
-    unselectedDotResource = ta.getResourceId(
-        R.styleable.DotsIndicator_unselected_dot_resource,
-        unselectedDotResource
-    )
+    unselectedDotResource = ta.getResourceId(R.styleable.DotsIndicator_unselected_dot_resource, unselectedDotResource)
 
-    firstSelectedDotResource = ta.getResourceId(
-        R.styleable.DotsIndicator_first_selected_dot_resource,
-        firstSelectedDotResource
-    )
+    lastSelDotResource = ta.getResourceId(R.styleable.DotsIndicator_last_selected_dot_resource, lastSelDotResource)
 
-    firstUnselectedDotResource = ta.getResourceId(
-        R.styleable.DotsIndicator_first_unselected_dot_resource,
-        firstUnselectedDotResource
-    )
+    lastUnselDotResource = ta.getResourceId(R.styleable.DotsIndicator_last_unselected_dot_resource, lastUnselDotResource)
 
-    dotSize =
-      ta.getDimensionPixelSize(R.styleable.DotsIndicator_dot_size, dotSize)
+    dotSize = ta.getDimensionPixelSize(R.styleable.DotsIndicator_dot_size, dotSize)
 
-    lastDotSize =
-      ta.getDimensionPixelSize(R.styleable.DotsIndicator_last_dot_size, lastDotSize)
+    lastDotSize = ta.getDimensionPixelSize(R.styleable.DotsIndicator_last_dot_size, lastDotSize)
 
-    marginsBetweenDots =
-      ta.getDimensionPixelSize(R.styleable.DotsIndicator_margins_between_dots, marginsBetweenDots)
-
+    marginsBetweenDots = ta.getDimensionPixelSize(R.styleable.DotsIndicator_margins_between_dots, marginsBetweenDots)
     initDots(dotsCount)
     ta.recycle()
   }
 
+  init {
+    //采用放大的模式会导致图片模糊，所以一开始把图标设大，显示的时候缩小，然后选中再放大，这样就不会模糊了
+    dotSize = (dotSize * selectedDotScaleFactor).toInt()
+    lastDotSize = (lastDotSize * selectedDotScaleFactor).toInt()
+  }
+
   //当不需要特殊的时候需要设置间距(+1是为了防止放大显示不全，不能去除小数，只能往上加)
   private val marginNoSpecial = (dotSize * (selectedDotScaleFactor - 1) / 2f).toInt() + 1
+
   //需要特殊的时候需要设置间距(+1是为了防止放大显示不全，不能去除小数，只能往上加)
   private val marginSpecial = (lastDotSize * (selectedDotScaleFactor - 1) / 2f).toInt() + 1
   fun initDots(dotsCount: Int) {
@@ -114,9 +121,9 @@ class DotsIndicator : LinearLayout {
 
       if (i == dotsCount - 1 && needSpecial) {
         if (selection == dotsCount - 1) {
-          dot.setImageResource(firstSelectedDotResource)
+          dot.setImageResource(lastSelDotResource)
         } else {
-          dot.setImageResource(firstUnselectedDotResource)
+          dot.setImageResource(lastUnselDotResource)
         }
       } else {
         if (selection == i) {
@@ -127,8 +134,11 @@ class DotsIndicator : LinearLayout {
       }
 
       if (selection == i) {
-        dot.scaleX = selectedDotScaleFactor
-        dot.scaleY = selectedDotScaleFactor
+        dot.scaleX = 1f
+        dot.scaleY = 1f
+      } else {
+        dot.scaleX = 1f / selectedDotScaleFactor
+        dot.scaleY = 1f / selectedDotScaleFactor
       }
 
       dot.setOnClickListener {
@@ -146,8 +156,8 @@ class DotsIndicator : LinearLayout {
     val newSelection: ImageView = findViewById(position)
     val selectedDot: ImageView = findViewWithTag(selection)
 
-    val increaseAnimator = ValueAnimator.ofFloat(1f, selectedDotScaleFactor)
-    val decreaseAnimator = ValueAnimator.ofFloat(selectedDotScaleFactor, 1f)
+    val increaseAnimator = ValueAnimator.ofFloat(1f / selectedDotScaleFactor, 1f) //变大
+    val decreaseAnimator = ValueAnimator.ofFloat(1f, 1f / selectedDotScaleFactor) //缩小
 
     increaseAnimator.addUpdateListener { animator ->
       val value: Float = animator.animatedValue as Float
@@ -168,27 +178,25 @@ class DotsIndicator : LinearLayout {
       override fun onAnimationRepeat(animation: Animator?) {}
 
       override fun onAnimationEnd(animation: Animator?) {
-        newSelection.scaleX = selectedDotScaleFactor
-        newSelection.scaleY = selectedDotScaleFactor
+        newSelection.scaleX = 1f
+        newSelection.scaleY = 1f
 
-        selectedDot.scaleX = 1f
-        selectedDot.scaleY = 1f
+        selectedDot.scaleX = 1f / selectedDotScaleFactor
+        selectedDot.scaleY = 1f / selectedDotScaleFactor
       }
 
       override fun onAnimationCancel(animation: Animator?) {}
 
       override fun onAnimationStart(animation: Animator?) {}
-
     }
 
     increaseAnimator.addListener(animationListener)
     decreaseAnimator.addListener(animationListener)
-
     newSelection.setImageResource(
-        if (newSelection.tag == dotsCount - 1 && needSpecial) firstSelectedDotResource else selectedDotResource
+      if (newSelection.tag == dotsCount - 1 && needSpecial) lastSelDotResource else selectedDotResource
     )
     selectedDot.setImageResource(
-        if (selection == dotsCount - 1 && needSpecial) firstUnselectedDotResource else unselectedDotResource
+      if (selection == dotsCount - 1 && needSpecial) lastUnselDotResource else unselectedDotResource
     )
     selection = newSelection.tag as Int
   }
