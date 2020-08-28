@@ -17,7 +17,10 @@ import com.cc.base2021.comm.CommFragment
 import com.cc.base2021.component.main.viewmodel.GankViewModel
 import com.cc.base2021.component.web.WebActivity
 import com.cc.base2021.item.*
+import com.cc.base2021.widget.picsel.ImageEngine
 import com.drakeet.multitype.MultiTypeAdapter
+import com.luck.picture.lib.PictureSelector
+import com.luck.picture.lib.entity.LocalMedia
 import kotlinx.android.synthetic.main.fragment_gank.androidRecycler
 
 /**
@@ -135,10 +138,16 @@ class GankFragment : CommFragment() {
   }
 
   //九宫图片点击事件
-  private var onItemImgClick: ((url: String, position: Int, iv: ImageView, list: MutableList<String>) -> Unit)? =
-    { url, position, iv, list ->
-      "position=${position},url=${url}".toast()
-    }
+  private var onItemImgClick: ((url: String, p: Int, iv: ImageView, list: MutableList<String>) -> Unit)? = { _, p, _, list ->
+    val tempList = mutableListOf<LocalMedia>()
+    list.forEach { s -> tempList.add(LocalMedia().also { it.path = s }) }
+    //开始预览
+    PictureSelector.create(this)
+      .themeStyle(R.style.picture_default_style)
+      .isNotPreviewDownload(true)
+      .imageEngine(ImageEngine())
+      .openExternalPreview(p, tempList)
+  }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="生命周期">
