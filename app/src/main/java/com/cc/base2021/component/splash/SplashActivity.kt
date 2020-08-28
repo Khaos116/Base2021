@@ -1,6 +1,5 @@
 package com.cc.base2021.component.splash
 
-import android.Manifest
 import com.blankj.utilcode.util.TimeUtils
 import com.cc.base.ext.*
 import com.cc.base.utils.PermissionUtils
@@ -13,7 +12,7 @@ import com.cc.base2021.ext.loadCacheFileFullScreen
 import com.cc.base2021.utils.MMkvUtils
 import com.cc.base2021.utils.RxUtils
 import com.gyf.immersionbar.ktx.immersionBar
-import com.permissionx.guolindev.PermissionX
+import com.hjq.permissions.*
 import io.reactivex.Flowable
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_splash.splashIv
@@ -65,17 +64,30 @@ class SplashActivity : CommActivity() {
       countDown()
       //请求SD卡权限
       if (!hasSDPermission) {
-        PermissionX.init(this)
-          .permissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-          .request { _, _, _ ->
-            if (PermissionUtils.instance.hasSDPermission()) {
-              hasSDPermission = true
-              goNextPage()
-            } else {
-              mActivity.toast("必须要给予SD卡权限才能使用")
+        XXPermissions.with(this)
+          .permission(Permission.MANAGE_EXTERNAL_STORAGE)
+          .request(object : OnPermission {
+            override fun hasPermission(granted: MutableList<String>, all: Boolean) {
+              if (PermissionUtils.instance.hasSDPermission()) {
+                hasSDPermission = true
+                goNextPage()
+              } else {
+                "必须要给予SD卡权限才能使用".toast()
+                finish()
+              }
+            }
+
+            override fun noPermission(denied: MutableList<String>, quick: Boolean) {
+              if (quick) {
+                "被永久拒绝授权，请手动授予存储权限".toast()
+                // 如果是被永久拒绝就跳转到应用权限系统设置页面
+                XXPermissions.startPermissionActivity(mActivity, denied);
+              } else {
+                "必须要给予SD卡权限才能使用".toast()
+              }
               finish()
             }
-          }
+          })
       }
     }
   }
