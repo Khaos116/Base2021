@@ -6,14 +6,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.billy.android.swipe.SmartSwipeRefresh
 import com.billy.android.swipe.SmartSwipeRefresh.SmartSwipeRefreshDataLoader
 import com.billy.android.swipe.consumer.SlidingConsumer
-import com.blankj.utilcode.util.StringUtils
 import com.cc.base.ext.stopInertiaRolling
 import com.cc.base2021.R
 import com.cc.base2021.bean.local.*
 import com.cc.base2021.comm.CommFragment
 import com.cc.base2021.component.main.viewmodel.GirlViewModel
 import com.cc.base2021.item.*
+import com.cc.base2021.utils.MMkvUtils
+import com.cc.base2021.widget.picsel.ImageEngine
 import com.drakeet.multitype.MultiTypeAdapter
+import com.luck.picture.lib.PictureSelector
+import com.luck.picture.lib.entity.LocalMedia
 import kotlinx.android.synthetic.main.fragment_girl.girlRecycler
 
 /**
@@ -77,7 +80,15 @@ class GirlFragment : CommFragment() {
     multiTypeAdapter.register(LoadingItemViewBinder())
     multiTypeAdapter.register(DividerItemViewBinder())
     multiTypeAdapter.register(EmptyErrorItemViewBinder() { mViewModel.refresh() })
-    multiTypeAdapter.register(GirlItemViewBinder())
+    multiTypeAdapter.register(GirlItemViewBinder() { item, position ->
+      val temp = LocalMedia()
+      temp.path = MMkvUtils.instance.getGankImageUrl(item.url ?: "") ?: item.url ?: ""
+      PictureSelector.create(this)
+        .themeStyle(R.style.picture_default_style)
+        .isNotPreviewDownload(true)
+        .imageEngine(ImageEngine())
+        .openExternalPreview(position, mutableListOf(temp));
+    })
     //监听加载结果
     mViewModel.girlState.observe(this, Observer { list ->
       //处理下拉和上拉
