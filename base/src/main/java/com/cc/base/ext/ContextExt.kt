@@ -53,8 +53,3 @@ fun Context.inflate(
 fun Context.toast(@StringRes resId: Int) {
   StringUtils.getString(resId).toast()
 }
-
-//吐司
-fun Context.toast(msg: String?) {
-  msg?.toast()
-}
