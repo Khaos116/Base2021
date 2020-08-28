@@ -1,7 +1,6 @@
 package com.cc.base2021.utils
 
 import com.tencent.mmkv.MMKV
-import java.util.regex.Pattern
 
 /**
  * Author:case
@@ -81,6 +80,17 @@ class MMkvUtils private constructor() {
   fun clearUserInfo() {
     MMKV.defaultMMKV().removeValueForKey(USER_UID)
     MMKV.defaultMMKV().removeValueForKey(USER_TOKEN)
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="Gank图片信息">
+  fun saveGankImageUrl(key: String, url: String) {
+    MMKV.mmkvWithID("GankImage")
+      .encode(key, url)
+  }
+
+  fun getGankImageUrl(key: String): String? {
+    return MMKV.mmkvWithID("GankImage").decodeString(key)
   }
   //</editor-fold>
 }
