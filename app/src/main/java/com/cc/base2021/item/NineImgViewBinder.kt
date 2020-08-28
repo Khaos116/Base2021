@@ -5,7 +5,6 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.cc.base.ext.*
 import com.cc.base2021.R
-import com.cc.base2021.ext.loadGank
 import com.cc.base2021.ext.loadImg
 import com.cc.base2021.item.NineImgViewBinder.ViewHolder
 import com.drakeet.multitype.ItemViewBinder
@@ -28,11 +27,7 @@ class NineImgViewBinder(
 
   //<editor-fold defaultstate="collapsed" desc="数据填充">
   override fun onBindViewHolder(holder: ViewHolder, item: String) {
-    if (item.contains("gank.io")) {
-      holder.itemView.itemNineImgTv.loadGank(item)
-    } else {
-      holder.itemView.itemNineImgTv.loadImg(item)
-    }
+    holder.itemView.itemNineImgTv.loadImg(item)
     if (onItemClick != null) {
       holder.itemView.pressEffectAlpha(0.95f)
       holder.itemView.click { onItemClick.invoke(item, holder.layoutPosition, holder.itemView.itemNineImgTv) }

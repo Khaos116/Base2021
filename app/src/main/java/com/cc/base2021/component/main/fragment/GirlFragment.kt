@@ -12,7 +12,6 @@ import com.cc.base2021.bean.local.*
 import com.cc.base2021.comm.CommFragment
 import com.cc.base2021.component.main.viewmodel.GirlViewModel
 import com.cc.base2021.item.*
-import com.cc.base2021.utils.MMkvUtils
 import com.cc.base2021.widget.picsel.ImageEngine
 import com.drakeet.multitype.MultiTypeAdapter
 import com.luck.picture.lib.PictureSelector
@@ -80,14 +79,16 @@ class GirlFragment : CommFragment() {
     multiTypeAdapter.register(LoadingItemViewBinder())
     multiTypeAdapter.register(DividerItemViewBinder())
     multiTypeAdapter.register(EmptyErrorItemViewBinder() { mViewModel.refresh() })
-    multiTypeAdapter.register(GirlItemViewBinder() { item, position ->
-      val temp = LocalMedia()
-      temp.path = MMkvUtils.instance.getGankImageUrl(item.url ?: "") ?: item.url ?: ""
-      PictureSelector.create(this)
-        .themeStyle(R.style.picture_default_style)
-        .isNotPreviewDownload(true)
-        .imageEngine(ImageEngine())
-        .openExternalPreview(1, mutableListOf(temp));
+    multiTypeAdapter.register(GirlItemViewBinder() { item, _ ->
+      item.url?.let { u ->
+        val temp = LocalMedia()
+        temp.path = u
+        PictureSelector.create(this)
+          .themeStyle(R.style.picture_default_style)
+          .isNotPreviewDownload(true)
+          .imageEngine(ImageEngine())
+          .openExternalPreview(1, mutableListOf(temp))
+      }
     })
     //监听加载结果
     mViewModel.girlState.observe(this, Observer { list ->
