@@ -32,7 +32,6 @@ class WanRepository private constructor() {
       .setCacheValidTime(TimeConstants.DAY.toLong()) //设置缓存时长
       .setCacheMode(if (readCache) CacheMode.REQUEST_NETWORK_FAILED_READ_CACHE else CacheMode.ONLY_NETWORK) //请求数据失败读取缓存
       .toResponseWan<MutableList<BannerBean>>()
-      .delay(500L)
       .await()
   }
 

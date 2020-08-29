@@ -44,7 +44,6 @@ class GankRepository private constructor() {
       .setCacheValidTime(TimeConstants.DAY.toLong()) //设置缓存时长
       .setCacheMode(if (readCache) CacheMode.REQUEST_NETWORK_FAILED_READ_CACHE else CacheMode.ONLY_NETWORK) //请求数据失败读取缓存
       .toResponseGank<MutableList<GankAndroidBean>>()
-      .delay(if (page == 1) 500L else 0L) //为了防止请求太快
       .await()
   }
   //</editor-fold>
@@ -61,7 +60,6 @@ class GankRepository private constructor() {
       .setCacheValidTime(TimeConstants.DAY.toLong()) //设置缓存时长
       .setCacheMode(if (readCache) CacheMode.REQUEST_NETWORK_FAILED_READ_CACHE else CacheMode.ONLY_NETWORK) //请求数据失败读取缓存
       .toResponseGank<MutableList<GankGirlBean>>()
-      .delay(if (page == 1) 500L else 0L) //为了防止请求太快
       .await()
   }
   //</editor-fold>
