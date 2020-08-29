@@ -3,7 +3,7 @@ package com.cc.base2021.item
 import android.view.*
 import androidx.recyclerview.widget.RecyclerView
 import com.cc.base.ext.*
-import com.cc.base2021.R.layout
+import com.cc.base2021.R
 import com.cc.base2021.bean.gank.GankGirlBean
 import com.cc.base2021.ext.loadFullScreen
 import com.cc.base2021.item.GirlItemViewBinder.ViewHolder
@@ -21,7 +21,7 @@ class GirlItemViewBinder(
 
   //<editor-fold defaultstate="collapsed" desc="XML">
   override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): ViewHolder {
-    val root = inflater.inflate(layout.item_girl, parent, false)
+    val root = inflater.inflate(R.layout.item_girl, parent, false)
     return ViewHolder(root)
   }
   //</editor-fold>
