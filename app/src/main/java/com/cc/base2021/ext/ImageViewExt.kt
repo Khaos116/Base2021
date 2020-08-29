@@ -7,20 +7,16 @@ import coil.util.CoilUtils
 import com.blankj.utilcode.util.Utils
 import com.cc.base.ext.*
 import com.cc.base2021.R
-import com.cc.base2021.config.RxHttpConfig
-import com.cc.base2021.utils.MMkvUtils
-import kotlinx.coroutines.*
 import okhttp3.*
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
-import java.io.IOException
 
 /**
  * Author:case
  * Date:2020/8/12
  * Time:18:28
  */
-//普通加载
-fun ImageView.loadImg(url: String?) {
+//正方形图片加载
+inline fun ImageView.loadImgSquare(url: String?) {
   if (url.isNullOrBlank()) {
     this.clear()
     this.setImageResource(R.drawable.error_square)
@@ -36,18 +32,35 @@ fun ImageView.loadImg(url: String?) {
   }
 }
 
-//全屏加载
-fun ImageView.loadFullScreen(url: String?) {
+//横向图片加载
+fun ImageView.loadImgHorizontal(url: String?) {
   if (url.isNullOrBlank()) {
     this.clear()
-    this.setImageResource(R.drawable.error_720p)
+    this.setImageResource(R.drawable.error_720p_horizontal)
   } else {
     if (getTag(R.id.suc_img) == url) return
     val iv = this
     iv.load(url) {
       crossfade(true)
-      placeholder(R.drawable.loading_720p)
-      error(R.drawable.error_720p)
+      placeholder(R.drawable.loading_720p_horizontal)
+      error(R.drawable.error_720p_horizontal)
+      listener { _, _ -> iv.setTag(R.id.suc_img, url) }
+    }
+  }
+}
+
+//竖向图片加载
+fun ImageView.loadImgVerticalScreen(url: String?) {
+  if (url.isNullOrBlank()) {
+    this.clear()
+    this.setImageResource(R.drawable.error_720p_vertical)
+  } else {
+    if (getTag(R.id.suc_img) == url) return
+    val iv = this
+    iv.load(url) {
+      crossfade(true)
+      placeholder(R.drawable.loading_720p_vertical)
+      error(R.drawable.error_720p_vertical)
       listener { _, _ -> iv.setTag(R.id.suc_img, url) }
     }
   }
@@ -57,7 +70,7 @@ fun ImageView.loadFullScreen(url: String?) {
 fun ImageView.loadCacheFileFullScreen(url: String?) {
   if (url.isNullOrBlank()) {
     this.clear()
-    this.setImageResource(R.drawable.error_720p)
+    this.setImageResource(R.drawable.error_720p_vertical)
   } else {
     url.toHttpUrlOrNull()?.let { u ->
       val f = CoilUtils.createDefaultCache(Utils.getApp()).directory.listFiles().orEmpty().find { it.name.contains(Cache.key(u)) }

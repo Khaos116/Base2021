@@ -13,8 +13,8 @@ import com.blankj.utilcode.util.Utils
 import com.cc.base.ext.gone
 import com.cc.base.ext.visible
 import com.cc.base2021.R
-import com.cc.base2021.ext.loadFullScreen
-import com.cc.base2021.ext.loadImg
+import com.cc.base2021.ext.loadImgVerticalScreen
+import com.cc.base2021.ext.loadImgSquare
 import com.luck.picture.lib.listener.OnImageCompleteCallback
 import com.luck.picture.lib.tools.MediaUtils
 import com.luck.picture.lib.widget.longimage.*
@@ -27,7 +27,7 @@ import com.luck.picture.lib.widget.longimage.*
 class ImageEngine : com.luck.picture.lib.engine.ImageEngine {
   //加载图片
   override fun loadImage(context: Context, url: String, imageView: ImageView) {
-    imageView.loadFullScreen(url)
+    imageView.loadImgVerticalScreen(url)
   }
 
   //加载网络图片适配长图方案(此方法只有加载网络图片才会回调)
@@ -44,7 +44,7 @@ class ImageEngine : com.luck.picture.lib.engine.ImageEngine {
           longImageView?.gone()
           imageView.visible()
           imageView.clear()
-          imageView.setImageResource(R.drawable.loading_720p)
+          imageView.setImageResource(R.drawable.loading_720p_vertical)
         },
         onSuccess = { resource ->
           loadNetImage(resource.toBitmap(), imageView, longImageView)
@@ -53,7 +53,7 @@ class ImageEngine : com.luck.picture.lib.engine.ImageEngine {
           longImageView?.gone()
           imageView.visible()
           imageView.clear()
-          imageView.setImageResource(R.drawable.error_720p)
+          imageView.setImageResource(R.drawable.error_720p_vertical)
         }
       ).build()
     )
@@ -88,7 +88,7 @@ class ImageEngine : com.luck.picture.lib.engine.ImageEngine {
 
   //加载相册目录
   override fun loadFolderImage(context: Context, url: String, imageView: ImageView) {
-    imageView.loadImg(url)
+    imageView.loadImgSquare(url)
   }
 
   //加载gif
@@ -97,6 +97,6 @@ class ImageEngine : com.luck.picture.lib.engine.ImageEngine {
 
   //加载图片列表图片
   override fun loadGridImage(context: Context, url: String, imageView: ImageView) {
-    imageView.loadImg(url)
+    imageView.loadImgSquare(url)
   }
 }

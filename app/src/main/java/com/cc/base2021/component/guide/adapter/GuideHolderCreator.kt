@@ -6,7 +6,7 @@ import android.widget.TextView
 import com.cc.base.ext.*
 import com.cc.base2021.R
 import com.cc.base2021.component.main.MainActivity
-import com.cc.base2021.ext.loadFullScreen
+import com.cc.base2021.ext.loadImgVerticalScreen
 import com.cc.base2021.utils.MMkvUtils
 import com.cc.base2021.widget.discretescrollview.holder.DiscreteHolder
 import com.cc.base2021.widget.discretescrollview.holder.DiscreteHolderCreator
@@ -37,7 +37,7 @@ class GuideHolder(view: View) : DiscreteHolder<String>(view) {
     position: Int,
     count: Int
   ) {
-    this.imageView?.loadFullScreen(data)
+    this.imageView?.loadImgVerticalScreen(data)
     this.textView?.visibleGone(position == count - 1)
     this.textView?.let { view ->
       view.visibleGone(position == count - 1)
