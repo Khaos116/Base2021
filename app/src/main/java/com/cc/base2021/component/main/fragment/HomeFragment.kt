@@ -45,11 +45,11 @@ class HomeFragment private constructor() : CommFragment() {
     if (titles.isEmpty()) {
       titles.add("Girl")
       titles.add("Article")
-      titles.add("Time")
+      titles.add("Wan")
       fragments = mutableListOf(
         GirlFragment.newInstance(),
         GankFragment.newInstance(),
-        SimpleTimeFragment.newInstance()
+        WanFragment.newInstance()
       )
     }
     homePager.adapter = object : FragmentPagerAdapter(childFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
