@@ -289,4 +289,6 @@ class DiscreteBanner<T> @JvmOverloads constructor(
     }
     return super.dispatchTouchEvent(ev)
   }
+
+  fun getOrientation() = orientation
 }
