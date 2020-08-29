@@ -7,9 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.billy.android.swipe.SmartSwipeRefresh
 import com.billy.android.swipe.SmartSwipeRefresh.SmartSwipeRefreshDataLoader
 import com.billy.android.swipe.consumer.SlidingConsumer
-import com.blankj.utilcode.util.StringUtils
 import com.cc.base.ext.stopInertiaRolling
-import com.cc.base.ext.toast
 import com.cc.base2021.R
 import com.cc.base2021.bean.gank.GankAndroidBean
 import com.cc.base2021.bean.local.*
@@ -21,7 +19,7 @@ import com.cc.base2021.widget.picsel.ImageEngine
 import com.drakeet.multitype.MultiTypeAdapter
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.entity.LocalMedia
-import kotlinx.android.synthetic.main.fragment_gank.androidRecycler
+import kotlinx.android.synthetic.main.fragment_gank.gankRecycler
 
 /**
  * Author:case
@@ -56,7 +54,7 @@ class GankFragment : CommFragment() {
   //<editor-fold defaultstate="collapsed" desc="初始化">
   override fun lazyInit() {
     //下拉刷新(translateMode和下面SlidingConsumer对应)
-    mSmartSwipeRefresh = SmartSwipeRefresh.translateMode(androidRecycler, false)
+    mSmartSwipeRefresh = SmartSwipeRefresh.translateMode(gankRecycler, false)
     mSmartSwipeRefresh?.swipeConsumer?.let {
       if (it is SlidingConsumer) { //https://qibilly.com/SmartSwipe-tutorial/pages/SmartSwipeRefresh.html
         it.setOverSwipeFactor(0f) //超过最大拖动距离的比例，0不允许超出
@@ -77,8 +75,8 @@ class GankFragment : CommFragment() {
       }
     }
     //设置适配器
-    androidRecycler.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
-    androidRecycler.adapter = multiTypeAdapter
+    gankRecycler.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
+    gankRecycler.adapter = multiTypeAdapter
     //注册多类型
     multiTypeAdapter.register(LoadingItemViewBinder())
     multiTypeAdapter.register(DividerItemViewBinder())
@@ -97,7 +95,7 @@ class GankFragment : CommFragment() {
         return@Observer
       }
       //停止惯性滚动
-      if (!multiTypeAdapter.items.isNullOrEmpty()) androidRecycler.stopInertiaRolling()
+      if (!multiTypeAdapter.items.isNullOrEmpty()) gankRecycler.stopInertiaRolling()
       //正常数据处理
       val items = ArrayList<Any>()
       list.data?.forEachIndexed { index, androidBean ->
@@ -123,10 +121,10 @@ class GankFragment : CommFragment() {
 
   //<editor-fold defaultstate="collapsed" desc="公共方法调用">
   override fun scroll2Top() {
-    androidRecycler.layoutManager?.let { manager ->
+    gankRecycler.layoutManager?.let { manager ->
       val firstPosition = (manager as LinearLayoutManager).findFirstVisibleItemPosition()
-      if (firstPosition > 5) androidRecycler.scrollToPosition(5)
-      androidRecycler.smoothScrollToPosition(0)
+      if (firstPosition > 5) gankRecycler.scrollToPosition(5)
+      gankRecycler.smoothScrollToPosition(0)
     }
   }
   //</editor-fold>

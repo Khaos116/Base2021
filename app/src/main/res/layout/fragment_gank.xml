@@ -6,7 +6,7 @@
     >
 
   <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/androidRecycler"
+      android:id="@+id/gankRecycler"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       />
