@@ -100,7 +100,7 @@ class WanFragment private constructor() : CommFragment() {
       //停止惯性滚动
       if (!multiTypeAdapter.items.isNullOrEmpty()) wanRecycler.stopInertiaRolling()
       val items = ArrayList<Any>()
-      items.add(mViewModel.bannerState.value ?: mutableListOf<MutableList<BannerBean>>())
+      mViewModel.bannerState.value?.let { if (!it.isNullOrEmpty()) items.add(it) }
       list?.data?.forEach { articleBean ->
         items.add(DividerBean(heightPx = 1, bgColor = Color.BLUE)) //分割线
         items.add(articleBean)
@@ -117,6 +117,7 @@ class WanFragment private constructor() : CommFragment() {
       multiTypeAdapter.notifyDataSetChanged()
     })
     mViewModel.bannerState.observe(this, Observer { list ->
+      if (list.isNullOrEmpty()) return@Observer
       if (multiTypeAdapter.items.any { it is LoadingBean }) multiTypeAdapter.items = mutableListOf(list)
       else multiTypeAdapter.items = multiTypeAdapter.items.toMutableList().apply { add(0, list) }
       multiTypeAdapter.notifyDataSetChanged()

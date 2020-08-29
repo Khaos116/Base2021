@@ -6,7 +6,6 @@ import com.cc.base2021.bean.base.BasePageList
 import com.cc.base2021.bean.wan.ArticleBean
 import com.cc.base2021.bean.wan.BannerBean
 import com.cc.base2021.constants.WanUrls
-import rxhttp.delay
 import rxhttp.wrapper.cahce.CacheMode
 import rxhttp.wrapper.param.RxHttp
 import rxhttp.wrapper.param.toResponseWan
