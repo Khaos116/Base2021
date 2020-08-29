@@ -5,7 +5,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.cc.base.ext.*
 import com.cc.base2021.R
-import com.cc.base2021.ext.loadImg
+import com.cc.base2021.ext.loadImgSquare
 import com.cc.base2021.item.NineImgViewBinder.ViewHolder
 import com.drakeet.multitype.ItemViewBinder
 import kotlinx.android.synthetic.main.item_nine_img.view.itemNineImgTv
@@ -27,7 +27,7 @@ class NineImgViewBinder(
 
   //<editor-fold defaultstate="collapsed" desc="数据填充">
   override fun onBindViewHolder(holder: ViewHolder, item: String) {
-    holder.itemView.itemNineImgTv.loadImg(item)
+    holder.itemView.itemNineImgTv.loadImgSquare(item)
     if (onItemClick != null) {
       holder.itemView.pressEffectAlpha(0.95f)
       holder.itemView.click { onItemClick.invoke(item, holder.layoutPosition, holder.itemView.itemNineImgTv) }
