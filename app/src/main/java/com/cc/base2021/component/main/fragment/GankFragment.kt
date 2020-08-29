@@ -101,7 +101,7 @@ class GankFragment private constructor() : CommFragment() {
       list.data?.forEachIndexed { index, androidBean ->
         items.add(androidBean) //文章
         if (androidBean.imagesNoNull().isNotEmpty()) items.add(androidBean.imagesNoNull()) //图片
-        if (index < (list.data?.size ?: 0) - 1) items.add(DividerBean(heightPx = 1, bgColor = Color.RED)) //分割线
+        if (index < (list.data?.size ?: 0) - 1) items.add(DividerBean(heightPx = 1, bgColor = Color.GREEN)) //分割线
       }
       //如果没有，判断是否要显示异常布局
       if (items.isEmpty()) {
