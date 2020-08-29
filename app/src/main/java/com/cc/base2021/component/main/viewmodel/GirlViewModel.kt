@@ -38,7 +38,7 @@ class GirlViewModel : BaseViewModel() {
   private fun requestGirlList(page: Int) {
     rxLifeScope.launch({
       //协程代码块
-      val result = GankRepository.instance.girlList(page = page, size = pageSize, readCache = false)
+      val result = GankRepository.instance.girlList(page = page, size = pageSize)
       currentPage = page
       hasMore = result.size == pageSize
       //可以直接更新UI
