@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cc.base.ext.*
 import com.cc.base2021.R
 import com.cc.base2021.bean.gank.GankGirlBean
-import com.cc.base2021.ext.loadFullScreen
+import com.cc.base2021.ext.loadImgVerticalScreen
 import com.cc.base2021.item.GirlItemViewBinder.ViewHolder
 import com.drakeet.multitype.ItemViewBinder
 import kotlinx.android.synthetic.main.item_girl.view.itemGirlIv
@@ -35,7 +35,7 @@ class GirlItemViewBinder(
       holder.itemView.pressEffectAlpha(0.95f)
       holder.itemView.click { onItemClick.invoke(item, holder.layoutPosition) }
     }
-    holder.itemView.itemGirlIv.loadFullScreen(item.images?.firstOrNull())
+    holder.itemView.itemGirlIv.loadImgVerticalScreen(item.images?.firstOrNull())
   }
   //</editor-fold>
 
