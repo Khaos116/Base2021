@@ -26,6 +26,10 @@ class MainActivity : CommActivity() {
 
   //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="XML">
+  override fun layoutResId() = layout.activity_main
+  //</editor-fold>
+
   //<editor-fold defaultstate="collapsed" desc="变量">
   //页面
   private lateinit var homeFragment: BaseFragment
@@ -40,14 +44,10 @@ class MainActivity : CommActivity() {
 
   //</editor-fold>
 
-  //<editor-fold defaultstate="collapsed" desc="XML">
-  override fun layoutResId() = layout.activity_main
-  //</editor-fold>
-
   //<editor-fold defaultstate="collapsed" desc="初始化View">
   override fun initView() {
     //初始化
-    homeFragment = HomeFragment()
+    homeFragment = HomeFragment.newInstance()
     dynFragment = SimpleFragment.newInstance("B")
     mineFragment = SimpleFragment.newInstance("C")
     //添加

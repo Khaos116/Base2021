@@ -13,12 +13,7 @@ import kotlinx.coroutines.*
  * Date:2020/8/19
  * Time:14:48
  */
-class SimpleTimeFragment : CommFragment() {
-
-  //<editor-fold defaultstate="collapsed" desc="变量">
-  private var msg = "北京时间获取"
-  //</editor-fold>
-
+class SimpleTimeFragment private constructor() : CommFragment() {
   //<editor-fold defaultstate="collapsed" desc="外部获取实例">
   companion object {
     fun newInstance(msg: String? = ""): SimpleTimeFragment {
@@ -31,6 +26,10 @@ class SimpleTimeFragment : CommFragment() {
 
   //<editor-fold defaultstate="collapsed" desc="XML">
   override val contentXmlId = R.layout.fragment_simple_time
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="变量">
+  private var msg = "北京时间获取"
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化">

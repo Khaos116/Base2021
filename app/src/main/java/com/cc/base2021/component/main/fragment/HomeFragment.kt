@@ -16,7 +16,20 @@ import kotlinx.android.synthetic.main.fragment_home.homePager
  * Date:2020/8/12
  * Time:20:50
  */
-class HomeFragment : CommFragment() {
+class HomeFragment private constructor() : CommFragment() {
+  //<editor-fold defaultstate="collapsed" desc="外部获取实例">
+  companion object {
+    fun newInstance(): HomeFragment {
+      val fragment = HomeFragment()
+      return fragment
+    }
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="XML">
+  override val contentXmlId = R.layout.fragment_home
+  //</editor-fold>
+
   //<editor-fold defaultstate="collapsed" desc="变量">
 
   //子Fragment
@@ -24,10 +37,6 @@ class HomeFragment : CommFragment() {
 
   //子Fragment标题
   private var titles: MutableList<String> = mutableListOf()
-  //</editor-fold>
-
-  //<editor-fold defaultstate="collapsed" desc="XML">
-  override val contentXmlId = R.layout.fragment_home
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化">

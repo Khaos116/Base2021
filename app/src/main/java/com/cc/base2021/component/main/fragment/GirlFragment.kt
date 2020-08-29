@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.fragment_girl.girlRecycler
  * Date:2020/8/12
  * Time:20:48
  */
-class GirlFragment : CommFragment() {
+class GirlFragment private constructor() : CommFragment() {
   //<editor-fold defaultstate="collapsed" desc="外部获取实例">
   companion object {
     fun newInstance(): GirlFragment {
@@ -32,6 +32,11 @@ class GirlFragment : CommFragment() {
       return fragment
     }
   }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="XML">
+  override val contentXmlId = R.layout.fragment_girl
+
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="变量">
@@ -43,11 +48,6 @@ class GirlFragment : CommFragment() {
 
   //下拉刷新
   private var mSmartSwipeRefresh: SmartSwipeRefresh? = null
-  //</editor-fold>
-
-  //<editor-fold defaultstate="collapsed" desc="XML">
-  override val contentXmlId = R.layout.fragment_girl
-
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化">

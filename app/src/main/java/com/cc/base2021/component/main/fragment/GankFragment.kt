@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.fragment_gank.gankRecycler
  * Date:2020/8/12
  * Time:20:48
  */
-class GankFragment : CommFragment() {
+class GankFragment private constructor() : CommFragment() {
   //<editor-fold defaultstate="collapsed" desc="外部获取实例">
   companion object {
     fun newInstance(): GankFragment {
@@ -34,6 +34,10 @@ class GankFragment : CommFragment() {
       return fragment
     }
   }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="XML">
+  override val contentXmlId = R.layout.fragment_gank
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="变量">
@@ -45,10 +49,6 @@ class GankFragment : CommFragment() {
 
   //下拉刷新
   private var mSmartSwipeRefresh: SmartSwipeRefresh? = null
-  //</editor-fold>
-
-  //<editor-fold defaultstate="collapsed" desc="XML">
-  override val contentXmlId = R.layout.fragment_gank
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化">
