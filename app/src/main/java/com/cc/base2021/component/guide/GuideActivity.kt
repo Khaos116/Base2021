@@ -7,7 +7,7 @@ import com.cc.base2021.comm.CommActivity
 import com.cc.base2021.component.guide.adapter.GuideHolderCreator
 import com.cc.base2021.constants.ImageUrls
 import com.cc.base2021.widget.discretescrollview.DSVOrientation
-import com.cc.base2021.widget.discretescrollview.DiscreteBanner
+import com.cc.base2021.widget.discretescrollview.banner.DiscreteBanner
 import com.gyf.immersionbar.ktx.immersionBar
 
 /**

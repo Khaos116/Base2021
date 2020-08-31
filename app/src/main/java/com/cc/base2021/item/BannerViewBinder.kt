@@ -7,9 +7,9 @@ import com.cc.base2021.R
 import com.cc.base2021.bean.wan.BannerBean
 import com.cc.base2021.ext.loadImgHorizontal
 import com.cc.base2021.widget.discretescrollview.DSVOrientation
-import com.cc.base2021.widget.discretescrollview.DiscreteBanner
-import com.cc.base2021.widget.discretescrollview.holder.DiscreteHolder
-import com.cc.base2021.widget.discretescrollview.holder.DiscreteHolderCreator
+import com.cc.base2021.widget.discretescrollview.banner.DiscreteBanner
+import com.cc.base2021.widget.discretescrollview.banner.holder.DiscreteHolder
+import com.cc.base2021.widget.discretescrollview.banner.holder.DiscreteHolderCreator
 import com.drakeet.multitype.ItemViewBinder
 import kotlinx.android.synthetic.main.item_banner_img.view.itemBannerImg
 
