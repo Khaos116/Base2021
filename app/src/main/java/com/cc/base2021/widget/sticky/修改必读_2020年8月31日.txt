@@ -1,4 +1,3 @@
 参考：https://github.com/LidongWen/MultiTypeAdapter/blob/master/multitypeadapter/src/main/java/com/wenld/multitypeadapter/sticky/StickyAdapter.java
 存在的问题：
   1.嵌套的下拉刷新和上拉加载可能会导致跟随移出和进入
-  2.ItemDecoration会存在间距变大的问题

@@ -1,2 +1,4 @@
 参考：https://github.com/LidongWen/MultiTypeAdapter
     基本没改什么代码，删除了多余的注释代码，增加了私有无参构造
+存在的问题：
+  1.ItemDecoration会存在间距变大的问题
