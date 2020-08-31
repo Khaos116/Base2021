@@ -1,4 +1,4 @@
-package com.cc.base2021.widget.discretescrollview
+package com.cc.base2021.widget.discretescrollview.indicator
 
 import android.animation.Animator
 import android.animation.ValueAnimator
@@ -10,6 +10,12 @@ import android.widget.LinearLayout
 import com.blankj.utilcode.util.SizeUtils
 import com.cc.base2021.R
 
+/**
+ * ViewPager选中圆点效果 参考：https://github.com/mazenrashed/DotsIndicatorWithoutViewpager/blob/master/dotsindicator/src/main/java/com/mazenrashed/dotsindicator/DotsIndicator.kt
+ * Author:CASE
+ * Date:2020/8/31
+ * Time:9:51
+ */
 class DotsIndicator : LinearLayout {
 
   //<editor-fold defaultstate="collapsed" desc="外部可设置的变量">

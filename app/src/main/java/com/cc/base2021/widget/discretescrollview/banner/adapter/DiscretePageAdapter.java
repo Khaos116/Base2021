@@ -1,17 +1,16 @@
-package com.cc.base2021.widget.discretescrollview.adapter;
+package com.cc.base2021.widget.discretescrollview.banner.adapter;
 
 import android.view.*;
 import androidx.recyclerview.widget.RecyclerView;
-import com.cc.base2021.widget.discretescrollview.holder.DiscreteHolder;
-import com.cc.base2021.widget.discretescrollview.holder.DiscreteHolderCreator;
-import com.cc.base2021.widget.discretescrollview.listener.OnItemClickListener;
+import com.cc.base2021.widget.discretescrollview.banner.holder.DiscreteHolder;
+import com.cc.base2021.widget.discretescrollview.banner.holder.DiscreteHolderCreator;
+import com.cc.base2021.widget.discretescrollview.banner.listener.OnItemClickListener;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Description:
- *
- * @author: caiyoufei
+ * 参考：https://github.com/saiwu-bigkoo/Android-ConvenientBanner/blob/master/convenientbanner/src/main/java/com/bigkoo/convenientbanner/adapter/CBPageAdapter.java
+ * @author: CASE
  * @date: 2019/10/14 12:09
  */
 public class DiscretePageAdapter<T> extends RecyclerView.Adapter<DiscreteHolder<T>> {
@@ -40,7 +39,7 @@ public class DiscretePageAdapter<T> extends RecyclerView.Adapter<DiscreteHolder<
     if (onItemClickListener != null) {
       holder.itemView.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View v) {
-          onItemClickListener.onItemClick(position,datas.get(position));
+          onItemClickListener.onItemClick(position, datas.get(position));
         }
       });
     }

@@ -1,4 +1,4 @@
-package com.cc.base2021.widget.discretescrollview
+package com.cc.base2021.widget.discretescrollview.banner
 
 import android.content.Context
 import android.os.Handler
@@ -6,15 +6,19 @@ import android.util.AttributeSet
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import com.cc.base2021.widget.discretescrollview.adapter.DiscretePageAdapter
-import com.cc.base2021.widget.discretescrollview.holder.DiscreteHolder
-import com.cc.base2021.widget.discretescrollview.holder.DiscreteHolderCreator
+import com.cc.base2021.widget.discretescrollview.banner.adapter.DiscretePageAdapter
 import com.blankj.utilcode.util.SizeUtils
 import com.cc.base2021.R
+import com.cc.base2021.widget.discretescrollview.*
+import com.cc.base2021.widget.discretescrollview.DSVOrientation.HORIZONTAL
+import com.cc.base2021.widget.discretescrollview.DSVOrientation.VERTICAL
+import com.cc.base2021.widget.discretescrollview.banner.holder.DiscreteHolder
+import com.cc.base2021.widget.discretescrollview.banner.holder.DiscreteHolderCreator
+import com.cc.base2021.widget.discretescrollview.indicator.DotsIndicator
 
 /**
- * Description:参考https://github.com/saiwu-bigkoo/Android-ConvenientBanner/blob/master/convenientbanner/src/main/java/com/bigkoo/convenientbanner/ConvenientBanner.java
- * @author: caiyoufei
+ * Description:参考 https://github.com/saiwu-bigkoo/Android-ConvenientBanner/blob/master/convenientbanner/src/main/java/com/bigkoo/convenientbanner/ConvenientBanner.java
+ * @author: CASE
  * @date: 2019/10/14 11:44
  */
 class DiscreteBanner<T> @JvmOverloads constructor(
@@ -24,7 +28,7 @@ class DiscreteBanner<T> @JvmOverloads constructor(
   defStyleRes: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
   //横向还是竖向
-  private var orientation = DSVOrientation.HORIZONTAL.ordinal
+  private var orientation = HORIZONTAL.ordinal
 
   //数据源
   private var mData: List<T> = emptyList()
@@ -61,7 +65,7 @@ class DiscreteBanner<T> @JvmOverloads constructor(
     if (attrs != null) {
       val ta = getContext().obtainStyledAttributes(attrs, R.styleable.DiscreteBanner)
       this.orientation =
-        ta.getInt(R.styleable.DiscreteBanner_dsv_orientation, DSVOrientation.HORIZONTAL.ordinal)
+        ta.getInt(R.styleable.DiscreteBanner_dsv_orientation, HORIZONTAL.ordinal)
       ta.recycle()
     }
     initPager()
@@ -81,10 +85,10 @@ class DiscreteBanner<T> @JvmOverloads constructor(
       }
       mIndicator.setDotSelection(position)
     }
-    if (orientation == DSVOrientation.HORIZONTAL.ordinal) { //横向
-      mPager.setOrientation(DSVOrientation.HORIZONTAL)
+    if (orientation == HORIZONTAL.ordinal) { //横向
+      mPager.setOrientation(HORIZONTAL)
     } else { //竖向
-      mPager.setOrientation(DSVOrientation.VERTICAL)
+      mPager.setOrientation(VERTICAL)
     }
     //添加View
     addView(mPager)
@@ -109,7 +113,7 @@ class DiscreteBanner<T> @JvmOverloads constructor(
       }
     }
     val indicatorParam = LayoutParams(-2, -2)
-    if (orientation == DSVOrientation.HORIZONTAL.ordinal) { //横向
+    if (orientation == HORIZONTAL.ordinal) { //横向
       mIndicator.orientation = LinearLayout.HORIZONTAL
       indicatorParam.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
       mIndicator.translationY = -defaultOffset
@@ -125,7 +129,7 @@ class DiscreteBanner<T> @JvmOverloads constructor(
   fun setOrientation(orientation: DSVOrientation): DiscreteBanner<T> {
     this.orientation = orientation.ordinal
     mPager.setOrientation(orientation)
-    if (orientation == DSVOrientation.HORIZONTAL) { //横向
+    if (orientation == HORIZONTAL) { //横向
       mIndicator.orientation = LinearLayout.HORIZONTAL
       (mIndicator.layoutParams as LayoutParams).gravity =
         Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
@@ -191,10 +195,7 @@ class DiscreteBanner<T> @JvmOverloads constructor(
 
   //设置数据
   @Suppress("UNCHECKED_CAST")
-  fun setPages(
-    holderCreator: DiscreteHolderCreator,
-    datas: List<T>
-  ): DiscreteBanner<T> {
+  fun setPages(holderCreator: DiscreteHolderCreator, datas: List<T>): DiscreteBanner<T> {
     stopPlay()
     this.mData = datas
     this.mPagerAdapter = DiscretePageAdapter(holderCreator, mData)
@@ -273,7 +274,7 @@ class DiscreteBanner<T> @JvmOverloads constructor(
         val action = e.action
         if (action == MotionEvent.ACTION_DOWN) {
           //如果需要竖向滑动，则请求父控件不拦截
-          if (this.orientation == DSVOrientation.VERTICAL.ordinal && mPagerAdapter?.itemCount ?: 0 > 1) {
+          if (this.orientation == VERTICAL.ordinal && mPagerAdapter?.itemCount ?: 0 > 1) {
             mPager.parent.requestDisallowInterceptTouchEvent(true)
           }
           stopPlay()

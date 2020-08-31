@@ -1,0 +1,13 @@
+1.其中一部分参考了：https://github.com/saiwu-bigkoo/Android-ConvenientBanner
+  a.DiscretePageAdapter
+  b.DiscreteHolder
+  c.DiscreteHolderCreator
+  d.OnItemClickListener
+  e.DiscreteBanner
+2.另外部分直接拷贝修改：https://github.com/yarolegovich/DiscreteScrollView
+  DiscreteScrollView文件修改内容大概如下：
+    a.新增endPosition和scrollPosition变量
+    b.接口OnItemChangedListener回调新增end字段
+    c.刷新方法notifyCurrentItemChanged新增end字段并判断防止二次回调相同位置
+    d.修改onScroll方法，新增滑动超过半屏进行回调
+3.DotsIndicator圆点指示器参考：https://github.com/mazenrashed/DotsIndicatorWithoutViewpager

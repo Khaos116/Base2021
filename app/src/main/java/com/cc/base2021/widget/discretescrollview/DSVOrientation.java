@@ -1,6 +1,5 @@
 package com.cc.base2021.widget.discretescrollview;
 
-
 import android.graphics.Point;
 import android.view.View;
 
@@ -43,7 +42,7 @@ public enum DSVOrientation {
 
     void offsetChildren(int amount, RecyclerViewProxy lm);
 
-    float getDistanceFromCenter(Point center, int viewCenterX, int viewCenterY);
+    float getDistanceFromCenter(Point center, float viewCenterX, float viewCenterY);
 
     boolean isViewVisible(Point center, int halfWidth, int halfHeight, int endBound, int extraSpace);
 
@@ -105,7 +104,7 @@ public enum DSVOrientation {
     }
 
     @Override
-    public float getDistanceFromCenter(Point center, int viewCenterX, int viewCenterY) {
+    public float getDistanceFromCenter(Point center, float viewCenterX, float viewCenterY) {
       return viewCenterX - center.x;
     }
 
@@ -134,7 +133,6 @@ public enum DSVOrientation {
       return 0;
     }
   }
-
 
   protected static class VerticalHelper implements Helper {
 
@@ -166,7 +164,7 @@ public enum DSVOrientation {
     }
 
     @Override
-    public float getDistanceFromCenter(Point center, int viewCenterX, int viewCenterY) {
+    public float getDistanceFromCenter(Point center, float viewCenterX, float viewCenterY) {
       return viewCenterY - center.y;
     }
 
@@ -216,5 +214,4 @@ public enum DSVOrientation {
       return pendingScroll;
     }
   }
-
 }

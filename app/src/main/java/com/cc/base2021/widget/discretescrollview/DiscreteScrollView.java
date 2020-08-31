@@ -11,9 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 原lib：https://github.com/yarolegovich/DiscreteScrollView
+ * 更新源文件，版本1.5.1，2020年8月31日10:49:52 by CASE
  * Created by yarolegovich on 18.02.2017.
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class DiscreteScrollView extends RecyclerView {
 
   public static final int NO_POSITION = DiscreteScrollLayoutManager.NO_POSITION;
@@ -24,6 +26,12 @@ public class DiscreteScrollView extends RecyclerView {
 
   private List<ScrollStateChangeListener> scrollStateChangeListeners;
   private List<OnItemChangedListener> onItemChangedListeners;
+  private Runnable notifyItemChangedRunnable = new Runnable() {
+    @Override
+    public void run() {
+      notifyCurrentItemChanged();
+    }
+  };
 
   private boolean isOverScrollEnabled;
   //滑动停止后回调的位置
@@ -48,13 +56,21 @@ public class DiscreteScrollView extends RecyclerView {
     setLayoutManager(layoutManager);
   }
 
-  public DiscreteScrollView(Context context, AttributeSet attrs) {
-    super(context, attrs);
-    init(attrs);
+  @Override
+  public void setLayoutManager(LayoutManager layout) {
+    if (layout instanceof DiscreteScrollLayoutManager) {
+      super.setLayoutManager(layout);
+    } else {
+      throw new IllegalArgumentException(
+          "You should not set LayoutManager on DiscreteScrollView.class instance. Library uses a special one. Just don\\'t call the method.");
+    }
   }
 
   @Override
   public boolean fling(int velocityX, int velocityY) {
+    if (layoutManager.isFlingDisallowed(velocityX, velocityY)) {
+      return false;
+    }
     boolean isFling = super.fling(velocityX, velocityY);
     if (isFling) {
       layoutManager.onFling(velocityX, velocityY);
@@ -64,18 +80,18 @@ public class DiscreteScrollView extends RecyclerView {
     return isFling;
   }
 
-  public DiscreteScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-    init(attrs);
+  @Nullable
+  public ViewHolder getViewHolder(int position) {
+    View view = layoutManager.findViewByPosition(position);
+    return view != null ? getChildViewHolder(view) : null;
   }
 
   @Override
-  public void setLayoutManager(LayoutManager layout) {
-    if (layout instanceof DiscreteScrollLayoutManager) {
-      super.setLayoutManager(layout);
-    } else {
-      throw new IllegalArgumentException(
-          "You should not set LayoutManager on DiscreteScrollView.class instance. Library uses a special one. Just don\\'t call the method.");
+  public void scrollToPosition(int position) {
+    int currentPosition = layoutManager.getCurrentPosition();
+    super.scrollToPosition(position);
+    if (currentPosition != position) {
+      notifyCurrentItemChanged();
     }
   }
 
@@ -110,6 +126,10 @@ public class DiscreteScrollView extends RecyclerView {
     layoutManager.setOffscreenItems(items);
   }
 
+  public void setScrollConfig(@NonNull DSVScrollConfig config) {
+    layoutManager.setScrollConfig(config);
+  }
+
   public void setClampTransformProgressAfter(@IntRange(from = 1) int itemCount) {
     if (itemCount <= 1) {
       throw new IllegalArgumentException("must be >= 1");
@@ -122,24 +142,24 @@ public class DiscreteScrollView extends RecyclerView {
     setOverScrollMode(OVER_SCROLL_NEVER);
   }
 
-  public void addScrollListener(@NonNull ScrollListener<?> scrollListener) {
-    addScrollStateChangeListener(new ScrollListenerAdapter(scrollListener));
-  }
-
   public void addScrollStateChangeListener(@NonNull ScrollStateChangeListener<?> scrollStateChangeListener) {
     scrollStateChangeListeners.add(scrollStateChangeListener);
+  }
+
+  public void addScrollListener(@NonNull ScrollListener<?> scrollListener) {
+    addScrollStateChangeListener(new ScrollListenerAdapter(scrollListener));
   }
 
   public void addOnItemChangedListener(@NonNull OnItemChangedListener<?> onItemChangedListener) {
     onItemChangedListeners.add(onItemChangedListener);
   }
 
-  public void removeScrollListener(@NonNull ScrollListener<?> scrollListener) {
-    removeScrollStateChangeListener(new ScrollListenerAdapter<>(scrollListener));
-  }
-
   public void removeScrollStateChangeListener(@NonNull ScrollStateChangeListener<?> scrollStateChangeListener) {
     scrollStateChangeListeners.remove(scrollStateChangeListener);
+  }
+
+  public void removeScrollListener(@NonNull ScrollListener<?> scrollListener) {
+    removeScrollStateChangeListener(new ScrollListenerAdapter<>(scrollListener));
   }
 
   public void removeItemChangedListener(@NonNull OnItemChangedListener<?> onItemChangedListener) {
@@ -168,26 +188,6 @@ public class DiscreteScrollView extends RecyclerView {
     }
   }
 
-  private void notifyCurrentItemChanged() {
-    if (onItemChangedListeners.isEmpty()) {
-      return;
-    }
-    int current = layoutManager.getCurrentPosition();
-    ViewHolder currentHolder = getViewHolder(current);
-    notifyCurrentItemChanged(currentHolder, current, false);
-  }
-
-  @Nullable
-  public ViewHolder getViewHolder(int position) {
-    View view = layoutManager.findViewByPosition(position);
-    return view != null ? getChildViewHolder(view) : null;
-  }
-
-  /**
-   * 这个回调选中位置有2个情况：
-   * 1是滑动过程中,滑动距离超过屏幕一半执行回调(这个回调滑动过程中可能会触发多次)
-   * 2是滑动停止后执行回调(这个回调每次滑动释放后再执行)
-   */
   private void notifyCurrentItemChanged(ViewHolder holder, int current, boolean end) {
     if (end && endPosition == current) return;//如果滑动结束后回调位置和上次回调的一样，则不再进行回调
     if (end) endPosition = current;//记录滑动结束的位置
@@ -198,33 +198,18 @@ public class DiscreteScrollView extends RecyclerView {
     }
   }
 
-  public interface OnItemChangedListener<T extends ViewHolder> {
-    /*
-     * This method will be also triggered when view appears on the screen for the first time.
-     * If data set is empty, viewHolder will be null and adapterPosition will be NO_POSITION
-     */
-    void onCurrentItemChanged(@Nullable T viewHolder, int adapterPosition, boolean endScroll);
-  }
-
-  public interface ScrollStateChangeListener<T extends ViewHolder> {
-
-    void onScrollStart(@NonNull T currentItemHolder, int adapterPosition);
-
-    void onScrollEnd(@NonNull T currentItemHolder, int adapterPosition);
-
-    void onScroll(float scrollPosition,
-        int currentPosition,
-        int newPosition,
-        @Nullable T currentHolder,
-        @Nullable T newCurrent);
-  }
-
-  public interface ScrollListener<T extends ViewHolder> {
-
-    void onScroll(float scrollPosition,
-        int currentPosition, int newPosition,
-        @Nullable T currentHolder,
-        @Nullable T newCurrent);
+  private void notifyCurrentItemChanged() {
+    removeCallbacks(notifyItemChangedRunnable);
+    if (onItemChangedListeners.isEmpty()) {
+      return;
+    }
+    int current = layoutManager.getCurrentPosition();
+    ViewHolder currentHolder = getViewHolder(current);
+    if (currentHolder == null) {
+      post(notifyItemChangedRunnable);
+    } else {
+      notifyCurrentItemChanged(currentHolder, current, false);
+    }
   }
 
   private class ScrollStateListener implements DiscreteScrollLayoutManager.ScrollStateListener {
@@ -241,6 +226,7 @@ public class DiscreteScrollView extends RecyclerView {
 
     @Override
     public void onScrollStart() {
+      removeCallbacks(notifyItemChangedRunnable);
       if (scrollStateChangeListeners.isEmpty()) {
         return;
       }
@@ -300,17 +286,41 @@ public class DiscreteScrollView extends RecyclerView {
 
     @Override
     public void onCurrentViewFirstLayout() {
-      post(new Runnable() {
-        @Override
-        public void run() {
-          notifyCurrentItemChanged();
-        }
-      });
+      notifyCurrentItemChanged();
     }
 
     @Override
     public void onDataSetChangeChangedPosition() {
       notifyCurrentItemChanged();
     }
+  }
+
+  public interface ScrollStateChangeListener<T extends ViewHolder> {
+
+    void onScrollStart(@NonNull T currentItemHolder, int adapterPosition);
+
+    void onScrollEnd(@NonNull T currentItemHolder, int adapterPosition);
+
+    void onScroll(float scrollPosition,
+        int currentPosition,
+        int newPosition,
+        @Nullable T currentHolder,
+        @Nullable T newCurrent);
+  }
+
+  public interface ScrollListener<T extends ViewHolder> {
+
+    void onScroll(float scrollPosition,
+        int currentPosition, int newPosition,
+        @Nullable T currentHolder,
+        @Nullable T newCurrent);
+  }
+
+  public interface OnItemChangedListener<T extends ViewHolder> {
+    /*
+     * This method will be also triggered when view appears on the screen for the first time.
+     * If data set is empty, viewHolder will be null and adapterPosition will be NO_POSITION
+     */
+    void onCurrentItemChanged(@Nullable T viewHolder, int adapterPosition, boolean end);
   }
 }

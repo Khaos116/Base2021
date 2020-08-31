@@ -1,6 +1,7 @@
 package com.cc.base2021.widget.discretescrollview.transform;
 
 import android.view.View;
+
 import androidx.annotation.FloatRange;
 
 /**

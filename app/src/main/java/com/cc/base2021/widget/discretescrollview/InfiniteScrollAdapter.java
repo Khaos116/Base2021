@@ -1,8 +1,11 @@
 package com.cc.base2021.widget.discretescrollview;
 
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.cc.base2021.R;
 import java.util.Locale;
 
 /**
@@ -34,7 +37,8 @@ public class InfiniteScrollAdapter<T extends RecyclerView.ViewHolder> extends Re
     if (recyclerView instanceof DiscreteScrollView) {
       layoutManager = (DiscreteScrollLayoutManager) recyclerView.getLayoutManager();
     } else {
-      throw new RuntimeException("InfiniteScrollAdapter is supposed to work only with DiscreteScrollView");
+      String msg = "InfiniteScrollAdapter is supposed to work only with DiscreteScrollView";
+      throw new RuntimeException(msg);
     }
   }
 

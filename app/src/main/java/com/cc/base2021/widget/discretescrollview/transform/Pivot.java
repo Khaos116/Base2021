@@ -1,7 +1,9 @@
 package com.cc.base2021.widget.discretescrollview.transform;
 
 import android.view.View;
+
 import androidx.annotation.IntDef;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
