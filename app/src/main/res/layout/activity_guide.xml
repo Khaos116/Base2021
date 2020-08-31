@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     >
 
-  <com.cc.base2021.widget.discretescrollview.DiscreteBanner
+  <com.cc.base2021.widget.discretescrollview.banner.DiscreteBanner
       android:id="@+id/guideBanner"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
