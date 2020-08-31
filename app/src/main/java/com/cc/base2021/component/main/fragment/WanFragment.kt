@@ -50,7 +50,7 @@ class WanFragment private constructor() : CommFragment() {
   //多类型适配器
   private val stickyAdapter = object : StickyAnyAdapter() {
     override fun isHeader(position: Int): Boolean {
-      return position == 2
+      return position == 3
     }
   }
 
