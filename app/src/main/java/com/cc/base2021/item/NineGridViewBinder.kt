@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.*
 import com.blankj.utilcode.util.SizeUtils
 import com.cc.base2021.R
 import com.cc.base2021.item.NineGridViewBinder.ViewHolder
-import com.cc.base2021.widget.decoration.EpoxyItemSpacingDecorator
+import com.cc.base2021.widget.decoration.EpoxyItemDecoration
 import com.cc.base2021.widget.drag.ItemTouchMoveListener
 import com.cc.base2021.widget.drag.MyItemTouchHelperCallback
 import com.drakeet.multitype.ItemViewBinder
@@ -43,7 +43,7 @@ class NineGridViewBinder(
     val recyclerView = holder.itemView.itemNineGridRecycler
     val count = if (item.size == 1) 1 else if (item.size == 2 || item.size == 4) 2 else 3
     recyclerView.layoutManager = GridLayoutManager(holder.itemView.context, count)
-    if (recyclerView.itemDecorationCount == 0) recyclerView.addItemDecoration(EpoxyItemSpacingDecorator(spaceItem))
+    if (recyclerView.itemDecorationCount == 0) recyclerView.addItemDecoration(EpoxyItemDecoration(spaceItem))
     val multiTypeAdapter = MultiTypeAdapter()
     multiTypeAdapter.register(NineImgViewBinder { url, position, iv -> onItemImgClick?.invoke(url, position, iv, item) })
     recyclerView.adapter = multiTypeAdapter
