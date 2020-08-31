@@ -2,15 +2,17 @@ package com.cc.base2021.item
 
 import android.view.*
 import android.widget.ImageView
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import com.blankj.utilcode.util.SizeUtils
 import com.cc.base2021.R
 import com.cc.base2021.item.NineGridViewBinder.ViewHolder
 import com.cc.base2021.widget.decoration.GridSpaceItemDecoration
+import com.cc.base2021.widget.drag.ItemTouchMoveListener
+import com.cc.base2021.widget.drag.MyItemTouchHelperCallback
 import com.drakeet.multitype.ItemViewBinder
 import com.drakeet.multitype.MultiTypeAdapter
 import kotlinx.android.synthetic.main.item_nine_grid.view.itemNineGridRecycler
+import java.util.Collections
 
 /**
  * Author:case
@@ -24,6 +26,9 @@ class NineGridViewBinder(
   //<editor-fold defaultstate="collapsed" desc="变量">
   //Item间距
   private val spaceItem = SizeUtils.dp2px(5f)
+
+  //拖拽效果
+  private var mapHelper: MutableMap<Int, ItemTouchHelper> = hashMapOf()
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="XML">
@@ -44,6 +49,24 @@ class NineGridViewBinder(
     recyclerView.adapter = multiTypeAdapter
     multiTypeAdapter.items = item
     multiTypeAdapter.notifyDataSetChanged()
+    //拖拽开始---->>>先置空，防止复用的时候一样的RecyclerView导致不执行attachToRecyclerView
+    mapHelper[recyclerView.hashCode()]?.attachToRecyclerView(null)
+    ItemTouchHelper(MyItemTouchHelperCallback(object : ItemTouchMoveListener {
+      override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
+        //1.数据交换；2.刷新
+        Collections.swap(item, fromPosition, toPosition)
+        multiTypeAdapter.notifyItemMoved(fromPosition, toPosition)
+        return true
+      }
+
+      override fun onItemRemove(position: Int): Boolean {
+        //不需要侧滑删除
+        //item.removeAt(position)
+        //multiTypeAdapter.notifyItemRemoved(position)
+        return false
+      }
+    })).apply { attachToRecyclerView(recyclerView) }.let { mapHelper[recyclerView.hashCode()] = it }
+    //拖拽结束---<<<
   }
   //</editor-fold>
 
