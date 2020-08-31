@@ -29,7 +29,7 @@ class WanRepository private constructor() {
     return RxHttp.get(WanUrls.Home.BANNER)
       .setDomainToWanIfAbsent()
       .setCacheValidTime(TimeConstants.DAY.toLong()) //设置缓存时长
-      .setCacheMode(if (readCache) CacheMode.REQUEST_NETWORK_FAILED_READ_CACHE else CacheMode.ONLY_NETWORK) //请求数据失败读取缓存
+      .setCacheMode(if (readCache) CacheMode.READ_CACHE_FAILED_REQUEST_NETWORK else CacheMode.ONLY_NETWORK) //读取缓失败存请求数据
       .toResponseWan<MutableList<BannerBean>>()
       .await()
   }
@@ -42,7 +42,7 @@ class WanRepository private constructor() {
     return RxHttp.get(String.format(WanUrls.Home.ARTICLE, page))
       .setDomainToWanIfAbsent()
       .setCacheValidTime(TimeConstants.DAY.toLong()) //设置缓存时长
-      .setCacheMode(if (readCache) CacheMode.REQUEST_NETWORK_FAILED_READ_CACHE else CacheMode.ONLY_NETWORK) //请求数据失败读取缓存
+      .setCacheMode(if (readCache) CacheMode.READ_CACHE_FAILED_REQUEST_NETWORK else CacheMode.ONLY_NETWORK) //读取缓失败存请求数据
       .toResponseWan<BasePageList<ArticleBean>>()
       .await()
   }

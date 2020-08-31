@@ -42,7 +42,7 @@ class GankRepository private constructor() {
     return RxHttp.get(String.format(GankUrls.ANDROID, page, size))
       .setDomainToGankIfAbsent()
       .setCacheValidTime(TimeConstants.DAY.toLong()) //设置缓存时长
-      .setCacheMode(if (readCache) CacheMode.REQUEST_NETWORK_FAILED_READ_CACHE else CacheMode.ONLY_NETWORK) //请求数据失败读取缓存
+      .setCacheMode(if (readCache) CacheMode.READ_CACHE_FAILED_REQUEST_NETWORK else CacheMode.ONLY_NETWORK) //读取缓失败存请求数据
       .toResponseGank<MutableList<GankAndroidBean>>()
       .await()
   }
@@ -58,7 +58,7 @@ class GankRepository private constructor() {
     return RxHttp.get(String.format(GankUrls.GIRL, page, size))
       .setDomainToGankIfAbsent()
       .setCacheValidTime(TimeConstants.DAY.toLong()) //设置缓存时长
-      .setCacheMode(if (readCache) CacheMode.REQUEST_NETWORK_FAILED_READ_CACHE else CacheMode.ONLY_NETWORK) //请求数据失败读取缓存
+      .setCacheMode(if (readCache) CacheMode.READ_CACHE_FAILED_REQUEST_NETWORK else CacheMode.ONLY_NETWORK) //读取缓失败存请求数据
       .toResponseGank<MutableList<GankGirlBean>>()
       .await()
   }
