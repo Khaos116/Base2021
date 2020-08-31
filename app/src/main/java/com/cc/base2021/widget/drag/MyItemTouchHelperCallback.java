@@ -14,13 +14,15 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MyItemTouchHelperCallback extends ItemTouchHelper.Callback {
   private ItemTouchMoveListener mMoveListener;
+  private boolean canSwipe = false;
 
   private MyItemTouchHelperCallback() {
     //不允许外部无参构造
   }
 
-  public MyItemTouchHelperCallback(ItemTouchMoveListener moveListener) {
+  public MyItemTouchHelperCallback(ItemTouchMoveListener moveListener, boolean swipe) {
     this.mMoveListener = moveListener;
+    this.canSwipe = swipe;
   }
 
   //Callback回调监听时先调用的，用来判断当前是什么动作，比如判断方向（意思就是我要监听哪个方向的拖动）
@@ -30,7 +32,7 @@ public class MyItemTouchHelperCallback extends ItemTouchHelper.Callback {
     int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
     //我要监听的swipe侧滑方向是哪个方向
     int swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
-    return makeMovementFlags(dragFlags, swipeFlags);
+    return makeMovementFlags(dragFlags, canSwipe ? swipeFlags : 0);
   }
 
   @Override

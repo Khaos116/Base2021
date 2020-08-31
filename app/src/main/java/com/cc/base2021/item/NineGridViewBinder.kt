@@ -65,7 +65,7 @@ class NineGridViewBinder(
         //multiTypeAdapter.notifyItemRemoved(position)
         return false
       }
-    })).apply { attachToRecyclerView(recyclerView) }.let { mapHelper[recyclerView.hashCode()] = it }
+    }, false)).apply { attachToRecyclerView(recyclerView) }.let { mapHelper[recyclerView.hashCode()] = it }
     //拖拽结束---<<<
   }
   //</editor-fold>
