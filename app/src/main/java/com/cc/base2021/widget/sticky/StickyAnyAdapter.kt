@@ -13,9 +13,9 @@ abstract class StickyAnyAdapter(
   var list: List<Any> = emptyList(),
   val apacity: Int = 0,
   var type: Types = MutableTypes(apacity)
-) : MultiTypeAdapter(list, apacity, type), StickyHeaderAdapter {
+) : MultiTypeAdapter(list, apacity, type), StickyHeaderCallbacks {
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
     super.onBindViewHolder(holder, position)
-    holder.itemView.setBackgroundColor(if (isHeader(position)) Color.WHITE else Color.TRANSPARENT)
+    holder.itemView.setBackgroundColor(if (isStickyHeader(holder.layoutPosition)) Color.WHITE else Color.TRANSPARENT)
   }
 }
