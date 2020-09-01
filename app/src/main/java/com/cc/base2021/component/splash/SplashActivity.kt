@@ -8,12 +8,15 @@ import com.cc.base2021.comm.CommActivity
 import com.cc.base2021.component.guide.GuideActivity
 import com.cc.base2021.component.main.MainActivity
 import com.cc.base2021.utils.MMkvUtils
+import com.cc.base2021.utils.RxUtils
 import com.gyf.immersionbar.ktx.immersionBar
 import com.hjq.permissions.*
 import com.opensource.svgaplayer.SVGACallback
+import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_splash.splashSVGA
 import kotlinx.android.synthetic.main.activity_splash.splashTv
+import java.util.concurrent.TimeUnit
 
 /**
  * Author:case
@@ -103,16 +106,13 @@ class SplashActivity : CommActivity() {
         goNextPage()
       }
 
-      override fun onPause() {
-      }
-
-      override fun onRepeat() {
-      }
-
-      override fun onStep(frame: Int, percentage: Double) {
-      }
-
+      override fun onPause() {}
+      override fun onRepeat() {}
+      override fun onStep(frame: Int, percentage: Double) {}
     }
+    disposable = Observable.timer(2, TimeUnit.SECONDS)
+      .compose(RxUtils.instance.rx2SchedulerHelperO())
+      .subscribe { splashTv.visible() }
   }
   //</editor-fold>
 

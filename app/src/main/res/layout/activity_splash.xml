@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
@@ -19,7 +18,7 @@
       android:id="@+id/splashSVGA"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="#000"
+      android:background="@color/white"
       app:autoPlay="true"
       app:fillMode="Backward"
       app:loopCount="1"
@@ -41,9 +40,10 @@
         android:layout_marginEnd="12dp"
         android:background="@drawable/shape_half_dark_green"
         android:gravity="center"
+        android:text="@string/skip"
         android:textColor="@color/white"
         android:textSize="10sp"
-        android:text="@string/skip"
+        android:visibility="gone"
         />
   </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
