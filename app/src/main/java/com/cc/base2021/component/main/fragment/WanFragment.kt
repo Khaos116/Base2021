@@ -1,6 +1,5 @@
 package com.cc.base2021.component.main.fragment
 
-import android.graphics.Color
 import android.widget.ImageView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,7 +8,8 @@ import com.billy.android.swipe.SmartSwipeRefresh.SmartSwipeRefreshDataLoader
 import com.billy.android.swipe.consumer.SlidingConsumer
 import com.cc.base.ext.stopInertiaRolling
 import com.cc.base2021.R
-import com.cc.base2021.bean.local.*
+import com.cc.base2021.bean.local.EmptyErrorBean
+import com.cc.base2021.bean.local.LoadingBean
 import com.cc.base2021.bean.wan.ArticleBean
 import com.cc.base2021.bean.wan.BannerBean
 import com.cc.base2021.comm.CommFragment
@@ -17,7 +17,8 @@ import com.cc.base2021.component.main.viewmodel.WanViewModel
 import com.cc.base2021.component.web.WebActivity
 import com.cc.base2021.item.*
 import com.cc.base2021.widget.picsel.ImageEngine
-import com.cc.base2021.widget.sticky.*
+import com.cc.base2021.widget.sticky.StickyAnyAdapter
+import com.cc.base2021.widget.sticky.StickyHeaderLinearLayoutManager
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.entity.LocalMedia
 import kotlinx.android.synthetic.main.fragment_wan.wanRecycler
@@ -49,7 +50,7 @@ class WanFragment private constructor() : CommFragment() {
   //多类型适配器
   private val stickyAdapter = object : StickyAnyAdapter() {
     override fun isStickyHeader(position: Int): Boolean {
-      return position == 0
+      return position == 1
     }
   }
 

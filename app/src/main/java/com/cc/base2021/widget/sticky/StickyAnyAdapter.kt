@@ -1,7 +1,9 @@
 package com.cc.base2021.widget.sticky
 
 import android.graphics.Color
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import android.view.View
+import com.cc.base.ext.pressEffectBgColor
+import com.cc.base.ext.pressEffectDisable
 import com.drakeet.multitype.*
 
 /**
@@ -14,8 +16,15 @@ abstract class StickyAnyAdapter(
   val apacity: Int = 0,
   var type: Types = MutableTypes(apacity)
 ) : MultiTypeAdapter(list, apacity, type), StickyHeaderCallbacks {
-  override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-    super.onBindViewHolder(holder, position)
-    holder.itemView.setBackgroundColor(if (isStickyHeader(holder.layoutPosition)) Color.WHITE else Color.TRANSPARENT)
+  override fun setupStickyHeaderView(stickyHeader: View) {
+    super.setupStickyHeaderView(stickyHeader)
+    stickyHeader.setBackgroundColor(Color.WHITE)
+    stickyHeader.pressEffectBgColor()
+  }
+
+  override fun teardownStickyHeaderView(stickyHeader: View) {
+    super.teardownStickyHeaderView(stickyHeader)
+    stickyHeader.setBackgroundColor(Color.TRANSPARENT)
+    stickyHeader.pressEffectDisable()
   }
 }
