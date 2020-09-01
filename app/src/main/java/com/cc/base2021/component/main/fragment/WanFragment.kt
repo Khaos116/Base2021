@@ -17,8 +17,7 @@ import com.cc.base2021.component.main.viewmodel.WanViewModel
 import com.cc.base2021.component.web.WebActivity
 import com.cc.base2021.item.*
 import com.cc.base2021.widget.picsel.ImageEngine
-import com.cc.base2021.widget.sticky.StickyAnyAdapter
-import com.cc.base2021.widget.sticky.StickyControl
+import com.cc.base2021.widget.sticky.*
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.entity.LocalMedia
 import kotlinx.android.synthetic.main.fragment_wan.wanRecycler
@@ -49,8 +48,8 @@ class WanFragment private constructor() : CommFragment() {
 
   //多类型适配器
   private val stickyAdapter = object : StickyAnyAdapter() {
-    override fun isHeader(position: Int): Boolean {
-      return position == 3
+    override fun isStickyHeader(position: Int): Boolean {
+      return position == 0
     }
   }
 
@@ -83,16 +82,13 @@ class WanFragment private constructor() : CommFragment() {
       }
     }
     //设置适配器
-    wanRecycler.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
+    wanRecycler.layoutManager = StickyHeaderLinearLayoutManager<StickyAnyAdapter>(mContext, LinearLayoutManager.VERTICAL, false)
     wanRecycler.adapter = stickyAdapter
     //注册多类型
     stickyAdapter.register(LoadingItemViewBinder())
-    stickyAdapter.register(DividerItemViewBinder())
-    //stickyAdapter.register(EmptyErrorItemViewBinder() { mViewModel.refresh() })
+    stickyAdapter.register(EmptyErrorItemViewBinder() { mViewModel.refresh() })
     stickyAdapter.register(BannerViewBinder(onItemBannerClick))
     stickyAdapter.register(ArticleViewBinder(onItemArticleClick))
-    //实现Sticky悬浮效果
-    StickyControl.any().adapter(stickyAdapter).setRecyclerView(wanRecycler).togo()
     //监听加载结果
     mViewModel.articleState.observe(this, Observer { list ->
       //处理下拉和上拉
@@ -108,13 +104,12 @@ class WanFragment private constructor() : CommFragment() {
       if (!stickyAdapter.items.isNullOrEmpty()) wanRecycler.stopInertiaRolling()
       val items = ArrayList<Any>()
       mViewModel.bannerState.value?.let { if (!it.isNullOrEmpty()) items.add(it) }
-      if (items.isNotEmpty()) items.add(DividerBean(heightPx = 1, bgColor = Color.BLUE)) //分割线
       list?.data?.forEach { articleBean -> items.add(articleBean) }
       //如果没有，判断是否要显示异常布局
       if (items.isEmpty()) {
         when {
           list.isLoading -> items.add(LoadingBean()) //加载中
-          //list.suc -> items.add(EmptyErrorBean(isEmpty = true, isError = false)) //如果请求成功没有数据
+          list.suc -> items.add(EmptyErrorBean(isEmpty = true, isError = false)) //如果请求成功没有数据
           list.exc != null -> items.add(EmptyErrorBean()) //如果是请求异常没有数据
         }
       }
