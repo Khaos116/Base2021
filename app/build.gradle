@@ -85,7 +85,7 @@ android {
       dimension "default"
       applicationId "com.cc.base2021D"
       resValue "string", "app_name", "${appName}D" //设置APP名称
-      dependencies { developerPFDebugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4' }
+      dependencies { developerPFDebugImplementation Deps.leakcanary }
     }
     releasePF {
       dimension "default"
@@ -156,7 +156,6 @@ android.applicationVariants.all { variant ->
 dependencies {
   implementation fileTree(dir: "libs", include: ["*.jar", '*.aar'])
   implementation project(path: ':base')
-  debugImplementation Deps.leakcanary
   implementation Deps.kotlin_stdlib
   implementation Deps.core_ktx
   implementation Deps.activity_ktx
