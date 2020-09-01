@@ -22,6 +22,7 @@
 **[agentweb](https://github.com/Justson/AgentWeb)**|易于使用的WebView封装
 **[swipe](https://github.com/luckybilly/SmartSwipe)**|集侧滑和下拉刷新等功能为一体
 **[cictureSelector](https://github.com/LuckSiege/PictureSelector)**|多媒体选择和预览
+**[leakcanary](https://square.github.io/leakcanary/getting_started/)**|内存泄漏检测
 =============================|=============================
 
 相关工具|描述  

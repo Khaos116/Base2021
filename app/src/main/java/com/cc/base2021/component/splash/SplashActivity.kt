@@ -7,18 +7,13 @@ import com.cc.base2021.R
 import com.cc.base2021.comm.CommActivity
 import com.cc.base2021.component.guide.GuideActivity
 import com.cc.base2021.component.main.MainActivity
-import com.cc.base2021.constants.ImageUrls
-import com.cc.base2021.ext.loadCacheFileFullScreen
 import com.cc.base2021.utils.MMkvUtils
-import com.cc.base2021.utils.RxUtils
 import com.gyf.immersionbar.ktx.immersionBar
 import com.hjq.permissions.*
-import io.reactivex.Flowable
+import com.opensource.svgaplayer.SVGACallback
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.activity_splash.splashIv
+import kotlinx.android.synthetic.main.activity_splash.splashSVGA
 import kotlinx.android.synthetic.main.activity_splash.splashTv
-import java.util.concurrent.TimeUnit
-import kotlin.math.max
 
 /**
  * Author:case
@@ -60,8 +55,6 @@ class SplashActivity : CommActivity() {
     //UI显示出来再执行倒计时和权限判断
     mContentView.post {
       hasSDPermission = PermissionUtils.instance.hasSDPermission()
-      //倒计时
-      countDown()
       //请求SD卡权限
       if (!hasSDPermission) {
         XXPermissions.with(this)
@@ -90,29 +83,37 @@ class SplashActivity : CommActivity() {
           })
       }
     }
+    splashTv.click {
+      splashSVGA?.callback = null
+      countDownFinish = true
+      splashTv.gone()
+      goNextPage()
+    }
   }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化数据">
   override fun initData() {
     //随机加载图片
-    splashIv.loadCacheFileFullScreen(ImageUrls.instance.getRandomImgUrl(randomImg))
-  }
-  //</editor-fold>
-
-  //<editor-fold defaultstate="collapsed" desc="倒计时">
-  private fun countDown() {
-    disposable = Flowable.intervalRange(0, countTime + 1, 0, 1, TimeUnit.SECONDS)
-      .compose(RxUtils.instance.rx2SchedulerHelperF())
-      .doOnNext { splashTv.text = String.format("%d", max(1, countTime - it)) }
-      .doOnComplete {
+    //splashIv.loadCacheFileFullScreen(ImageUrls.instance.getRandomImgUrl(randomImg))
+    splashSVGA.callback = object : SVGACallback {
+      override fun onFinished() {
         countDownFinish = true
         splashTv.gone()
         goNextPage()
       }
-      .subscribe()
-  }
 
+      override fun onPause() {
+      }
+
+      override fun onRepeat() {
+      }
+
+      override fun onStep(frame: Int, percentage: Double) {
+      }
+
+    }
+  }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="打开下一个页面">
@@ -137,6 +138,7 @@ class SplashActivity : CommActivity() {
   override fun finish() {
     super.finish()
     disposable?.dispose()
+    splashSVGA?.callback = null
   }
   //</editor-fold>
 }
