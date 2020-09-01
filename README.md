@@ -8,6 +8,7 @@
 **[coil](https://github.com/coil-kt/coil)**|Kotlin版本的图片加载(目前还有坑)
 **[multiType](https://github.com/drakeet/MultiType)**|多类型适配器(和Epoxy比较像)
 **[svga](https://github.com/svga/SVGAPlayer-Android/blob/master/readme.zh.md)**|比Lottie更省内存的动画  
+======================================|======================================
 
 旧的三方库|描述  
 :------------------------------------:|:------------------------------------:
@@ -20,7 +21,8 @@
 **[eventBus](https://github.com/JeremyLiao/LiveEventBus)**|LiveData实现的EventBus
 **[agentweb](https://github.com/Justson/AgentWeb)**|易于使用的WebView封装
 **[swipe](https://github.com/luckybilly/SmartSwipe)**|集侧滑和下拉刷新等功能为一体
-**[cictureSelector](https://github.com/LuckSiege/PictureSelector)**|多媒体选择和预览  
+**[cictureSelector](https://github.com/LuckSiege/PictureSelector)**|多媒体选择和预览
+======================================|======================================
 
 相关工具|描述  
 :------------------------------------:|:------------------------------------:
@@ -31,3 +33,4 @@
 **[StickyHeaderLinearLayoutManager](https://github.com/caiyoufei/Base2021/blob/master/app/src/main/java/com/cc/base2021/widget/sticky/StickyHeaderLinearLayoutManager.kt)**|解决RecyclerView烦恼的Sticky悬浮效果
 **[SimpleViewpagerIndicator](https://github.com/caiyoufei/Base2021/blob/master/app/src/main/java/com/cc/base2021/widget/SimpleViewpagerIndicator.java)**|简单的ViewPager标题适配
 **[FlashingTextView](https://github.com/caiyoufei/Base2021/blob/master/app/src/main/java/com/cc/base2021/widget/FlashingTextView.java)**|闪动的TextView  
+======================================|======================================
