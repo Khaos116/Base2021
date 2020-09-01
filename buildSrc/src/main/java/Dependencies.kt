@@ -30,7 +30,7 @@ object Deps {
   const val multidex = "androidx.multidex:multidex:2.0.1"
 
   //内存泄漏检测 https://square.github.io/leakcanary/getting_started/
-  const val leakcanary = "'com.squareup.leakcanary:leakcanary-android:2.4"
+  const val leakcanary = "com.squareup.leakcanary:leakcanary-android:2.4"
 
   //工具类 https://github.com/Blankj/AndroidUtilCode/blob/master/lib/utilcode/README-CN.md
   const val utilcodex = "com.blankj:utilcodex:1.29.0"
