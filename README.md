@@ -1,7 +1,7 @@
 # Base2021(AndroidX + MVVM + LiveData + Kotlin协程)，在[Abase](https://github.com/caiyoufei/ABase)的基础上进一步优化  
 
 新的三方库|描述  
-:--:|:--:
+:------------------------------------:|:------------------------------------:
 **[startup](https://developer.android.google.cn/topic/libraries/app-startup)**|安卓系统启动优化
 **[freeProGuard](https://developer.android.google.cn/topic/libraries/app-startup)**|防止混淆
 **[xxpermissions](https://github.com/getActivity/XXPermissions)**|动态权限请求(已适配安卓11)
@@ -10,7 +10,7 @@
 **[svga](https://github.com/svga/SVGAPlayer-Android/blob/master/readme.zh.md)**|比Lottie更省内存的动画  
 
 旧的三方库|描述  
-:--:|:--:
+:------------------------------------:|:------------------------------------:
 **[utilcodex](https://github.com/Blankj/AndroidUtilCode/blob/master/lib/utilcode/README-CN.md)**|安卓强大的三方工具库
 **[autosize](https://github.com/JessYanCoding/AndroidAutoSize)**|安卓屏幕适配
 **[timber](https://github.com/JakeWharton/timber)**|Log打印
@@ -23,7 +23,7 @@
 **[cictureSelector](https://github.com/LuckSiege/PictureSelector)**|多媒体选择和预览  
 
 相关工具|描述  
-:--:|:--:
+:------------------------------------:|:------------------------------------:
 **[Dependencies](https://github.com/caiyoufei/Base2021/blob/master/buildSrc/src/main/java/Dependencies.kt)**|将三方依赖统一管理
 **[DiscreteScrollView](https://github.com/caiyoufei/Base2021/blob/master/app/src/main/java/com/cc/base2021/widget/discretescrollview/DiscreteScrollView.java)**|解决多指无限滑动Page问题
 **[EpoxyItemDecoration](https://github.com/caiyoufei/Base2021/blob/master/app/src/main/java/com/cc/base2021/widget/decoration/EpoxyItemDecoration.kt)**|解决RecyclerView烦恼的分割线
