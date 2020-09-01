@@ -29,8 +29,12 @@ object Deps {
   //分包 https://developer.android.google.cn/studio/build/multidex?hl=zh_cn#mdex-gradle
   const val multidex = "androidx.multidex:multidex:2.0.1"
 
+  //内存泄漏检测 https://square.github.io/leakcanary/getting_started/
+  const val leakcanary = "'com.squareup.leakcanary:leakcanary-android:2.4"
+
   //工具类 https://github.com/Blankj/AndroidUtilCode/blob/master/lib/utilcode/README-CN.md
   const val utilcodex = "com.blankj:utilcodex:1.29.0"
+
   //防止混淆 https://github.com/Blankj/FreeProGuard
   const val proguardx = "com.blankj:free-proguard:1.0.2"
 
