@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'McImage'
 
 //解决渠道下DebugImplementation和ReleaseImplementation编译通不过的问题  https://stackoverflow.com/questions/24860659/multi-flavor-app-based-on-multi-flavor-library-in-android-gradle
 configurations {
@@ -93,6 +94,23 @@ android {
       resValue "string", "app_name", appName //设置APP名称
     }
   }
+}
+
+McImageConfig {
+  isCheckSize true //是否检测图片大小，默认为true
+  optimizeType "ConvertWebp" //优化类型，可选"ConvertWebp"，"Compress"，转换为webp或原图压缩，默认Compress，使用ConvertWep需要min sdk >= 18.但是压缩效果更好
+  maxSize 200 * 1024 //不允许超过200K的图编译通过
+  enableWhenDebug true //debug下是否可用，default true
+  isCheckPixels true // 是否检测大像素图片，default true
+  maxWidth 720 //default 1000 如果开启图片宽高检查，默认的最大宽度
+  maxHeight 1280 //default 1000 如果开启图片宽高检查，默认的最大高度
+  whiteList = [//默认为空，如果添加，对图片不进行任何处理
+      "ic_launcher.png"
+  ]
+  mctoolsDir "$rootDir" //mctoolsDir工具目录地址
+  isSupportAlphaWebp false //是否支持带有透明度的webp，default false,带有透明图的图片会进行压缩
+  multiThread true //是否开启多线程处理图片，default true
+  bigImageWhiteList = [] //默认为空，如果添加，大图检测将跳过这些图片
 }
 
 //https://coil-kt.github.io/coil/getting_started/
