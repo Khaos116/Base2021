@@ -24,7 +24,7 @@ class WanViewModel : BaseViewModel() {
   //刷新
   fun refresh() {
     if (isRequest) return
-    requestWanList(1)
+    requestWanList(0)
   }
 
   //加载更多
@@ -38,7 +38,7 @@ class WanViewModel : BaseViewModel() {
   private val articleList = MutableLiveData<ListUiState<MutableList<ArticleBean>>>()
   private val bannerList = MutableLiveData<MutableList<BannerBean>>()
   private var isRequest = false
-  private var currentPage = 1
+  private var currentPage = 0
   private var hasMore = true
 
   private fun requestWanList(page: Int) {
