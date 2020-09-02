@@ -8,6 +8,7 @@
 **[coil](https://github.com/coil-kt/coil)**|Kotlin版本的图片加载(目前还有坑)
 **[multiType](https://github.com/drakeet/MultiType)**|多类型适配器(和Epoxy比较像)
 **[svga](https://github.com/svga/SVGAPlayer-Android/blob/master/readme.zh.md)**|比Lottie更省内存的动画  
+**[mcImage](https://github.com/smallSohoSolo/McImage/blob/master/README-CN.md)**|编译压缩图片减小APK体积
 =============================|=============================
 
 旧的三方库|描述  
