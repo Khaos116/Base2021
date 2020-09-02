@@ -89,4 +89,7 @@ object Deps {
 
   //图片选择器 https://github.com/LuckSiege/PictureSelector
   const val pic_select = "com.github.LuckSiege.PictureSelector:picture_library:v2.5.8"
+
+  //打包资源压缩 https://github.com/smallSohoSolo/McImage/blob/master/README-CN.md
+  const val mc_image = "com.smallsoho.mobcase:McImage:1.5.1"
 }

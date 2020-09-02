@@ -8,6 +8,7 @@ buildscript {
     classpath Deps.plugin_android_gradle
     classpath Deps.plugin_kotlin_gradle
     classpath Deps.plugin_r8_gradle
+    classpath Deps.mc_image
   }
 }
 
