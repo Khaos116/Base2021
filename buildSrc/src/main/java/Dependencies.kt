@@ -79,7 +79,7 @@ object Deps {
   const val swipex = "com.billy.android:smart-swipe-x:1.1.0"
 
   //图片加载 https://github.com/coil-kt/coil
-  const val coil = "io.coil-kt:coil:0.12.0"
+  const val coil = "io.coil-kt:coil:0.13.0"
 
   //多类型适配器 https://github.com/drakeet/MultiType
   const val multitype = "com.drakeet.multitype:multitype:4.2.0"
