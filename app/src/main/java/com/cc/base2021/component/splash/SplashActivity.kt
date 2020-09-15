@@ -1,5 +1,7 @@
 package com.cc.base2021.component.splash
 
+import android.content.Context
+import android.media.AudioManager
 import com.blankj.utilcode.util.TimeUtils
 import com.cc.base.ext.*
 import com.cc.base.utils.PermissionUtils
@@ -10,12 +12,13 @@ import com.cc.base2021.component.main.MainActivity
 import com.cc.base2021.utils.MMkvUtils
 import com.cc.base2021.utils.RxUtils
 import com.gyf.immersionbar.ktx.immersionBar
-import com.hjq.permissions.*
+import com.hjq.permissions.OnPermission
+import com.hjq.permissions.Permission
+import com.hjq.permissions.XXPermissions
 import com.opensource.svgaplayer.SVGACallback
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.activity_splash.splashSVGA
-import kotlinx.android.synthetic.main.activity_splash.splashTv
+import kotlinx.android.synthetic.main.activity_splash.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -27,7 +30,7 @@ class SplashActivity : CommActivity() {
   //<editor-fold defaultstate="collapsed" desc="变量">
   //一个小时变一张图
   private val randomImg = TimeUtils.millis2String(System.currentTimeMillis())
-    .split(" ")[1].split(":")[0].toInt()
+      .split(" ")[1].split(":")[0].toInt()
 
   //倒计时
   private var countTime = 3L
@@ -55,35 +58,37 @@ class SplashActivity : CommActivity() {
 
   //<editor-fold defaultstate="collapsed" desc="初始化View">
   override fun initView() {
+    (getSystemService(Context.AUDIO_SERVICE) as AudioManager).adjustStreamVolume(AudioManager.STREAM_MUSIC,
+        AudioManager.ADJUST_MUTE, 0) //静音
     //UI显示出来再执行倒计时和权限判断
     mContentView.post {
       hasSDPermission = PermissionUtils.instance.hasSDPermission()
       //请求SD卡权限
       if (!hasSDPermission) {
         XXPermissions.with(this)
-          .permission(Permission.MANAGE_EXTERNAL_STORAGE)
-          .request(object : OnPermission {
-            override fun hasPermission(granted: MutableList<String>, all: Boolean) {
-              if (PermissionUtils.instance.hasSDPermission()) {
-                hasSDPermission = true
-                goNextPage()
-              } else {
-                "必须要给予SD卡权限才能使用".toast()
+            .permission(Permission.MANAGE_EXTERNAL_STORAGE)
+            .request(object : OnPermission {
+              override fun hasPermission(granted: MutableList<String>, all: Boolean) {
+                if (PermissionUtils.instance.hasSDPermission()) {
+                  hasSDPermission = true
+                  goNextPage()
+                } else {
+                  "必须要给予SD卡权限才能使用".toast()
+                  finish()
+                }
+              }
+
+              override fun noPermission(denied: MutableList<String>, quick: Boolean) {
+                if (quick) {
+                  "被永久拒绝授权，请手动授予存储权限".toast()
+                  // 如果是被永久拒绝就跳转到应用权限系统设置页面
+                  XXPermissions.startPermissionActivity(mActivity, denied);
+                } else {
+                  "必须要给予SD卡权限才能使用".toast()
+                }
                 finish()
               }
-            }
-
-            override fun noPermission(denied: MutableList<String>, quick: Boolean) {
-              if (quick) {
-                "被永久拒绝授权，请手动授予存储权限".toast()
-                // 如果是被永久拒绝就跳转到应用权限系统设置页面
-                XXPermissions.startPermissionActivity(mActivity, denied);
-              } else {
-                "必须要给予SD卡权限才能使用".toast()
-              }
-              finish()
-            }
-          })
+            })
       }
     }
     splashTv.click {
@@ -111,8 +116,8 @@ class SplashActivity : CommActivity() {
       override fun onStep(frame: Int, percentage: Double) {}
     }
     disposable = Observable.timer(2, TimeUnit.SECONDS)
-      .compose(RxUtils.instance.rx2SchedulerHelperO())
-      .subscribe { splashTv.visible() }
+        .compose(RxUtils.instance.rx2SchedulerHelperO())
+        .subscribe { splashTv.visible() }
   }
   //</editor-fold>
 
@@ -139,6 +144,8 @@ class SplashActivity : CommActivity() {
     super.finish()
     disposable?.dispose()
     splashSVGA?.callback = null
+    (getSystemService(Context.AUDIO_SERVICE) as AudioManager).adjustStreamVolume(AudioManager.STREAM_MUSIC,
+        AudioManager.ADJUST_UNMUTE, 0) //非静音
   }
   //</editor-fold>
 }
