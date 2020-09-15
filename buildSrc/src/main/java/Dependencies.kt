@@ -1,9 +1,9 @@
 object Versions {
   internal const val sdkMin = 23
   internal const val sdkTarget = 30
-  internal const val kotlin = "1.3.72"
+  internal const val kotlin = "1.4.0"
   internal const val okHttp = "4.8.1"
-  internal const val rxHttp = "2.3.5"
+  internal const val rxHttp = "2.4.0"
 }
 
 object Deps {
@@ -24,7 +24,7 @@ object Deps {
   const val constraint = "androidx.constraintlayout:constraintlayout:1.1.3"
 
   //启动初始化 https://developer.android.google.cn/topic/libraries/app-startup
-  const val startup = "androidx.startup:startup-runtime:1.0.0-alpha01"
+  const val startup = "androidx.startup:startup-runtime:1.0.0-alpha03"
 
   //分包 https://developer.android.google.cn/studio/build/multidex?hl=zh_cn#mdex-gradle
   const val multidex = "androidx.multidex:multidex:2.0.1"
@@ -60,7 +60,7 @@ object Deps {
   //RxHttp https://github.com/liujingxing/okhttp-RxHttp
   const val rxhttp = "com.ljx.rxhttp:rxhttp:${Versions.rxHttp}"
   const val rxhttp_kapt = "com.ljx.rxhttp:rxhttp-compiler:${Versions.rxHttp}" //生成RxHttp类
-  const val rxlife = "com.ljx.rxlife:rxlife-coroutine:2.0.0" //管理协程生命周期，页面销毁，关闭请求
+  const val rxlife = "com.ljx.rxlife:rxlife-coroutine:2.0.1" //管理协程生命周期，页面销毁，关闭请求
 
   //RxAndroid https://github.com/ReactiveX/RxAndroid
   const val rxandroid = "io.reactivex.rxjava2:rxandroid:2.1.1"
@@ -85,10 +85,10 @@ object Deps {
   const val multitype = "com.drakeet.multitype:multitype:4.2.0"
 
   //SVGA动画 https://github.com/svga/SVGAPlayer-Android/blob/master/readme.zh.md
-  const val svga = "com.github.yyued:SVGAPlayer-Android:2.5.9"
+  const val svga = "com.github.yyued:SVGAPlayer-Android:2.5.11"
 
   //图片选择器 https://github.com/LuckSiege/PictureSelector
-  const val pic_select = "com.github.LuckSiege.PictureSelector:picture_library:v2.5.8"
+  const val pic_select = "com.github.LuckSiege.PictureSelector:picture_library:v2.5.9"
 
   //打包资源压缩 https://github.com/smallSohoSolo/McImage/blob/master/README-CN.md
   const val mc_image = "com.smallsoho.mobcase:McImage:1.5.1"
