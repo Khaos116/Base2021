@@ -11,8 +11,7 @@ import com.cc.base2021.R
 import com.cc.base2021.R.layout
 import com.cc.base2021.comm.CommActivity
 import com.cc.base2021.component.main.fragment.HomeFragment
-import com.cc.base2021.component.simple.SimpleFragment
-import com.cc.base2021.component.simple.SimpleTimeFragment
+import com.cc.base2021.component.simple.*
 import kotlinx.android.synthetic.main.activity_main.mainContainer
 import kotlinx.android.synthetic.main.activity_main.mainNavigation
 
@@ -49,7 +48,8 @@ class MainActivity : CommActivity() {
   override fun initView() {
     //初始化
     homeFragment = HomeFragment.newInstance()
-    dynFragment = SimpleFragment.newInstance("B")
+    //dynFragment = SimpleFragment.newInstance("B")
+    dynFragment = SimpleVideoFragment.newInstance()
     mineFragment = SimpleTimeFragment.newInstance("请求北京时间")
     //添加
     fragmentList = mutableListOf(homeFragment, dynFragment, mineFragment)
