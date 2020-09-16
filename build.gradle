@@ -2,7 +2,8 @@ buildscript {
   repositories {
     google()
     jcenter()
-    maven { url 'https://jitpack.io', url 'https://maven.aliyun.com/repository/releases' }
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://maven.aliyun.com/repository/releases' }
   }
   dependencies {
     classpath Deps.plugin_android_gradle
@@ -16,7 +17,8 @@ allprojects {
   repositories {
     google()
     jcenter()
-    maven { url 'https://jitpack.io', url 'https://maven.aliyun.com/repository/releases' }
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://maven.aliyun.com/repository/releases' }
   }
 
   tasks.withType(Javadoc) {
