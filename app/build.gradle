@@ -203,6 +203,7 @@ dependencies {
   kapt Deps.rxhttp_kapt
   implementation Deps.rxlife
   implementation Deps.pic_select
+  implementation Deps.player_base
   implementation Deps.ali_player
   implementation Deps.ali_conan
 }
