@@ -3,6 +3,8 @@ package com.cc.base2021.component.main
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.IntRange
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleRegistry
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.FragmentUtils
 import com.cc.base.ext.toast
@@ -11,7 +13,8 @@ import com.cc.base2021.R
 import com.cc.base2021.R.layout
 import com.cc.base2021.comm.CommActivity
 import com.cc.base2021.component.main.fragment.HomeFragment
-import com.cc.base2021.component.simple.*
+import com.cc.base2021.component.simple.SimpleTimeFragment
+import com.cc.base2021.component.simple.SimpleVideoFragment
 import kotlinx.android.synthetic.main.activity_main.mainContainer
 import kotlinx.android.synthetic.main.activity_main.mainNavigation
 
@@ -79,13 +82,17 @@ class MainActivity : CommActivity() {
       return
     }
     //先关闭之前显示的
-    currentFragment?.let { FragmentUtils.hide(it) }
+    currentFragment?.let {
+      FragmentUtils.hide(it)
+      (it.lifecycle as LifecycleRegistry).currentState = Lifecycle.State.STARTED //触发Fragment的onPause
+    }
     //设置现在需要显示的
     currentFragment = f
     if (!f.isAdded) { //没有添加，则添加并显示
       FragmentUtils.add(supportFragmentManager, f, mainContainer.id, "${f::class.java.simpleName}_${f.hashCode()}", false)
     } else { //添加了就直接显示
       FragmentUtils.show(f)
+      (f.lifecycle as LifecycleRegistry).currentState = Lifecycle.State.RESUMED //触发Fragment的onResume
     }
   }
   //</editor-fold>
