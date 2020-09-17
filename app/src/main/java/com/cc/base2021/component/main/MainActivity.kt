@@ -7,6 +7,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleRegistry
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.FragmentUtils
+import com.cc.base.ext.mContentView
 import com.cc.base.ext.toast
 import com.cc.base.ui.BaseFragment
 import com.cc.base2021.R
@@ -115,6 +116,18 @@ class MainActivity : CommActivity() {
   override fun initData() {
     //关闭其他所有页面
     ActivityUtils.finishOtherActivities(javaClass)
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="生命周期">
+  override fun onResume() {
+    super.onResume()
+    //由于退到后台再回来会触发fragment的onResume，所以延迟一点进行onPause操作
+    mContentView.post {
+      supportFragmentManager.fragments.forEach {
+        if (it != currentFragment) (it.lifecycle as LifecycleRegistry).currentState = Lifecycle.State.STARTED //触发Fragment的onPause
+      }
+    }
   }
   //</editor-fold>
 
