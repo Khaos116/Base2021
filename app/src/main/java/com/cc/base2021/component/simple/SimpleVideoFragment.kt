@@ -32,7 +32,6 @@ class SimpleVideoFragment : CommFragment() {
   //<editor-fold defaultstate="collapsed" desc="初始化">
   override fun lazyInit() {
     simpleVideoView.setLifecycleOwner(this)
-    simpleVideoView.setLoopVideo(true)
     simpleVideoView.setUrlVideo(mUrl)
     simpleVideoView.prepareStartVideo()
   }
