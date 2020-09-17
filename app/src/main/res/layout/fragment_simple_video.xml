@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     >
 
-  <com.kk.taurus.playerbase.widget.BaseVideoView
+  <com.cc.base2021.widget.video.MyBaseVideoView
       android:id="@+id/simpleVideoView"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
