@@ -45,7 +45,10 @@ class VideoControllerView @JvmOverloads constructor(
     controller_bottom_play_pause.pressEffectAlpha(0.95f)
     controller_bottom_full_screen.pressEffectAlpha(0.95f)
     //点击事件
-    controller_top_back.click { controllerListener?.onBack() }
+    controller_top_back.click {
+      controllerListener?.onBack()
+      countDownHidden()
+    }
     controller_bottom_play_pause.click {
       controllerListener?.onPlayOrPause()
       countDownHidden()

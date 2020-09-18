@@ -1,5 +1,6 @@
 package com.cc.base2021.component.simple
 
+import android.content.res.Configuration
 import com.cc.base2021.R
 import com.cc.base2021.comm.CommFragment
 import com.cc.video.ui.VideoControllerView
@@ -38,4 +39,13 @@ class SimpleVideoFragment : CommFragment() {
     simpleVideoView.prepareStartVideo()
   }
   //</editor-fold>
+
+  override fun onConfigurationChanged(newConfig: Configuration) {
+    super.onConfigurationChanged(newConfig)
+    if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+    } else {
+
+    }
+  }
 }

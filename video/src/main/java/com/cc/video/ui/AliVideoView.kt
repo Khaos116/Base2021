@@ -2,17 +2,16 @@ package com.cc.video.ui
 
 import android.app.Activity
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.graphics.SurfaceTexture
 import android.util.AttributeSet
 import android.view.*
 import android.widget.FrameLayout
 import androidx.annotation.FloatRange
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
-import com.aliyun.player.*
+import androidx.lifecycle.*
+import com.aliyun.player.AliPlayerFactory
+import com.aliyun.player.IPlayer
 import com.aliyun.player.bean.ErrorInfo
 import com.aliyun.player.bean.InfoCode
 import com.aliyun.player.nativeclass.CacheConfig
@@ -21,7 +20,8 @@ import com.aliyun.player.source.UrlSource
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.PathUtils
 import com.cc.ext.removeParent
-import com.cc.video.ext.*
+import com.cc.video.ext.logE
+import com.cc.video.ext.logI
 import com.cc.video.inter.VideoControllerCallListener
 import com.cc.video.inter.VideoControllerListener
 
@@ -332,8 +332,10 @@ class AliVideoView @JvmOverloads constructor(
   fun enterOrExitFullScreen() {
     if (isFullScreen) {
       controllerCallListener?.exitFullScreen()
+      if (mContext is Activity) mContext.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     } else {
       controllerCallListener?.enterFullScreen()
+      if (mContext is Activity) mContext.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
     }
     isFullScreen = !isFullScreen
   }
