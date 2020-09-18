@@ -1,4 +1,4 @@
-package com.cc.resource.widget
+package com.cc.widget
 
 import android.content.Context
 import android.graphics.Rect
