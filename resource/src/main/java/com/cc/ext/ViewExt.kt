@@ -3,7 +3,7 @@ package com.cc.ext
 import android.graphics.Color
 import android.view.View
 import android.view.ViewManager
-import com.cc.resource.R
+import com.cc.R
 import com.cc.utils.PressEffectHelper
 
 /**

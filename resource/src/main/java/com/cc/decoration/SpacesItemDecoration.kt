@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.recyclerview.widget.RecyclerView.LayoutParams
 import androidx.recyclerview.widget.RecyclerView.State
 import com.blankj.utilcode.util.*
-import com.cc.resource.R
+import com.cc.R
 
 /*
  * Copyright 2019. Bin Jing (https://github.com/youlookwhat)
