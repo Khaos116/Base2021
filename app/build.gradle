@@ -172,6 +172,7 @@ android.applicationVariants.all { variant ->
 
 //三方依赖
 dependencies {
+  implementation project(path: ':video')
   implementation fileTree(dir: "libs", include: ["*.jar", '*.aar'])
   implementation project(path: ':base')
   implementation Deps.kotlin_stdlib
