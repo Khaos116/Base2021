@@ -11,14 +11,14 @@ import com.cc.base2021.component.guide.GuideActivity
 import com.cc.base2021.component.main.MainActivity
 import com.cc.base2021.utils.MMkvUtils
 import com.cc.base2021.utils.RxUtils
+import com.cc.ext.*
 import com.gyf.immersionbar.ktx.immersionBar
-import com.hjq.permissions.OnPermission
-import com.hjq.permissions.Permission
-import com.hjq.permissions.XXPermissions
+import com.hjq.permissions.*
 import com.opensource.svgaplayer.SVGACallback
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.activity_splash.*
+import kotlinx.android.synthetic.main.activity_splash.splashSVGA
+import kotlinx.android.synthetic.main.activity_splash.splashTv
 import java.util.concurrent.TimeUnit
 
 /**

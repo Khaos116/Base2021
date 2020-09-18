@@ -10,8 +10,8 @@ import coil.Coil
 import coil.clear
 import coil.request.ImageRequest
 import com.blankj.utilcode.util.Utils
-import com.cc.base.ext.gone
-import com.cc.base.ext.visible
+import com.cc.ext.gone
+import com.cc.ext.visible
 import com.cc.base2021.R
 import com.cc.base2021.ext.loadImgVerticalScreen
 import com.cc.base2021.ext.loadImgSquare

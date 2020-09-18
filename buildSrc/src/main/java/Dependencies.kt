@@ -57,6 +57,9 @@ object Deps {
   //网络请求 https://github.com/square/okhttp
   const val okhttp = "com.squareup.okhttp3:okhttp:${Versions.okHttp}"
 
+  //协程 https://github.com/Kotlin/kotlinx.coroutines
+  const val coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9"
+
   //RxHttp https://github.com/liujingxing/okhttp-RxHttp
   const val rxhttp = "com.ljx.rxhttp:rxhttp:${Versions.rxHttp}"
   const val rxhttp_kapt = "com.ljx.rxhttp:rxhttp-compiler:${Versions.rxHttp}" //生成RxHttp类

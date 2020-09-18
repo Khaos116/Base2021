@@ -3,7 +3,7 @@ package com.cc.base2021.item
 import android.view.*
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.cc.base.ext.*
+import com.cc.ext.*
 import com.cc.base2021.R
 import com.cc.base2021.ext.loadImgSquare
 import com.cc.base2021.item.NineImgViewBinder.ViewHolder

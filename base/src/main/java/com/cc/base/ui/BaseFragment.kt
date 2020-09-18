@@ -7,8 +7,8 @@ import android.view.*
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import com.cc.base.ext.logI
-import com.cc.base.ext.removeParent
 import com.cc.base.utils.CleanLeakUtils
+import com.cc.ext.removeParent
 
 /**
  * Author:case

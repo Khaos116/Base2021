@@ -4,6 +4,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.cc.base.ext.*
 import com.cc.base2021.R
+import com.cc.ext.click
+import com.cc.ext.pressEffectAlpha
 import kotlinx.android.synthetic.main.activity_comm_title.commonRootView
 import kotlinx.android.synthetic.main.layout_comm_title.commTitleBack
 import kotlinx.android.synthetic.main.layout_comm_title.commTitleText

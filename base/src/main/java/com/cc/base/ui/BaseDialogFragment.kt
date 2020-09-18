@@ -9,8 +9,7 @@ import android.view.*
 import android.view.ViewGroup.LayoutParams
 import android.widget.FrameLayout
 import androidx.fragment.app.DialogFragment
-import com.cc.base.R
-import com.cc.base.ext.removeParent
+import com.cc.ext.removeParent
 
 /**
  * Author:case

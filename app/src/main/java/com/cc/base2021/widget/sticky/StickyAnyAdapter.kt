@@ -2,8 +2,8 @@ package com.cc.base2021.widget.sticky
 
 import android.graphics.Color
 import android.view.View
-import com.cc.base.ext.pressEffectBgColor
-import com.cc.base.ext.pressEffectDisable
+import com.cc.ext.pressEffectBgColor
+import com.cc.ext.pressEffectDisable
 import com.drakeet.multitype.*
 
 /**

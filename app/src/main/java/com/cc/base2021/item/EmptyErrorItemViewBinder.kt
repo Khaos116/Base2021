@@ -4,7 +4,7 @@ import android.view.*
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.StringUtils
-import com.cc.base.ext.*
+import com.cc.ext.*
 import com.cc.base.utils.NetUtils
 import com.cc.base2021.R
 import com.cc.base2021.bean.local.EmptyErrorBean

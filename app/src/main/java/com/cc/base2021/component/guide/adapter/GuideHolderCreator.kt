@@ -3,13 +3,13 @@ package com.cc.base2021.component.guide.adapter
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.cc.base.ext.*
 import com.cc.base2021.R
 import com.cc.base2021.component.main.MainActivity
 import com.cc.base2021.ext.loadImgVerticalScreen
 import com.cc.base2021.utils.MMkvUtils
 import com.cc.base2021.widget.discretescrollview.banner.holder.DiscreteHolder
 import com.cc.base2021.widget.discretescrollview.banner.holder.DiscreteHolderCreator
+import com.cc.ext.*
 import kotlinx.android.synthetic.main.layout_guide.view.guideGo
 import kotlinx.android.synthetic.main.layout_guide.view.guideIV
 
