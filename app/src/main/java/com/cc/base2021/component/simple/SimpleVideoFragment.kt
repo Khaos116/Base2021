@@ -2,6 +2,7 @@ package com.cc.base2021.component.simple
 
 import com.cc.base2021.R
 import com.cc.base2021.comm.CommFragment
+import com.cc.video.ui.VideoControllerView
 import kotlinx.android.synthetic.main.fragment_simple_video.simpleVideoView
 
 /**
@@ -31,6 +32,7 @@ class SimpleVideoFragment : CommFragment() {
 
   //<editor-fold defaultstate="collapsed" desc="初始化">
   override fun lazyInit() {
+    simpleVideoView.addOverView(VideoControllerView(mContext))
     simpleVideoView.setLifecycleOwner(this)
     simpleVideoView.setUrlVideo(mUrl)
     simpleVideoView.prepareStartVideo()
