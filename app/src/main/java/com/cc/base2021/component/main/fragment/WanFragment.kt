@@ -18,7 +18,7 @@ import com.cc.base2021.component.web.WebActivity
 import com.cc.base2021.item.*
 import com.cc.base2021.widget.picsel.ImageEngine
 import com.cc.base2021.widget.sticky.StickyAnyAdapter
-import com.cc.base2021.widget.sticky.StickyHeaderLinearLayoutManager
+import com.cc.sticky.StickyHeaderLinearLayoutManager
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.entity.LocalMedia
 import kotlinx.android.synthetic.main.fragment_wan.wanRecycler

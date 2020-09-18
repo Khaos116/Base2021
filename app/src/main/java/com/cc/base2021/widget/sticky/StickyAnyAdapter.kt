@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.view.View
 import com.cc.ext.pressEffectBgColor
 import com.cc.ext.pressEffectDisable
+import com.cc.sticky.StickyHeaderCallbacks
 import com.drakeet.multitype.*
 
 /**

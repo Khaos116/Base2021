@@ -1,4 +1,4 @@
-package com.cc.base2021.widget.sticky
+package com.cc.sticky
 
 import android.content.Context
 import android.graphics.PointF

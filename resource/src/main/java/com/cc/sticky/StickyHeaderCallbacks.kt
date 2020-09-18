@@ -1,4 +1,4 @@
-package com.cc.base2021.widget.sticky
+package com.cc.sticky
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
