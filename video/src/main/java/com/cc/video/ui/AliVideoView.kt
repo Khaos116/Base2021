@@ -138,10 +138,7 @@ class AliVideoView @JvmOverloads constructor(
     //出错事件
     aliPlayer.setOnErrorListener { "播放出错:${it.msg}".logE() }
     //准备成功事件
-    aliPlayer.setOnPreparedListener {
-      controllerCallListener?.callDuration(aliPlayer.duration)
-      if (!aliPlayer.isAutoPlay) isPause = true
-    }
+    aliPlayer.setOnPreparedListener { controllerCallListener?.callDuration(aliPlayer.duration) }
     //视频分辨率变化回调
     aliPlayer.setOnVideoSizeChangedListener { width, height -> }
     //首帧渲染显示事件
@@ -150,8 +147,14 @@ class AliVideoView @JvmOverloads constructor(
     aliPlayer.setOnInfoListener { infoBean ->
       //自动播放开始事件(自动播放的时候将不会回调onPrepared，需要从这判断)
       when (infoBean.code) {
-        InfoCode.AutoPlayStart -> "自动播放".logI()
-        InfoCode.LoopingStart -> "循环播放".logI()
+        InfoCode.AutoPlayStart -> {
+          isPlaying = true
+          isPause = false
+        }
+        InfoCode.LoopingStart -> {
+          isPlaying = true
+          isPause = false
+        }
         InfoCode.CacheSuccess -> "缓存成功".logI()
         InfoCode.CacheError -> if ("url is local source" != infoBean.extraMsg) "缓存失败:${infoBean.extraMsg}".logE()
         InfoCode.SwitchToSoftwareVideoDecoder -> "切换到软解".logE()
@@ -275,6 +278,7 @@ class AliVideoView @JvmOverloads constructor(
   fun prepareVideo() {
     aliPlayer.prepare()
     isPlaying = aliPlayer.isAutoPlay
+    isPause = !isPlaying
   }
 
   //准备并播放
@@ -315,10 +319,8 @@ class AliVideoView @JvmOverloads constructor(
 
   //重置
   fun resetVideo() {
-    isPause = false
-    isPlaying = false
     aliPlayer.reset()
-    aliPlayer.prepare()
+    prepareVideo()
   }
 
   //释放,释放后播放器将不可再被使用
