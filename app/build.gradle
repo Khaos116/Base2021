@@ -173,8 +173,9 @@ android.applicationVariants.all { variant ->
 //三方依赖
 dependencies {
   implementation project(path: ':video')
-  implementation fileTree(dir: "libs", include: ["*.jar", '*.aar'])
+  implementation project(path: ':resource')
   implementation project(path: ':base')
+  implementation fileTree(dir: "libs", include: ["*.jar", '*.aar'])
   implementation Deps.kotlin_stdlib
   implementation Deps.core_ktx
   implementation Deps.activity_ktx
@@ -200,7 +201,8 @@ dependencies {
   implementation Deps.permissions
   implementation Deps.coil
   implementation Deps.multitype
-  implementation Deps.rxhttp
+  implementation(Deps.rxhttp) { exclude module: 'kotlinx-coroutines-core' }
+  implementation Deps.coroutine
   kapt Deps.rxhttp_kapt
   implementation Deps.rxlife
   implementation Deps.pic_select
