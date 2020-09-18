@@ -2,13 +2,13 @@ package com.cc.base2021.component.main
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import androidx.annotation.IntRange
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleRegistry
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.FragmentUtils
-import com.cc.base.ext.mContentView
-import com.cc.base.ext.toast
+import com.cc.base.ext.*
 import com.cc.base.ui.BaseFragment
 import com.cc.base2021.R
 import com.cc.base2021.R.layout
@@ -16,8 +16,10 @@ import com.cc.base2021.comm.CommActivity
 import com.cc.base2021.component.main.fragment.HomeFragment
 import com.cc.base2021.component.simple.SimpleTimeFragment
 import com.cc.base2021.component.simple.SimpleVideoFragment
-import kotlinx.android.synthetic.main.activity_main.mainContainer
-import kotlinx.android.synthetic.main.activity_main.mainNavigation
+import com.cc.ext.visibleGone
+import com.gyf.immersionbar.BarHide
+import com.gyf.immersionbar.ktx.immersionBar
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : CommActivity() {
   //<editor-fold defaultstate="collapsed" desc="外部跳转">
@@ -50,6 +52,7 @@ class MainActivity : CommActivity() {
 
   //<editor-fold defaultstate="collapsed" desc="初始化View">
   override fun initView() {
+    mainRootView.setPadding(0, mStatusBarHeight, 0, 0)
     //初始化
     homeFragment = HomeFragment.newInstance()
     //dynFragment = SimpleFragment.newInstance("B")
@@ -127,6 +130,20 @@ class MainActivity : CommActivity() {
       supportFragmentManager.fragments.forEach {
         if (it != currentFragment) (it.lifecycle as LifecycleRegistry).currentState = Lifecycle.State.STARTED //触发Fragment的onPause
       }
+    }
+  }
+
+  override fun onConfigurationChanged(newConfig: Configuration) {
+    super.onConfigurationChanged(newConfig)
+    val landScape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE
+    mainLineLayer.visibleGone(!landScape)
+    mainNavigation.visibleGone(!landScape)
+    mainRootView.setPadding(0, if (landScape) 0 else mStatusBarHeight, 0, 0)
+    immersionBar {
+      statusBarDarkFont(!landScape)
+      fullScreen(landScape)
+      hideBar(if (landScape) BarHide.FLAG_HIDE_BAR else BarHide.FLAG_SHOW_BAR)
+      statusBarColor(if (landScape) R.color.transparent else R.color.style_Accent)
     }
   }
   //</editor-fold>

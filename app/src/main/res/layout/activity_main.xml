@@ -2,9 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainRootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:fitsSystemWindows="false"
     android:orientation="vertical"
     >
   <!--内容导航-->
@@ -33,6 +34,7 @@
 
   <!--分割线-->
   <ImageView
+      android:id="@+id/mainLineLayer"
       android:layout_width="match_parent"
       android:layout_height="6dp"
       android:contentDescription="@null"
