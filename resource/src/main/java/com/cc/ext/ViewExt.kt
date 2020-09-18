@@ -11,13 +11,44 @@ import com.cc.utils.PressEffectHelper
  * Date:2020/8/11
  * Time:17:33
  */
-//点击事件
-inline fun View.click(crossinline function: (view: View) -> Unit) {
+//击事件
+inline fun View.click(crossinline funClick: (view: View) -> Unit) {
   this.setOnClickListener {
     val tag = this.getTag(R.id.id_tag_click)
     if (tag == null || System.currentTimeMillis() - tag.toString().toLong() > 600) {
       this.setTag(R.id.id_tag_click, System.currentTimeMillis())
-      function.invoke(it)
+      funClick.invoke(it)
+    }
+  }
+}
+
+//单击+双击事件
+inline fun View.clickAndDouble(
+  crossinline funClick: (view: View) -> Unit,
+  crossinline funDoubleClick: (view: View) -> Unit
+) {
+  val clickView = this
+  clickView.setOnClickListener {
+    val tag1 = clickView.getTag(R.id.id_tag_click)
+    val tag2 = clickView.getTag(R.id.id_tag_click_double)
+    //触发点击后600ms内不再触发点击
+    if (tag2 != null && System.currentTimeMillis() - tag2.toString().toLong() < 600) return@setOnClickListener
+    //单击
+    if (tag1 == null || System.currentTimeMillis() - tag1.toString().toLong() > 600) {
+      clickView.setTag(R.id.id_tag_click, System.currentTimeMillis())
+      //倒计时执行单击
+      val runnable = Runnable {
+        clickView.getTag(R.id.id_tag_click_runnable)?.let { r -> clickView.removeCallbacks(r as Runnable) }
+        clickView.setTag(R.id.id_tag_click_double, System.currentTimeMillis())
+        funClick.invoke(clickView)
+      }
+      clickView.setTag(R.id.id_tag_click_runnable, runnable)
+      clickView.postDelayed(runnable, 220)
+    } else if (System.currentTimeMillis() - tag1.toString().toLong() <= 220) { //双击
+      //取消单击，执行双击
+      clickView.getTag(R.id.id_tag_click_runnable)?.let { r -> clickView.removeCallbacks(r as Runnable) }
+      clickView.setTag(R.id.id_tag_click_double, System.currentTimeMillis())
+      funDoubleClick.invoke(clickView)
     }
   }
 }
