@@ -1,3 +1,6 @@
+include ':resource'
+include ':music'
+include ':video'
 include ':base'
 include ':app'
 rootProject.name = "Base2021"
