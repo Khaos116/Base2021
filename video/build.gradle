@@ -29,6 +29,9 @@ dependencies {
   implementation Deps.core_ktx
   implementation Deps.appcompat
   implementation Deps.constraint
+  implementation Deps.coroutine
+  implementation Deps.utilcodex
   implementation Deps.ali_player
   implementation Deps.ali_conan
+  implementation Deps.timber
 }

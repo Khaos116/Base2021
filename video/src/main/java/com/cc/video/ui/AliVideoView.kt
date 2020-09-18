@@ -1,5 +1,6 @@
-package com.cc.base2021.widget.video
+package com.cc.video.ui
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.SurfaceTexture
@@ -19,7 +20,10 @@ import com.aliyun.player.nativeclass.TrackInfo
 import com.aliyun.player.source.UrlSource
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.PathUtils
-import com.cc.base.ext.*
+import com.cc.ext.removeParent
+import com.cc.video.ext.*
+import com.cc.video.inter.VideoControllerCallListener
+import com.cc.video.inter.VideoControllerListener
 
 /**
  * https://help.aliyun.com/document_detail/124714.html?spm=a2c4g.11186623.6.1084.5eddd8e76YpCGt
@@ -28,10 +32,10 @@ import com.cc.base.ext.*
  * Time:15:37
  */
 class AliVideoView @JvmOverloads constructor(
-    private val mContext: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0,
-    defStyleRes: Int = 0
+  private val mContext: Context,
+  attrs: AttributeSet? = null,
+  defStyleAttr: Int = 0,
+  defStyleRes: Int = 0
 ) : FrameLayout(mContext, attrs, defStyleAttr, defStyleRes), LifecycleObserver {
 
   //<editor-fold defaultstate="collapsed" desc="变量区">
@@ -52,11 +56,11 @@ class AliVideoView @JvmOverloads constructor(
   //是否处于暂停
   private var isPause = false
 
-  //播放进度回调
-  var playPositionCall: ((position: Long, duration: Long) -> Unit)? = null
+  //是否处于全屏
+  private var isFullScreen: Boolean = false
 
-  //缓冲进度回调
-  var bufferPositionCall: ((position: Long, duration: Long) -> Unit)? = null
+  //外部回调Controller
+  private var controllerCallListener: VideoControllerCallListener? = null
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化">
@@ -129,15 +133,19 @@ class AliVideoView @JvmOverloads constructor(
   private fun addListener() {
     //播放完成事件
     aliPlayer.setOnCompletionListener {
+      if (!aliPlayer.isLoop) resetVideo()
     }
     //出错事件
     aliPlayer.setOnErrorListener { "播放出错:${it.msg}".logE() }
     //准备成功事件
-    aliPlayer.setOnPreparedListener { "Prepared完成".logI() }
+    aliPlayer.setOnPreparedListener {
+      controllerCallListener?.callDuration(aliPlayer.duration)
+      if (!aliPlayer.isAutoPlay) isPause = true
+    }
     //视频分辨率变化回调
     aliPlayer.setOnVideoSizeChangedListener { width, height -> }
     //首帧渲染显示事件
-    aliPlayer.setOnRenderingStartListener { "首帧渲染完成".logI() }
+    aliPlayer.setOnRenderingStartListener { controllerCallListener?.callDuration(aliPlayer.duration) }
     //其他信息的事件，type包括了：循环播放开始，缓冲位置，当前播放位置，自动播放开始等
     aliPlayer.setOnInfoListener { infoBean ->
       //自动播放开始事件(自动播放的时候将不会回调onPrepared，需要从这判断)
@@ -147,8 +155,8 @@ class AliVideoView @JvmOverloads constructor(
         InfoCode.CacheSuccess -> "缓存成功".logI()
         InfoCode.CacheError -> if ("url is local source" != infoBean.extraMsg) "缓存失败:${infoBean.extraMsg}".logE()
         InfoCode.SwitchToSoftwareVideoDecoder -> "切换到软解".logE()
-        InfoCode.CurrentPosition -> playPositionCall?.invoke(infoBean.extraValue, aliPlayer.duration)
-        InfoCode.BufferedPosition -> bufferPositionCall?.invoke(infoBean.extraValue, aliPlayer.duration)
+        InfoCode.CurrentPosition -> controllerCallListener?.callProgress(infoBean.extraValue)
+        InfoCode.BufferedPosition -> controllerCallListener?.callBufferProgress(infoBean.extraValue)
         else -> {
           "infoBean=${GsonUtils.toJson(infoBean)}".logI()
         }
@@ -189,9 +197,9 @@ class AliVideoView @JvmOverloads constructor(
     //播放器状态改变事件
     aliPlayer.setOnStateChangedListener {
       when (it) {
-        3 -> "播放器状态：播放开始".logI()
-        4 -> "播放器状态：播放暂停".logI()
-        6 -> "播放器状态：播放完成".logI()
+        3 -> controllerCallListener?.callPlay()
+        4 -> controllerCallListener?.callPause()
+        6 -> controllerCallListener?.callComplete()
         else -> "播放器状态：$it".logI()
       }
     }
@@ -271,8 +279,8 @@ class AliVideoView @JvmOverloads constructor(
 
   //准备并播放
   fun prepareStartVideo() {
-    setAutoPlayVideo(true)
     prepareVideo()
+    startVideo()
   }
 
   //开始播放
@@ -281,6 +289,7 @@ class AliVideoView @JvmOverloads constructor(
     isPlaying = true
     isPause = false
     aliPlayer.start()
+    controllerCallListener?.callPlay()
   }
 
   //暂停播放
@@ -289,11 +298,14 @@ class AliVideoView @JvmOverloads constructor(
     isPause = true
     isPlaying = false
     aliPlayer.pause()
+    controllerCallListener?.callPause()
   }
 
   //停止播放
   fun stopVideo() {
     aliPlayer.stop()
+    controllerCallListener?.callStop()
+    resetVideo()
   }
 
   //跳转到,不精准
@@ -303,12 +315,27 @@ class AliVideoView @JvmOverloads constructor(
 
   //重置
   fun resetVideo() {
+    isPause = false
+    isPlaying = false
     aliPlayer.reset()
+    aliPlayer.prepare()
   }
 
   //释放,释放后播放器将不可再被使用
   fun releaseVideo() {
     aliPlayer.release()
+    isPause = false
+    isPlaying = false
+  }
+
+  //进入或者退出全屏
+  fun enterOrExitFullScreen() {
+    if (isFullScreen) {
+      controllerCallListener?.exitFullScreen()
+    } else {
+      controllerCallListener?.enterFullScreen()
+    }
+    isFullScreen = !isFullScreen
   }
   //</editor-fold>
 
@@ -349,6 +376,66 @@ class AliVideoView @JvmOverloads constructor(
     mSurface?.release()
     mSurfaceTexture?.release()
     releaseVideo()
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="添加上层控件">
+  private var mOverViews = mutableListOf<View>()
+  fun addOverView(over: View) {
+    if (!mOverViews.any { v -> v.javaClass.name == over.javaClass.name }) {
+      over.removeParent()
+      addView(over, ViewGroup.LayoutParams(-1, -1))
+      mOverViews.add(over)
+      //Controller相关
+      if (over is VideoControllerCallListener) {
+        over.setController(controllerListener)
+        controllerListener.setControllerCall(over)
+      }
+    }
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="外部操作">
+  private var controllerListener = object : VideoControllerListener {
+    override fun onBack() {
+      if (isFullScreen) {
+        enterOrExitFullScreen()
+      } else {
+        if (mContext is Activity) mContext.onBackPressed()
+      }
+    }
+
+    override fun onPlayOrPause() {
+      if (isPause) {
+        startVideo()
+      } else if (isPlaying) {
+        pauseVideo()
+      }
+    }
+
+    override fun onPlay() {
+      startVideo()
+    }
+
+    override fun onPause() {
+      pauseVideo()
+    }
+
+    override fun seekTo(msc: Long) {
+      seekToVideo(msc)
+    }
+
+    override fun onStop() {
+      stopVideo()
+    }
+
+    override fun fullScreenOrExit() {
+      enterOrExitFullScreen()
+    }
+
+    override fun setControllerCall(call: VideoControllerCallListener?) {
+      controllerCallListener = call
+    }
   }
   //</editor-fold>
 }
