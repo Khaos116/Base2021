@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--icon图标颜色-->
+  <color name="media_icon_color">#00C9CA</color>
+  <!--上下操作栏的渐变背景-->
+  <color name="media_controller_bg_dark">#66000000</color>
+  <color name="media_controller_bg_light">#00000000</color>
+  <!--进度条颜色-->
+  <color name="media_seek_bg">#808A87</color>
+  <color name="media_seek_progress">#00C9CA</color>
+  <color name="media_seek_buffer">#3300C9CA</color>
+  <!--标题-->
+  <color name="media_video_title">#ffffff</color>
+  <!--时间显示-->
+  <color name="media_video_time">#00C9CA</color>
+</resources>
