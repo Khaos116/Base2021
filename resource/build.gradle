@@ -26,6 +26,7 @@ dependencies {
   implementation fileTree(dir: "libs", include: ["*.jar"])
   implementation Deps.kotlin_stdlib
   implementation Deps.appcompat
+  implementation Deps.material
   implementation Deps.coroutine
   implementation Deps.utilcodex
 }
