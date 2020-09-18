@@ -1,13 +1,9 @@
 package com.cc.base2021.utils;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
-import com.blankj.utilcode.util.Utils;
 import com.cc.base.utils.PermissionUtils;
 import java.io.*;
 import java.security.KeyStore;
