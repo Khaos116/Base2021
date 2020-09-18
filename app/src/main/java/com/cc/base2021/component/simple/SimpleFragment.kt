@@ -2,7 +2,6 @@ package com.cc.base2021.component.simple
 
 import com.cc.base2021.R
 import com.cc.base2021.comm.CommFragment
-import com.cc.base2021.component.main.fragment.HomeFragment
 import kotlinx.android.synthetic.main.fragment_simple.simpleTv
 
 /**
