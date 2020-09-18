@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <dimen name="media_video_title">15sp</dimen>
+  <dimen name="media_video_time">12sp</dimen>
+</resources>

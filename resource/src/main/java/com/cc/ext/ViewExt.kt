@@ -1,10 +1,10 @@
-package com.cc.base.ext
+package com.cc.ext
 
 import android.graphics.Color
 import android.view.View
 import android.view.ViewManager
-import com.cc.base.R
-import com.cc.base.utils.PressEffectHelper
+import com.cc.resource.R
+import com.cc.utils.PressEffectHelper
 
 /**
  * Author:case
@@ -50,19 +50,19 @@ fun View.pressEffectAlpha(pressAlpha: Float = 0.7f) {
 
 //设置按下效果为改变背景色
 fun View.pressEffectBgColor(
-    bgColor: Int = Color.parseColor("#f7f7f7"),
-    topLeftRadiusDp: Float = 0f,
-    topRightRadiusDp: Float = 0f,
-    bottomRightRadiusDp: Float = 0f,
-    bottomLeftRadiusDp: Float = 0f
+  bgColor: Int = Color.parseColor("#f7f7f7"),
+  topLeftRadiusDp: Float = 0f,
+  topRightRadiusDp: Float = 0f,
+  bottomRightRadiusDp: Float = 0f,
+  bottomLeftRadiusDp: Float = 0f
 ) {
   PressEffectHelper.bgColorEffect(
-      this,
-      bgColor,
-      topLeftRadiusDp,
-      topRightRadiusDp,
-      bottomRightRadiusDp,
-      bottomLeftRadiusDp
+    this,
+    bgColor,
+    topLeftRadiusDp,
+    topRightRadiusDp,
+    bottomRightRadiusDp,
+    bottomLeftRadiusDp
   )
 }
 

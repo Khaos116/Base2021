@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
   compileSdkVersion Versions.sdkTarget
@@ -22,4 +24,8 @@ android {
 
 dependencies {
   implementation fileTree(dir: "libs", include: ["*.jar"])
+  implementation Deps.kotlin_stdlib
+  implementation Deps.appcompat
+  implementation Deps.coroutine
+  implementation Deps.utilcodex
 }

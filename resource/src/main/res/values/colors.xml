@@ -9,4 +9,8 @@
   <color name="media_seek_bg">#808A87</color>
   <color name="media_seek_progress">#00C9CA</color>
   <color name="media_seek_buffer">#3300C9CA</color>
+  <!--标题-->
+  <color name="media_video_title">#ffffff</color>
+  <!--时间显示-->
+  <color name="media_video_time">#00C9CA</color>
 </resources>

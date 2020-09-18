@@ -5,7 +5,7 @@
   <!-- SEEKBAR背景底部的颜色 -->
   <item android:id="@android:id/background">
     <shape>
-      <corners android:radius="5dp"/>
+      <corners android:radius="0dp"/>
 
       <solid android:color="@color/media_seek_bg"/>
     </shape>
@@ -14,7 +14,7 @@
   <item android:id="@android:id/progress">
     <clip>
       <shape>
-        <corners android:radius="5dp"/>
+        <corners android:radius="0dp"/>
 
         <solid android:color="@color/media_seek_progress"/>
       </shape>
@@ -25,7 +25,7 @@
   <item android:id="@android:id/secondaryProgress">
     <clip>
       <shape>
-        <corners android:radius="5dp"/>
+        <corners android:radius="0dp"/>
 
         <solid android:color="@color/media_seek_buffer"/>
       </shape>

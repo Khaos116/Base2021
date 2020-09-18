@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_selected="true">
-        <bitmap android:src="@drawable/svg_media_play"/>
-    </item>
-    <item>
-        <bitmap android:src="@drawable/svg_media_pause"/>
-    </item>
+  <item android:drawable="@drawable/svg_media_play" android:state_selected="true"/>
+  <item android:drawable="@drawable/svg_media_pause"/>
 </selector>
