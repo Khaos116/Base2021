@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.*
 import com.blankj.utilcode.util.SizeUtils
 import com.cc.base2021.R
 import com.cc.base2021.item.NineGridViewBinder.ViewHolder
-import com.cc.base2021.widget.decoration.EpoxyItemDecoration
 import com.cc.base2021.widget.drag.ItemTouchMoveListener
 import com.cc.base2021.widget.drag.MyItemTouchHelperCallback
+import com.cc.decoration.EpoxyItemDecoration
 import com.drakeet.multitype.ItemViewBinder
 import com.drakeet.multitype.MultiTypeAdapter
 import kotlinx.android.synthetic.main.item_nine_grid.view.itemNineGridRecycler

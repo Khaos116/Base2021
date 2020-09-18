@@ -1,4 +1,4 @@
-package com.cc.base2021.widget.decoration
+package com.cc.decoration
 
 import android.graphics.Rect
 import android.view.View

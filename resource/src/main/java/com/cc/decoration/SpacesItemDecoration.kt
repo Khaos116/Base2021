@@ -1,4 +1,4 @@
-package com.cc.base2021.widget.decoration
+package com.cc.decoration
 
 import android.content.res.Resources
 import android.graphics.*
@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.recyclerview.widget.RecyclerView.LayoutParams
 import androidx.recyclerview.widget.RecyclerView.State
 import com.blankj.utilcode.util.*
-import com.cc.base2021.R
+import com.cc.resource.R
 
 /*
  * Copyright 2019. Bin Jing (https://github.com/youlookwhat)
