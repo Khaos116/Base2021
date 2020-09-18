@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<merge
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:visibility="gone"
-    tools:visibility="visible"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout"
     >
   <!--返回和标题-->
   <LinearLayout
       android:id="@+id/controller_top_container"
       android:layout_width="match_parent"
       android:layout_height="36dp"
+      android:alpha="0"
       android:background="@drawable/shape_controller_top_gradient"
       android:gravity="center_vertical"
       android:orientation="horizontal"
       app:layout_constraintTop_toTopOf="parent"
+      tools:alpha="1"
       >
 
     <ImageView
@@ -46,10 +47,12 @@
       android:id="@+id/controller_bottom_container"
       android:layout_width="match_parent"
       android:layout_height="36dp"
+      android:alpha="0"
       android:background="@drawable/shape_controller_bottom_gradient"
       android:gravity="center_vertical"
       android:orientation="horizontal"
       app:layout_constraintBottom_toBottomOf="parent"
+      tools:alpha="1"
       >
 
     <ImageView
@@ -106,17 +109,17 @@
         android:src="@drawable/selector_full_screen_state"
         />
   </LinearLayout>
-
+  <!--播放背景-->
   <ProgressBar
       android:id="@+id/controller_bottom_progressbar"
       style="@style/Widget.AppCompat.ProgressBar.Horizontal"
       android:layout_width="match_parent"
       android:layout_height="3dp"
+      android:alpha="0"
       android:progressDrawable="@drawable/style_seekbar_video_bottom"
-      android:visibility="gone"
       app:layout_constraintBottom_toBottomOf="parent"
+      tools:alpha="1"
       tools:progress="38"
       tools:secondaryProgress="80"
-      tools:visibility="visible"
       />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</merge>
