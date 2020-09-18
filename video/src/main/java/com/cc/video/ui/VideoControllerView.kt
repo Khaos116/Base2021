@@ -20,6 +20,7 @@ import java.util.Locale
  * Date:2020-9-18
  * Time:16:34
  */
+@SuppressLint("SetTextI18n")
 class VideoControllerView @JvmOverloads constructor(
   private val mContext: Context,
   attrs: AttributeSet? = null,
@@ -40,6 +41,11 @@ class VideoControllerView @JvmOverloads constructor(
   //<editor-fold defaultstate="collapsed" desc="初始化">
   init {
     LayoutInflater.from(mContext).inflate(R.layout.layout_controller, this, true)
+    //默认值
+    controller_bottom_duration.text = "00:00:00"
+    controller_bottom_time.text = "00:00:00"
+    controller_bottom_seekbar.max = 0
+    controller_bottom_progressbar.max = 0
     //按压
     controller_top_back.pressEffectAlpha(0.95f)
     controller_bottom_play_pause.pressEffectAlpha(0.95f)
@@ -125,7 +131,6 @@ class VideoControllerView @JvmOverloads constructor(
     showView()
   }
 
-  @SuppressLint("SetTextI18n")
   override fun callComplete() {
     callPause()
     controller_bottom_progressbar.progress = 0
@@ -153,12 +158,15 @@ class VideoControllerView @JvmOverloads constructor(
   }
 
   override fun callDuration(duration: Long) {
+    if (controller_bottom_progressbar.max == 0) {
+      controller_bottom_progressbar.alpha = 1f
+      controller_top_container.alpha = 0f
+      controller_bottom_container.alpha = 0f
+    }
     controller_bottom_progressbar.max = duration.toInt()
     controller_bottom_seekbar.max = duration.toInt() / 1000
     controller_bottom_duration.text = forMateVideoTime(duration)
-    controller_bottom_progressbar.alpha = 1f
-    controller_top_container.alpha = 0f
-    controller_bottom_container.alpha = 0f
+
   }
 
   override fun enterFullScreen() {
