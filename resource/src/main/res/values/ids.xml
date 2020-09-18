@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <item name="id_tag_click" type="id"/>
+  <item name="id_tag_click_double" type="id"/>
+  <item name="id_tag_click_runnable" type="id"/>
 </resources>
