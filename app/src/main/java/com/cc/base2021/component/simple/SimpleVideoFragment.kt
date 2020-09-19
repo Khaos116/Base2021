@@ -4,8 +4,7 @@ import com.blankj.utilcode.util.FileUtils
 import com.cc.base2021.R
 import com.cc.base2021.comm.CommFragment
 import com.cc.base2021.utils.VideoRandomUtils
-import com.cc.video.ui.VideoControllerView
-import com.cc.video.ui.VideoLoadingView
+import com.cc.video.ui.*
 import kotlinx.android.synthetic.main.fragment_simple_video.simpleVideoView
 
 /**
@@ -34,15 +33,20 @@ class SimpleVideoFragment : CommFragment() {
 
   //<editor-fold defaultstate="collapsed" desc="初始化">
   override fun lazyInit() {
-    val videoBean = VideoRandomUtils.instance.randomVideo()
+    //自动感应生命周期
+    simpleVideoView.setLifecycleOwner(this)
+    //视频控制器
     simpleVideoView.addOverView(VideoControllerView(mContext))
     simpleVideoView.addOverView(VideoLoadingView(mContext))
-    simpleVideoView.setLifecycleOwner(this)
+    simpleVideoView.addOverView(VideoErrorView(mContext))
+    //视频数据
+    val videoBean = VideoRandomUtils.instance.randomVideo()
     simpleVideoView.setUrlVideo(
-      url = videoBean.second,
-      title = FileUtils.getFileName(videoBean.second),
-      cover = videoBean.first
+        url = videoBean.second,
+        title = FileUtils.getFileName(videoBean.second),
+        cover = videoBean.first
     )
+    //播放
     simpleVideoView.prepareStartVideo()
   }
   //</editor-fold>

@@ -1,14 +1,18 @@
 package com.cc.video.ui
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.SurfaceTexture
 import android.util.AttributeSet
 import android.view.*
 import android.widget.FrameLayout
 import androidx.annotation.FloatRange
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
 import com.aliyun.player.AliPlayerFactory
 import com.aliyun.player.IPlayer
@@ -17,11 +21,9 @@ import com.aliyun.player.bean.InfoCode
 import com.aliyun.player.nativeclass.CacheConfig
 import com.aliyun.player.nativeclass.TrackInfo
 import com.aliyun.player.source.UrlSource
-import com.blankj.utilcode.util.GsonUtils
-import com.blankj.utilcode.util.PathUtils
+import com.blankj.utilcode.util.*
 import com.cc.ext.removeParent
-import com.cc.video.ext.logE
-import com.cc.video.ext.logI
+import com.cc.video.ext.*
 import com.cc.video.inter.*
 
 /**
@@ -31,15 +33,15 @@ import com.cc.video.inter.*
  * Time:15:37
  */
 class AliVideoView @JvmOverloads constructor(
-  private val mContext: Context,
-  attrs: AttributeSet? = null,
-  defStyleAttr: Int = 0,
-  defStyleRes: Int = 0
-) : FrameLayout(mContext, attrs, defStyleAttr, defStyleRes), LifecycleObserver {
+    private val con: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
+) : FrameLayout(con, attrs, defStyleAttr, defStyleRes), LifecycleObserver {
 
   //<editor-fold defaultstate="collapsed" desc="变量区">
   //视频显示控件
-  private var mTextureView = TextureView(mContext)
+  private var mTextureView = TextureView(con)
   private var mSurfaceTexture: SurfaceTexture? = null
   private var mSurface: Surface? = null
 
@@ -49,7 +51,7 @@ class AliVideoView @JvmOverloads constructor(
   private var videoCover: String = ""
 
   //播放器
-  private var aliPlayer = AliPlayerFactory.createAliPlayer(mContext.applicationContext)
+  private var aliPlayer = AliPlayerFactory.createAliPlayer(con.applicationContext)
 
   //缓存
   private var mCacheConfig = CacheConfig()
@@ -62,14 +64,23 @@ class AliVideoView @JvmOverloads constructor(
 
   //是否处于全屏
   private var isFullScreen: Boolean = false
+
+  //是否允许移动网络播放
+  private var canUserMobile = Utils.getApp().useMobileNet
+
+  //是否显示了异常View
+  private var isShowError = false
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="回调到外部">
   //外部回调Controller
   private var callController: VideoControllerCallListener? = null
 
-  //外部回调加载状态
+  //外部回调Loading
   private var callLoading: VideoLoadingCallListener? = null
+
+  //外部回调Error
+  private var callError: VideoErrorCallListener? = null
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化">
@@ -145,16 +156,16 @@ class AliVideoView @JvmOverloads constructor(
       if (!aliPlayer.isLoop) resetVideo()
     }
     //出错事件
-    aliPlayer.setOnErrorListener { "播放出错:${it.msg}".logE() }
+    aliPlayer.setOnErrorListener { callPlayError() }
     //准备成功事件
     aliPlayer.setOnPreparedListener {
       callLoading?.hiddenLoading()
-      callController?.callDuration(aliPlayer.duration)
+      if (!isShowError) callController?.callDuration(aliPlayer.duration)
     }
     //视频分辨率变化回调
     aliPlayer.setOnVideoSizeChangedListener { width, height -> }
     //首帧渲染显示事件
-    aliPlayer.setOnRenderingStartListener { callController?.callDuration(aliPlayer.duration) }
+    aliPlayer.setOnRenderingStartListener { if (!isShowError) callController?.callDuration(aliPlayer.duration) }
     //其他信息的事件，type包括了：循环播放开始，缓冲位置，当前播放位置，自动播放开始等
     aliPlayer.setOnInfoListener { infoBean ->
       //自动播放开始事件(自动播放的时候将不会回调onPrepared，需要从这判断)
@@ -181,7 +192,7 @@ class AliVideoView @JvmOverloads constructor(
     //缓冲事件
     aliPlayer.setOnLoadingStatusListener(object : IPlayer.OnLoadingStatusListener {
       override fun onLoadingBegin() { //缓冲开始
-        callLoading?.showLoading()
+        if (!isShowError) callLoading?.showLoading()
       }
 
       override fun onLoadingProgress(percent: Int, kbps: Float) { //缓冲进度
@@ -229,6 +240,28 @@ class AliVideoView @JvmOverloads constructor(
     aliPlayer.setOnSnapShotListener { bm, with, height ->
 
     }
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="播放出错判断">
+  @SuppressLint("MissingPermission")
+  private fun callPlayError() {
+    if (callError == null) return
+    isShowError = true
+    if (ContextCompat.checkSelfPermission(con, Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED) {
+      if (!NetworkUtils.isConnected()) { //无网络
+        callError?.errorNoNet()
+      } else if (NetworkUtils.isWifiConnected()) { //Wifi状态
+        callError?.errorNormal()
+      } else if (!canUserMobile) { //手机网络，但是不允许使用
+        callError?.errorMobileNet()
+      } else {
+        isShowError = false
+      }
+    } else {
+      callError?.errorNormal()
+    }
+    callLoading?.hiddenLoading()
   }
   //</editor-fold>
 
@@ -298,10 +331,24 @@ class AliVideoView @JvmOverloads constructor(
   }
 
   //准备播放
+  @SuppressLint("MissingPermission")
   fun prepareVideo() {
     aliPlayer.prepare()
-    callLoading?.showLoading()
     callController?.callPrepare()
+    if (ContextCompat.checkSelfPermission(con, Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED) {
+      if (callError != null)
+        if (!canUserMobile && NetworkUtils.isConnected() && !NetworkUtils.isWifiConnected()) {
+          aliPlayer.isAutoPlay = false
+          isShowError = true
+          callError?.errorMobileNet()
+          callLoading?.hiddenLoading()
+        } else if (!NetworkUtils.isConnected()) {
+          aliPlayer.isAutoPlay = false
+          isShowError = true
+          callError?.errorNoNet()
+          callLoading?.hiddenLoading()
+        }
+    }
     isPlaying = aliPlayer.isAutoPlay
     isPause = !isPlaying
   }
@@ -313,7 +360,22 @@ class AliVideoView @JvmOverloads constructor(
   }
 
   //开始播放
+  @SuppressLint("MissingPermission")
   fun startVideo() {
+    if (ContextCompat.checkSelfPermission(con, Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED &&
+        callError != null) {
+      if (!canUserMobile && NetworkUtils.isConnected() && !NetworkUtils.isWifiConnected()) {
+        isShowError = true
+        callError?.errorMobileNet()
+        callLoading?.hiddenLoading()
+        return
+      } else if (!NetworkUtils.isConnected()) {
+        isShowError = true
+        callError?.errorNoNet()
+        callLoading?.hiddenLoading()
+        return
+      }
+    }
     if (isPlaying) return
     isPlaying = true
     isPause = false
@@ -344,6 +406,7 @@ class AliVideoView @JvmOverloads constructor(
 
   //重置
   fun resetVideo() {
+    callLoading?.hiddenLoading()
     aliPlayer.reset()
     prepareVideo()
   }
@@ -359,10 +422,10 @@ class AliVideoView @JvmOverloads constructor(
   fun enterOrExitFullScreen() {
     if (isFullScreen) {
       callController?.exitFullScreen()
-      if (mContext is Activity) mContext.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+      if (con is Activity) con.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     } else {
       callController?.enterFullScreen()
-      if (mContext is Activity) mContext.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+      if (con is Activity) con.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
     }
     isFullScreen = !isFullScreen
   }
@@ -415,15 +478,18 @@ class AliVideoView @JvmOverloads constructor(
       over.removeParent()
       addView(over, ViewGroup.LayoutParams(-1, -1))
       mOverViews.add(over)
-      //Controller相关
+      //播放组件相关
       when (over) {
         is VideoControllerCallListener -> {
-          over.callTitle(videoTitle)
           over.setCall(operateController)
           callController = over
         }
         is VideoLoadingCallListener -> {
           callLoading = over
+        }
+        is VideoErrorCallListener -> {
+          over.setCall(operateError)
+          callError = over
         }
       }
     }
@@ -437,7 +503,7 @@ class AliVideoView @JvmOverloads constructor(
       if (isFullScreen) {
         enterOrExitFullScreen()
       } else {
-        if (mContext is Activity) mContext.onBackPressed()
+        if (con is Activity) con.onBackPressed()
       }
     }
 
@@ -472,11 +538,16 @@ class AliVideoView @JvmOverloads constructor(
 
   //异常控制
   private var operateError = object : VideoErrorListener {
-    override fun normalPlay() {
+    override fun continuePlay() {
+      isShowError = false
+      canUserMobile = true
+      Utils.getApp().useMobileNet = true
+      if (aliPlayer.duration > 0) callController?.callDuration(aliPlayer.duration)
       startVideo()
     }
 
     override fun resetPlay() {
+      isShowError = false
       resetVideo()
       startVideo()
     }
