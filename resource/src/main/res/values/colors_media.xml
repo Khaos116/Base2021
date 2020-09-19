@@ -16,4 +16,8 @@
   <!--加载中的颜色-->
   <color name="media_video_loading_bg">@color/blue_87CEEB</color>
   <color name="media_video_loading_hint">#00FFFF</color>
+  <!--出错的颜色-->
+  <color name="media_video_error_hint">@color/blue_00C78C</color>
+  <color name="media_video_error_retry">#00FFFF</color>
+  <color name="media_video_error_retry_bg">@color/blue_87CEEB</color>
 </resources>
