@@ -10,7 +10,7 @@ import com.cc.ext.*
 import com.cc.video.R
 import com.cc.video.inter.VideoControllerCallListener
 import com.cc.video.inter.VideoControllerListener
-import kotlinx.android.synthetic.main.layout_controller.view.*
+import kotlinx.android.synthetic.main.layout_video_controller.view.*
 import kotlinx.coroutines.*
 import java.util.Formatter
 import java.util.Locale
@@ -38,9 +38,9 @@ class VideoControllerView @JvmOverloads constructor(
   private var isSeeking = false
   //</editor-fold>
 
-  //<editor-fold defaultstate="collapsed" desc="初始化">
+  //<editor-fold defaultstate="collapsed" desc="初始化XML">
   init {
-    LayoutInflater.from(mContext).inflate(R.layout.layout_controller, this, true)
+    LayoutInflater.from(mContext).inflate(R.layout.layout_video_controller, this, true)
     //默认值
     controller_bottom_duration.text = "00:00:00"
     controller_bottom_time.text = "00:00:00"
@@ -112,6 +112,10 @@ class VideoControllerView @JvmOverloads constructor(
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="回调处理">
+  override fun callPrepare() {
+    showView()
+  }
+
   override fun callPlay() {
     controller_bottom_play_pause.setImageResource(R.drawable.selector_play_state)
     controller_bottom_play_pause.isSelected = false
@@ -177,7 +181,7 @@ class VideoControllerView @JvmOverloads constructor(
     controller_bottom_full_screen.isSelected = false
   }
 
-  override fun setController(call: VideoControllerListener?) {
+  override fun setCall(call: VideoControllerListener?) {
     controllerListener = call
   }
   //</editor-fold>
