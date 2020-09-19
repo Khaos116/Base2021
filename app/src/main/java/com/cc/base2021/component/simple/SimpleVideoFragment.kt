@@ -1,9 +1,11 @@
 package com.cc.base2021.component.simple
 
-import android.content.res.Configuration
+import com.blankj.utilcode.util.FileUtils
 import com.cc.base2021.R
 import com.cc.base2021.comm.CommFragment
+import com.cc.base2021.utils.VideoRandomUtils
 import com.cc.video.ui.VideoControllerView
+import com.cc.video.ui.VideoLoadingView
 import kotlinx.android.synthetic.main.fragment_simple_video.simpleVideoView
 
 /**
@@ -20,7 +22,6 @@ class SimpleVideoFragment : CommFragment() {
       return fragment
     }
   }
-
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="变量">
@@ -33,19 +34,16 @@ class SimpleVideoFragment : CommFragment() {
 
   //<editor-fold defaultstate="collapsed" desc="初始化">
   override fun lazyInit() {
+    val videoBean = VideoRandomUtils.instance.randomVideo()
     simpleVideoView.addOverView(VideoControllerView(mContext))
+    simpleVideoView.addOverView(VideoLoadingView(mContext))
     simpleVideoView.setLifecycleOwner(this)
-    simpleVideoView.setUrlVideo(mUrl)
+    simpleVideoView.setUrlVideo(
+      url = videoBean.second,
+      title = FileUtils.getFileName(videoBean.second),
+      cover = videoBean.first
+    )
     simpleVideoView.prepareStartVideo()
   }
   //</editor-fold>
-
-  override fun onConfigurationChanged(newConfig: Configuration) {
-    super.onConfigurationChanged(newConfig)
-    if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-
-    } else {
-
-    }
-  }
 }
