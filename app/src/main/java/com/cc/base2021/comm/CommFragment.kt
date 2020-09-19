@@ -7,7 +7,7 @@ import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.StringUtils
 import com.cc.base.ui.BaseFragment
 import com.cc.base2021.R
-import com.cc.base2021.widget.FlashingTextView
+import com.cc.widget.FlashingTextView
 import com.cc.ext.click
 import com.cc.ext.removeParent
 
