@@ -29,7 +29,7 @@ class VideoControllerView @JvmOverloads constructor(
 ) : ConstraintLayout(mContext, attrs, defStyleAttr, defStyleRes), VideoControllerCallListener {
   //<editor-fold defaultstate="collapsed" desc="变量">
   //操作监听
-  var controllerListener: VideoControllerListener? = null
+  private var controllerListener: VideoControllerListener? = null
 
   //倒计时隐藏
   private var job: Job? = null
@@ -49,6 +49,7 @@ class VideoControllerView @JvmOverloads constructor(
     //按压
     controller_top_back.pressEffectAlpha(0.95f)
     controller_bottom_play_pause.pressEffectAlpha(0.95f)
+    controller_bottom_stop.pressEffectAlpha(0.95f)
     controller_bottom_full_screen.pressEffectAlpha(0.95f)
     //点击事件
     controller_top_back.click {
