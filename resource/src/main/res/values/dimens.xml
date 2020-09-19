@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <dimen name="media_video_title">15sp</dimen>
-  <dimen name="media_video_time">12sp</dimen>
+  <dimen name="media_video_title_size">15sp</dimen>
+  <dimen name="media_video_time_size">12sp</dimen>
+  <dimen name="media_video_title_height">36dp</dimen>
 </resources>

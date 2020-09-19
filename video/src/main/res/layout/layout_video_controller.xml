@@ -12,7 +12,7 @@
   <LinearLayout
       android:id="@+id/controller_top_container"
       android:layout_width="match_parent"
-      android:layout_height="36dp"
+      android:layout_height="@dimen/media_video_title_height"
       android:alpha="0"
       android:background="@drawable/shape_controller_top_gradient"
       android:gravity="center_vertical"
@@ -24,7 +24,7 @@
     <ImageView
         android:id="@+id/controller_top_back"
         android:layout_width="44dp"
-        android:layout_height="36dp"
+        android:layout_height="match_parent"
         android:contentDescription="@null"
         android:padding="5dp"
         android:src="@drawable/svg_media_back"
@@ -38,7 +38,7 @@
         android:gravity="center_vertical"
         android:maxLines="1"
         android:textColor="@color/media_video_title"
-        android:textSize="@dimen/media_video_title"
+        android:textSize="@dimen/media_video_title_size"
         tools:text="这是视频标题的显示"
         />
   </LinearLayout>
@@ -46,7 +46,7 @@
   <LinearLayout
       android:id="@+id/controller_bottom_container"
       android:layout_width="match_parent"
-      android:layout_height="36dp"
+      android:layout_height="@dimen/media_video_title_height"
       android:alpha="0"
       android:background="@drawable/shape_controller_bottom_gradient"
       android:gravity="center_vertical"
@@ -57,7 +57,7 @@
 
     <ImageView
         android:id="@+id/controller_bottom_play_pause"
-        android:layout_width="36dp"
+        android:layout_width="@dimen/media_video_title_height"
         android:layout_height="match_parent"
         android:contentDescription="@null"
         android:padding="8dp"
@@ -70,13 +70,13 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:textColor="@color/media_video_time"
-        android:textSize="@dimen/media_video_time"
+        android:textSize="@dimen/media_video_time_size"
         tools:text="00:00:00"
         />
 
     <ImageView
         android:id="@+id/controller_bottom_stop"
-        android:layout_width="36dp"
+        android:layout_width="@dimen/media_video_title_height"
         android:layout_height="match_parent"
         android:contentDescription="@null"
         android:padding="8dp"
@@ -105,13 +105,13 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:textColor="@color/media_video_time"
-        android:textSize="@dimen/media_video_time"
+        android:textSize="@dimen/media_video_time_size"
         tools:text="00:05:20"
         />
 
     <ImageView
         android:id="@+id/controller_bottom_full_screen"
-        android:layout_width="36dp"
+        android:layout_width="@dimen/media_video_title_height"
         android:layout_height="match_parent"
         android:contentDescription="@null"
         android:padding="8dp"

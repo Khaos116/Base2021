@@ -37,7 +37,7 @@ class VideoErrorView @JvmOverloads constructor(
     error_retry.pressEffectAlpha(0.95f)
     //点击事件
     error_retry.click {
-      error_view.gone()
+      showError(false)
       if (error_retry.text.toString() == StringUtils.getString(R.string.video_continue)) {
         errorListener?.continuePlay()
       } else {
@@ -45,7 +45,13 @@ class VideoErrorView @JvmOverloads constructor(
       }
     }
     //默认不显示
-    error_view.gone()
+    showError(false)
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="显示和隐藏">
+  private fun showError(show: Boolean) {
+    error_view?.visibleGone(show)
   }
   //</editor-fold>
 
@@ -53,19 +59,19 @@ class VideoErrorView @JvmOverloads constructor(
   override fun errorNormal() {
     error_info.text = StringUtils.getString(R.string.video_error_default)
     error_retry.text = StringUtils.getString(R.string.video_retry)
-    error_view.visible()
+    showError(true)
   }
 
   override fun errorMobileNet() {
     error_info.text = StringUtils.getString(R.string.video_error_mobile)
     error_retry.text = StringUtils.getString(R.string.video_continue)
-    error_view.visible()
+    showError(true)
   }
 
   override fun errorNoNet() {
     error_info.text = StringUtils.getString(R.string.video_error_no_net)
     error_retry.text = StringUtils.getString(R.string.video_retry)
-    error_view.visible()
+    showError(true)
   }
 
   override fun setCall(call: VideoErrorListener) {
