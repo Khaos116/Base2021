@@ -63,6 +63,10 @@ class VideoControllerView @JvmOverloads constructor(
       controllerListener?.fullScreenOrExit()
       countDownHidden()
     }
+    controller_bottom_stop.click {
+      controllerListener?.onStop()
+      job?.cancel()
+    }
     controller_bottom_seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
       override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
         if (fromUser) {
@@ -113,7 +117,7 @@ class VideoControllerView @JvmOverloads constructor(
 
   //<editor-fold defaultstate="collapsed" desc="回调处理">
   override fun callPrepare() {
-    showView()
+    callPause()
   }
 
   override fun callPlay() {
@@ -130,18 +134,16 @@ class VideoControllerView @JvmOverloads constructor(
   }
 
   override fun callStop() {
-    controller_bottom_play_pause.setImageResource(R.drawable.selector_play_state)
-    job?.cancel()
-    showView()
-  }
-
-  override fun callComplete() {
     callPause()
     controller_bottom_progressbar.progress = 0
     controller_bottom_seekbar.progress = 0
     controller_bottom_time.text = "00:00:00"
     job?.cancel()
     showView()
+  }
+
+  override fun callComplete() {
+    callStop()
   }
 
   override fun callTitle(title: String) {
