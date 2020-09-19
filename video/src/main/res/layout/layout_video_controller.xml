@@ -123,7 +123,7 @@
       android:id="@+id/controller_bottom_progressbar"
       style="@style/Widget.AppCompat.ProgressBar.Horizontal"
       android:layout_width="match_parent"
-      android:layout_height="3dp"
+      android:layout_height="2dp"
       android:alpha="0"
       android:progressDrawable="@drawable/style_seekbar_video_bottom"
       app:layout_constraintBottom_toBottomOf="parent"
