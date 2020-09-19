@@ -13,4 +13,7 @@
   <color name="media_video_title">#ffffff</color>
   <!--时间显示-->
   <color name="media_video_time">#00C9CA</color>
+  <!--加载中的颜色-->
+  <color name="media_video_loading_bg">@color/blue_87CEEB</color>
+  <color name="media_video_loading_hint">#00FFFF</color>
 </resources>
