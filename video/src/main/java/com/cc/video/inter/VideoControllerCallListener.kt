@@ -6,6 +6,7 @@ package com.cc.video.inter
  * Time:16:51
  */
 interface VideoControllerCallListener {
+  fun callPrepare()
   fun callPlay()
   fun callPause()
   fun callStop()
@@ -16,5 +17,5 @@ interface VideoControllerCallListener {
   fun callDuration(duration: Long)
   fun enterFullScreen()
   fun exitFullScreen()
-  fun setController(call: VideoControllerListener?)
+  fun setCall(call: VideoControllerListener?)
 }

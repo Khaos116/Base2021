@@ -13,5 +13,4 @@ interface VideoControllerListener {
   fun seekTo(msc: Long)
   fun onStop()
   fun fullScreenOrExit()
-  fun setControllerCall(call: VideoControllerCallListener?)
 }
