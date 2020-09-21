@@ -23,7 +23,6 @@ import com.aliyun.player.nativeclass.CacheConfig
 import com.aliyun.player.nativeclass.TrackInfo
 import com.aliyun.player.source.UrlSource
 import com.blankj.utilcode.util.*
-import com.cc.ext.removeParent
 import com.cc.video.ext.*
 import com.cc.video.inter.*
 import kotlin.math.max
@@ -343,6 +342,7 @@ class AliVideoView @JvmOverloads constructor(
 
   //设置播放器音量,范围0~1
   fun setVolumeVideo(@FloatRange(from = 0.0, to = 1.0) volume: Float) {
+    "播放器音量:$volume".logI()
     aliPlayer.volume = volume
   }
 
@@ -358,6 +358,7 @@ class AliVideoView @JvmOverloads constructor(
 
   //设置播放地址
   fun setUrlVideo(url: String, title: String? = "", cover: String? = "") {
+    "播放地址:$url".logI()
     setCanOperate(false)
     callController?.callStop()
     videoUrl = url
