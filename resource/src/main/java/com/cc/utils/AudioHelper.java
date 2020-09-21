@@ -118,11 +118,10 @@ public class AudioHelper {
    * @param streamType 音频类类型
    * @param volume 音频大小
    */
-  public void setVolume(int streamType, int volume) {
-    volume = (volume > getMaxVolume(streamType)) ? getMaxVolume(streamType) : volume;
+  public void setVolume(int streamType, int volume, boolean showUi) {
+    volume = Math.min(volume, getMaxVolume(streamType));
     audioManager.setStreamVolume(streamType,
-        volume,
-        AudioManager.FLAG_PLAY_SOUND | AudioManager.FLAG_SHOW_UI);
+        volume, showUi ? AudioManager.FLAG_PLAY_SOUND | AudioManager.FLAG_SHOW_UI : AudioManager.FLAG_PLAY_SOUND);
   }
 
   /**
@@ -130,32 +129,31 @@ public class AudioHelper {
    *
    * @param streamType 音频类类型
    */
-  public void raiseVolume(int streamType) {
+  public void raiseVolume(int streamType, boolean showUi) {
     int currentVolume = getCurrentVolume(streamType);
     if (currentVolume < getMaxVolume(streamType)) {
       audioManager.adjustStreamVolume(streamType,
           AudioManager.ADJUST_RAISE,
-          AudioManager.FLAG_PLAY_SOUND | AudioManager.FLAG_SHOW_UI);
+          showUi ? AudioManager.FLAG_PLAY_SOUND | AudioManager.FLAG_SHOW_UI : AudioManager.FLAG_PLAY_SOUND);
     }
   }
 
   /**
    * 调小音量
    */
-  public void lowerVolume(int streamType) {
+  public void lowerVolume(int streamType, boolean showUi) {
     int currentVolume = getCurrentVolume(streamType);
     if (currentVolume > 0) {
       audioManager.adjustStreamVolume(streamType,
-          AudioManager.ADJUST_LOWER,
-          AudioManager.FLAG_SHOW_UI);
+          AudioManager.ADJUST_LOWER, showUi ? AudioManager.FLAG_SHOW_UI : 0);
     }
   }
 
-  public void raiseMusicVolume() {
-    raiseVolume(AudioManager.STREAM_MUSIC);
+  public void raiseMusicVolume(boolean showUi) {
+    raiseVolume(AudioManager.STREAM_MUSIC, showUi);
   }
 
-  public void lowerMusicVolume() {
-    lowerVolume(AudioManager.STREAM_MUSIC);
+  public void lowerMusicVolume(boolean showUi) {
+    lowerVolume(AudioManager.STREAM_MUSIC, showUi);
   }
 }
