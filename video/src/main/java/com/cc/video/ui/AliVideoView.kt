@@ -344,7 +344,6 @@ class AliVideoView @JvmOverloads constructor(
 
   //设置播放器音量,范围0~1
   fun setVolumePlayerVideo(@FloatRange(from = 0.0, to = 1.0) volume: Float) {
-    "播放器音量:$volume".logI()
     aliPlayer.volume = volume
   }
 
@@ -353,7 +352,6 @@ class AliVideoView @JvmOverloads constructor(
 
   //设置手机音乐音量
   fun setVolumeVideo(volume: Float) {
-    "手机音乐音量:$volume".logI()
     maxVolume = AudioHelper.getInstance().musicMaxVolume * 1f
     AudioHelper.getInstance().setVolume(AudioManager.STREAM_MUSIC, (volume * maxVolume).toInt(), false)
   }

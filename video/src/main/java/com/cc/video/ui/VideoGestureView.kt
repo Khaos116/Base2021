@@ -103,9 +103,10 @@ class VideoGestureView @JvmOverloads constructor(
       volume > lastVolume -> gesture_volume_iv.setImageResource(R.drawable.svg_media_volume_add)
       volume < lastVolume -> gesture_volume_iv.setImageResource(R.drawable.svg_media_volume_sub)
     }
-    gesture_volume_tv.text = String.format("%d%%", (volume * 100).toInt())
+    val volumePercent = volume / (gestureListener?.getVolumeMax() ?: 1f)
+    gesture_volume_tv.text = String.format("%d%%", (volumePercent * 100).toInt())
     lastVolume = volume
-    gestureListener?.setVolume(volume)
+    gestureListener?.setVolume(volumePercent)
   }
 
   private fun setSeekToPreView(msc: Long) {
@@ -143,14 +144,14 @@ class VideoGestureView @JvmOverloads constructor(
   private fun onBrightVerticalSlide(percent: Float) {
     gestureListener?.let { gl ->
       if (gesture_bright_view.visibility != View.VISIBLE) showBright()
-      setBright(max(gl.getBrightMin(), min(1f, downBright + gl.getBrightMax() * percent)))
+      setBright(max(gl.getBrightMin(), min(gl.getBrightMax(), downBright + gl.getBrightMax() * percent)))
     }
   }
 
   private fun onVolumeVerticalSlide(percent: Float) {
     gestureListener?.let { gl ->
       if (gesture_volume_view.visibility != View.VISIBLE) showVolume()
-      setVolume(max(gl.getVolumeMin(), min(1f, downVolume + gl.getVolumeMax() * percent)))
+      setVolume(max(gl.getVolumeMin(), min(gl.getVolumeMax(), downVolume + gl.getVolumeMax() * percent)))
     }
   }
   //</editor-fold>
@@ -193,7 +194,6 @@ class VideoGestureView @JvmOverloads constructor(
       }
       if (horizontalSlide) onHorizontalSlide(-deltaX / width)
       else {
-        if (abs(deltaY) > height) return
         if (rightVerticalSlide) onVolumeVerticalSlide(deltaY / height)
         else onBrightVerticalSlide(deltaY / height)
       }

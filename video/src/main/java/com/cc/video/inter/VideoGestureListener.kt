@@ -1,5 +1,8 @@
 package com.cc.video.inter
 
+import androidx.annotation.FloatRange
+import androidx.annotation.IntRange
+
 /**
  * 播放手势相关操作
  * Author:CASE
@@ -20,9 +23,9 @@ interface VideoGestureListener {
   //设置
   fun onPause()
   fun onStart()
-  fun seekPreviewTo(msc: Long)
-  fun seekTo(msc: Long)
-  fun setVolume(volume: Float)
-  fun setPlayerVolume(volume: Float)
-  fun setBright(bright: Float)
+  fun seekPreviewTo(@IntRange(from = 0) msc: Long)
+  fun seekTo(@IntRange(from = 0) msc: Long)
+  fun setVolume(@FloatRange(from = 0.0, to = 1.0) volume: Float)
+  fun setPlayerVolume(@FloatRange(from = 0.0, to = 1.0) volume: Float)
+  fun setBright(@FloatRange(from = 0.0, to = 1.0) bright: Float)
 }
