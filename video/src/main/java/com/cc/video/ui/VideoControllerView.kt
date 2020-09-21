@@ -3,17 +3,16 @@ package com.cc.video.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
-import android.view.LayoutInflater
+import android.view.*
 import android.widget.SeekBar
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.cc.ext.*
+import com.cc.ext.click
+import com.cc.ext.pressEffectAlpha
 import com.cc.video.R
-import com.cc.video.inter.VideoControllerCallListener
-import com.cc.video.inter.VideoControllerListener
+import com.cc.video.inter.*
+import com.cc.video.utils.VideoTimeUtils
 import kotlinx.android.synthetic.main.layout_video_controller.view.*
 import kotlinx.coroutines.*
-import java.util.Formatter
-import java.util.Locale
 
 /**
  * Author:CASE
@@ -22,14 +21,17 @@ import java.util.Locale
  */
 @SuppressLint("SetTextI18n")
 class VideoControllerView @JvmOverloads constructor(
-  private val mContext: Context,
+  private val con: Context,
   attrs: AttributeSet? = null,
   defStyleAttr: Int = 0,
   defStyleRes: Int = 0
-) : ConstraintLayout(mContext, attrs, defStyleAttr, defStyleRes), VideoControllerCallListener {
+) : ConstraintLayout(con, attrs, defStyleAttr, defStyleRes), VideoControllerCallListener, OverGestureListener {
   //<editor-fold defaultstate="collapsed" desc="变量">
   //操作监听
   private var controllerListener: VideoControllerListener? = null
+
+  //是否可以进行操作
+  private var canOperateVideo: Boolean = false
 
   //倒计时隐藏
   private var job: Job? = null
@@ -40,7 +42,7 @@ class VideoControllerView @JvmOverloads constructor(
 
   //<editor-fold defaultstate="collapsed" desc="初始化XML">
   init {
-    LayoutInflater.from(mContext).inflate(R.layout.layout_video_controller, this, true)
+    LayoutInflater.from(con).inflate(R.layout.layout_video_controller, this, true)
     //默认值
     controller_bottom_duration.text = "00:00:00"
     controller_bottom_time.text = "00:00:00"
@@ -57,6 +59,7 @@ class VideoControllerView @JvmOverloads constructor(
       countDownHidden()
     }
     controller_bottom_play_pause.click {
+      if (!canOperateVideo) return@click
       controllerListener?.onPlayOrPause()
       countDownHidden()
     }
@@ -72,7 +75,7 @@ class VideoControllerView @JvmOverloads constructor(
       override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
         if (fromUser) {
           controller_bottom_seekbar.progress = progress
-          controller_bottom_time.text = forMateVideoTime(progress * 1000L)
+          controller_bottom_time.text = VideoTimeUtils.instance.forMatterVideoTime(progress * 1000L)
         }
       }
 
@@ -89,14 +92,6 @@ class VideoControllerView @JvmOverloads constructor(
         countDownHidden()
       }
     })
-    this.click {
-      if (controller_bottom_progressbar.alpha == 1f) {
-        showView()
-        if (!controller_bottom_play_pause.isSelected) countDownHidden()
-      } else if (!controller_bottom_play_pause.isSelected) {
-        hiddenView()
-      }
-    }
   }
   //</editor-fold>
 
@@ -116,7 +111,7 @@ class VideoControllerView @JvmOverloads constructor(
   }
   //</editor-fold>
 
-  //<editor-fold defaultstate="collapsed" desc="回调处理">
+  //<editor-fold defaultstate="collapsed" desc="播放器回调">
   override fun callPrepare() {
     callPause()
   }
@@ -160,7 +155,7 @@ class VideoControllerView @JvmOverloads constructor(
     if (!isSeeking) {
       controller_bottom_progressbar.progress = msc.toInt()
       controller_bottom_seekbar.progress = msc.toInt() / 1000
-      controller_bottom_time.text = forMateVideoTime(msc)
+      controller_bottom_time.text = VideoTimeUtils.instance.forMatterVideoTime(msc)
     }
   }
 
@@ -172,7 +167,7 @@ class VideoControllerView @JvmOverloads constructor(
     }
     controller_bottom_progressbar.max = duration.toInt()
     controller_bottom_seekbar.max = duration.toInt() / 1000
-    controller_bottom_duration.text = forMateVideoTime(duration)
+    controller_bottom_duration.text = VideoTimeUtils.instance.forMatterVideoTime(duration)
 
   }
 
@@ -184,26 +179,41 @@ class VideoControllerView @JvmOverloads constructor(
     controller_bottom_full_screen.isSelected = false
   }
 
+  override fun callOperate(canOperate: Boolean) {
+    this.canOperateVideo = canOperate
+    controller_bottom_seekbar.isEnabled = canOperate
+    if (canOperate) {
+      showView()
+      if (!controller_bottom_play_pause.isSelected) countDownHidden()
+    } else {
+      hiddenView()
+    }
+  }
+
   override fun setCall(call: VideoControllerListener?) {
     controllerListener = call
   }
   //</editor-fold>
 
-  //<editor-fold defaultstate="collapsed" desc="时间处理">
-  private var formatterBuilder: StringBuilder = StringBuilder()
-  private var formatterHHMM: Formatter = Formatter(formatterBuilder, Locale.getDefault())
-  private fun forMateVideoTime(time: Long): String {
-    val totalSeconds: Int = (time / 1000).toInt()
-    val seconds: Int = totalSeconds % 60
-    val minutes: Int = totalSeconds / 60 % 60
-    val hours: Int = totalSeconds / 3600
-    formatterBuilder.setLength(0)
-    return if (hours > 0) {
-      formatterHHMM.format("%d:%02d:%02d", hours, minutes, seconds).toString()
-    } else {
-      formatterHHMM.format("00:%02d:%02d", minutes, seconds).toString()
+  //<editor-fold defaultstate="collapsed" desc="手势回调">
+  override fun callOverClick() {
+    if (controller_bottom_progressbar.alpha == 1f) {
+      showView()
+      if (!controller_bottom_play_pause.isSelected) countDownHidden()
+    } else if (!controller_bottom_play_pause.isSelected) {
+      hiddenView()
     }
   }
+
+  override fun callOverDoubleClick() {
+    controllerListener?.onPlayOrPause()
+  }
+
+  override fun callOverScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float) {}
+
+  override fun callOverTouchDown(e: MotionEvent?) {}
+
+  override fun callOverTouchUp() {}
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="倒计时隐藏">

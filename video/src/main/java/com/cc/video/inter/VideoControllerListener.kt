@@ -1,6 +1,7 @@
 package com.cc.video.inter
 
 /**
+ * 播放控制器发送相关操作
  * Author:CASE
  * Date:2020-9-18
  * Time:16:28

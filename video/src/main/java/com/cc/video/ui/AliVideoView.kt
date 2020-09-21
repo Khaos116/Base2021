@@ -8,6 +8,7 @@ import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.SurfaceTexture
+import android.provider.Settings
 import android.util.AttributeSet
 import android.view.*
 import android.widget.FrameLayout
@@ -25,6 +26,8 @@ import com.blankj.utilcode.util.*
 import com.cc.ext.removeParent
 import com.cc.video.ext.*
 import com.cc.video.inter.*
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * https://help.aliyun.com/document_detail/124714.html?spm=a2c4g.11186623.6.1084.5eddd8e76YpCGt
@@ -33,13 +36,16 @@ import com.cc.video.inter.*
  * Time:15:37
  */
 class AliVideoView @JvmOverloads constructor(
-    private val con: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0,
-    defStyleRes: Int = 0
+  private val con: Context,
+  attrs: AttributeSet? = null,
+  defStyleAttr: Int = 0,
+  defStyleRes: Int = 0
 ) : FrameLayout(con, attrs, defStyleAttr, defStyleRes), LifecycleObserver {
 
   //<editor-fold defaultstate="collapsed" desc="变量区">
+  //Over控件
+  private var mOverParent: VideoOverView = VideoOverView(con)
+
   //视频显示控件
   private var mTextureView = TextureView(con)
   private var mSurfaceTexture: SurfaceTexture? = null
@@ -70,25 +76,36 @@ class AliVideoView @JvmOverloads constructor(
 
   //是否显示了异常View
   private var isShowError = false
+
+  //当前播放位置
+  private var mCurrentPosition = 0L
   //</editor-fold>
 
-  //<editor-fold defaultstate="collapsed" desc="回调到外部">
-  //外部回调Controller
+  //<editor-fold defaultstate="collapsed" desc="回调状态到控制器">
+  //回调Controller状态
   private var callController: VideoControllerCallListener? = null
 
-  //外部回调Loading
+  //回调Loading状态
   private var callLoading: VideoLoadingCallListener? = null
 
-  //外部回调Error
+  //回调Error状态
   private var callError: VideoErrorCallListener? = null
+
+  //回调手势状态
+  private var callGesture: VideoGestureCallListener? = null
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化">
   init {
     setBackgroundColor(Color.BLACK)
     addView(mTextureView, 0, ViewGroup.LayoutParams(-1, -1))
+    addView(mOverParent, ViewGroup.LayoutParams(-1, -1))
     mTextureView.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
-      override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
+      override fun onSurfaceTextureAvailable(
+        surface: SurfaceTexture,
+        width: Int,
+        height: Int
+      ) {
         mSurfaceTexture = surface
         //设置播放的surface
         mSurface = Surface(surface)
@@ -97,7 +114,11 @@ class AliVideoView @JvmOverloads constructor(
         aliPlayer.redraw()
       }
 
-      override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
+      override fun onSurfaceTextureSizeChanged(
+        surface: SurfaceTexture,
+        width: Int,
+        height: Int
+      ) {
         //画面大小变化的时候重绘界面，立即刷新界面
         aliPlayer.redraw()
       }
@@ -160,12 +181,20 @@ class AliVideoView @JvmOverloads constructor(
     //准备成功事件
     aliPlayer.setOnPreparedListener {
       callLoading?.hiddenLoading()
-      if (!isShowError) callController?.callDuration(aliPlayer.duration)
+      if (!isShowError) {
+        callController?.callDuration(aliPlayer.duration)
+        setCanOperate(true)
+      }
     }
     //视频分辨率变化回调
     aliPlayer.setOnVideoSizeChangedListener { width, height -> }
     //首帧渲染显示事件
-    aliPlayer.setOnRenderingStartListener { if (!isShowError) callController?.callDuration(aliPlayer.duration) }
+    aliPlayer.setOnRenderingStartListener {
+      if (!isShowError) {
+        callController?.callDuration(aliPlayer.duration)
+        setCanOperate(true)
+      }
+    }
     //其他信息的事件，type包括了：循环播放开始，缓冲位置，当前播放位置，自动播放开始等
     aliPlayer.setOnInfoListener { infoBean ->
       //自动播放开始事件(自动播放的时候将不会回调onPrepared，需要从这判断)
@@ -182,7 +211,10 @@ class AliVideoView @JvmOverloads constructor(
         InfoCode.CacheSuccess -> "缓存成功".logI()
         InfoCode.CacheError -> if ("url is local source" != infoBean.extraMsg) "缓存失败:${infoBean.extraMsg}".logE()
         InfoCode.SwitchToSoftwareVideoDecoder -> "切换到软解".logE()
-        InfoCode.CurrentPosition -> callController?.callProgress(infoBean.extraValue)
+        InfoCode.CurrentPosition -> {
+          mCurrentPosition = infoBean.extraValue
+          callController?.callProgress(mCurrentPosition)
+        }
         InfoCode.BufferedPosition -> callController?.callBufferProgress(infoBean.extraValue)
         else -> {
           "infoBean=${GsonUtils.toJson(infoBean)}".logI()
@@ -243,12 +275,14 @@ class AliVideoView @JvmOverloads constructor(
   }
   //</editor-fold>
 
-  //<editor-fold defaultstate="collapsed" desc="播放出错判断">
+  //<editor-fold defaultstate="collapsed" desc="播放出错判断(主要处理手机网络播放状态)">
   @SuppressLint("MissingPermission")
   private fun callPlayError() {
     if (callError == null) return
     isShowError = true
-    if (ContextCompat.checkSelfPermission(con, Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED) {
+    if (ContextCompat.checkSelfPermission(con, Manifest.permission.ACCESS_NETWORK_STATE)
+      == PackageManager.PERMISSION_GRANTED
+    ) {
       if (!NetworkUtils.isConnected()) { //无网络
         callError?.errorNoNet()
       } else if (NetworkUtils.isWifiConnected()) { //Wifi状态
@@ -262,10 +296,11 @@ class AliVideoView @JvmOverloads constructor(
       callError?.errorNormal()
     }
     callLoading?.hiddenLoading()
+    if (isShowError) setCanOperate(false)
   }
   //</editor-fold>
 
-  //<editor-fold defaultstate="collapsed" desc="播放器控制">
+  //<editor-fold defaultstate="collapsed" desc="外部调用播放器">
   //设置缓存相关
   fun setCacheVideo(dsl: (CacheConfig.() -> Unit)? = null) {
     dsl?.invoke(mCacheConfig)
@@ -323,6 +358,8 @@ class AliVideoView @JvmOverloads constructor(
 
   //设置播放地址
   fun setUrlVideo(url: String, title: String? = "", cover: String? = "") {
+    setCanOperate(false)
+    callController?.callStop()
     videoUrl = url
     aliPlayer.setDataSource(UrlSource().apply { uri = url })
     videoTitle = title ?: ""
@@ -335,18 +372,24 @@ class AliVideoView @JvmOverloads constructor(
   fun prepareVideo() {
     aliPlayer.prepare()
     callController?.callPrepare()
-    if (ContextCompat.checkSelfPermission(con, Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED) {
+    if (ContextCompat.checkSelfPermission(
+        con,
+        Manifest.permission.ACCESS_NETWORK_STATE
+      ) == PackageManager.PERMISSION_GRANTED
+    ) {
       if (callError != null)
         if (!canUserMobile && NetworkUtils.isConnected() && !NetworkUtils.isWifiConnected()) {
           aliPlayer.isAutoPlay = false
           isShowError = true
           callError?.errorMobileNet()
           callLoading?.hiddenLoading()
+          setCanOperate(false)
         } else if (!NetworkUtils.isConnected()) {
           aliPlayer.isAutoPlay = false
           isShowError = true
           callError?.errorNoNet()
           callLoading?.hiddenLoading()
+          setCanOperate(false)
         }
     }
     isPlaying = aliPlayer.isAutoPlay
@@ -362,17 +405,23 @@ class AliVideoView @JvmOverloads constructor(
   //开始播放
   @SuppressLint("MissingPermission")
   fun startVideo() {
-    if (ContextCompat.checkSelfPermission(con, Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED &&
-        callError != null) {
+    if (ContextCompat.checkSelfPermission(
+        con,
+        Manifest.permission.ACCESS_NETWORK_STATE
+      ) == PackageManager.PERMISSION_GRANTED &&
+      callError != null
+    ) {
       if (!canUserMobile && NetworkUtils.isConnected() && !NetworkUtils.isWifiConnected()) {
         isShowError = true
         callError?.errorMobileNet()
         callLoading?.hiddenLoading()
+        setCanOperate(false)
         return
       } else if (!NetworkUtils.isConnected()) {
         isShowError = true
         callError?.errorNoNet()
         callLoading?.hiddenLoading()
+        setCanOperate(false)
         return
       }
     }
@@ -425,7 +474,8 @@ class AliVideoView @JvmOverloads constructor(
       if (con is Activity) con.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     } else {
       callController?.enterFullScreen()
-      if (con is Activity) con.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+      if (con is Activity) con.requestedOrientation =
+        ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
     }
     isFullScreen = !isFullScreen
   }
@@ -471,32 +521,31 @@ class AliVideoView @JvmOverloads constructor(
   }
   //</editor-fold>
 
-  //<editor-fold defaultstate="collapsed" desc="添加上层控件">
-  private var mOverViews = mutableListOf<View>()
+  //<editor-fold defaultstate="collapsed" desc="添加上层(控制器)控件">
   fun addOverView(over: View) {
-    if (!mOverViews.any { v -> v.javaClass.name == over.javaClass.name }) {
-      over.removeParent()
-      addView(over, ViewGroup.LayoutParams(-1, -1))
-      mOverViews.add(over)
-      //播放组件相关
-      when (over) {
-        is VideoControllerCallListener -> {
-          over.setCall(operateController)
-          callController = over
-        }
-        is VideoLoadingCallListener -> {
-          callLoading = over
-        }
-        is VideoErrorCallListener -> {
-          over.setCall(operateError)
-          callError = over
-        }
+    mOverParent.addOverChildView(over)
+    //播放组件相关
+    when (over) {
+      is VideoControllerCallListener -> {
+        over.setCall(operateController)
+        callController = over
+      }
+      is VideoLoadingCallListener -> {
+        callLoading = over
+      }
+      is VideoErrorCallListener -> {
+        over.setCall(operateError)
+        callError = over
+      }
+      is VideoGestureCallListener -> {
+        over.setCall(operateGesture)
+        callGesture = over
       }
     }
   }
   //</editor-fold>
 
-  //<editor-fold defaultstate="collapsed" desc="外部操作">
+  //<editor-fold defaultstate="collapsed" desc="控制器操作的监听">
   //正常控制
   private var operateController = object : VideoControllerListener {
     override fun onBack() {
@@ -542,7 +591,10 @@ class AliVideoView @JvmOverloads constructor(
       isShowError = false
       canUserMobile = true
       Utils.getApp().useMobileNet = true
-      if (aliPlayer.duration > 0) callController?.callDuration(aliPlayer.duration)
+      if (aliPlayer.duration > 0) {
+        callController?.callDuration(aliPlayer.duration)
+        setCanOperate(true)
+      }
       startVideo()
     }
 
@@ -551,6 +603,83 @@ class AliVideoView @JvmOverloads constructor(
       resetVideo()
       startVideo()
     }
+  }
+
+  //手势操作
+  private var operateGesture = object : VideoGestureListener {
+    override fun getDuration(): Long {
+      return if (videoUrl.isNotBlank()) aliPlayer.duration else 0
+    }
+
+    override fun getCurrentPosition(): Long {
+      return mCurrentPosition
+    }
+
+    override fun getVolumeCurrent(): Float {
+      return aliPlayer.volume
+    }
+
+    override fun getVolumeMax(): Float {
+      return 1f
+    }
+
+    override fun getVolumeMin(): Float {
+      return 0f
+    }
+
+    override fun getBrightCurrent(): Float {
+      if (con is Activity) {
+        val value = con.window.attributes.screenBrightness
+        return if (value < 0) {
+          max(0f, Settings.System.getInt(con.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS) / 255f)
+        } else {
+          value
+        }
+      }
+      return 1f
+    }
+
+    override fun getBrightMax(): Float {
+      return 1f
+    }
+
+    override fun getBrightMin(): Float {
+      return 0.01f
+    }
+
+    override fun onPause() {
+      pauseVideo()
+    }
+
+    override fun onStart() {
+      startVideo()
+    }
+
+    override fun seekPreviewTo(msc: Long) {
+      callController?.callProgress(msc)
+    }
+
+    override fun seekTo(msc: Long) {
+      seekToVideo(msc)
+    }
+
+    override fun setVolume(volume: Float) {
+      setVolumeVideo(volume)
+    }
+
+    override fun setBright(bright: Float) {
+      if (con is Activity) con.window.apply {
+        attributes.screenBrightness = max(0.01f, min(1f, bright))
+        con.window.attributes = attributes
+      }
+    }
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="回调到控制器判断是否可以操作">
+  private fun setCanOperate(can: Boolean) {
+    callController?.callOperate(can)
+    callGesture?.callOperate(can)
   }
   //</editor-fold>
 }

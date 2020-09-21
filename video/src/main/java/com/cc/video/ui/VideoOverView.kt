@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.*
 import android.widget.FrameLayout
+import com.cc.ext.removeParent
 import com.cc.video.inter.*
 
 /**
@@ -69,7 +70,7 @@ open class VideoOverView @JvmOverloads constructor(
     mGestureDetector?.let { gd ->
       gd.onTouchEvent(event)
       if (event?.action ?: 0 == MotionEvent.ACTION_UP) {
-        getAllChildView().firstOrNull { it is OverGestureListener }?.let { (it as OverGestureListener).callOverTouchUp() }
+        getAllChildView().filter { it is OverGestureListener }.forEach { (it as OverGestureListener).callOverTouchUp() }
       }
       return true
     }
@@ -78,11 +79,14 @@ open class VideoOverView @JvmOverloads constructor(
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="添加OverView">
-  fun addOverChildView(view: View) {
-    if (view is VideoControllerCallListener) {
-      addView(view, 0, ViewGroup.LayoutParams(-1, -1))
+  fun addOverChildView(v: View) {
+    //如果已经存在一样的，则移除之前的
+    getAllChildView().firstOrNull { it.javaClass.name == v.javaClass.name }?.removeParent()
+    v.removeParent()
+    if (v is VideoControllerCallListener) {
+      addView(v, 0, ViewGroup.LayoutParams(-1, -1))
     } else {
-      addView(view, ViewGroup.LayoutParams(-1, -1))
+      addView(v, ViewGroup.LayoutParams(-1, -1))
     }
   }
   //</editor-fold>
