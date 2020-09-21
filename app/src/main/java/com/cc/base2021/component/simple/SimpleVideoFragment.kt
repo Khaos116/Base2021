@@ -36,15 +36,16 @@ class SimpleVideoFragment : CommFragment() {
     //自动感应生命周期
     simpleVideoView.setLifecycleOwner(this)
     //视频控制器
+    simpleVideoView.addOverView(VideoGestureView(mContext))
     simpleVideoView.addOverView(VideoControllerView(mContext))
     simpleVideoView.addOverView(VideoLoadingView(mContext))
     simpleVideoView.addOverView(VideoErrorView(mContext))
     //视频数据
     val videoBean = VideoRandomUtils.instance.randomVideo()
     simpleVideoView.setUrlVideo(
-        url = videoBean.second,
-        title = FileUtils.getFileName(videoBean.second),
-        cover = videoBean.first
+      url = videoBean.second,
+      title = FileUtils.getFileName(videoBean.second),
+      cover = videoBean.first
     )
     //播放
     simpleVideoView.prepareStartVideo()
