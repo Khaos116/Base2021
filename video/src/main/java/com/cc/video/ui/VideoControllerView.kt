@@ -35,9 +35,13 @@ class VideoControllerView @JvmOverloads constructor(
 
   //倒计时隐藏
   private var job: Job? = null
+  private var jobLock: Job? = null
 
   //是否正在拖动
   private var isSeeking = false
+
+  //是否加锁
+  private var isLocked = false
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化XML">
@@ -53,23 +57,34 @@ class VideoControllerView @JvmOverloads constructor(
     controller_bottom_play_pause.pressEffectAlpha(0.95f)
     controller_bottom_stop.pressEffectAlpha(0.95f)
     controller_bottom_full_screen.pressEffectAlpha(0.95f)
+    controller_lock_state.pressEffectAlpha(0.95f)
     //点击事件
     controller_top_back.click {
       controllerListener?.onBack()
       countDownHidden()
+      countDownHiddenLock()
     }
     controller_bottom_play_pause.click {
       if (!canOperateVideo) return@click
       controllerListener?.onPlayOrPause()
       countDownHidden()
+      countDownHiddenLock()
     }
     controller_bottom_full_screen.click {
       controllerListener?.fullScreenOrExit()
       countDownHidden()
+      countDownHiddenLock()
     }
     controller_bottom_stop.click {
       controllerListener?.onStop()
       job?.cancel()
+    }
+    controller_lock_state.click {
+      if (controller_lock_state.isSelected) {
+        unLock()
+      } else {
+        lock()
+      }
     }
     controller_bottom_seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
       override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
@@ -90,6 +105,7 @@ class VideoControllerView @JvmOverloads constructor(
         controllerListener?.onPlay()
         isSeeking = false
         countDownHidden()
+        countDownHiddenLock()
       }
     })
   }
@@ -109,6 +125,16 @@ class VideoControllerView @JvmOverloads constructor(
     controller_top_container?.animate()?.alpha(0f)?.start()
     controller_bottom_container?.animate()?.alpha(0f)?.start()
   }
+
+  //隐藏锁图标
+  private fun showLock() {
+    controller_lock_state?.animate()?.alpha(1f)?.start()
+  }
+
+  //显示锁图标
+  private fun hiddenLock() {
+    controller_lock_state?.animate()?.alpha(0f)?.start()
+  }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="播放器回调">
@@ -119,14 +145,19 @@ class VideoControllerView @JvmOverloads constructor(
   override fun callPlay() {
     controller_bottom_play_pause.setImageResource(R.drawable.selector_play_state)
     controller_bottom_play_pause.isSelected = false
-    if (controller_bottom_progressbar.alpha != 1f) countDownHidden()
+    if (controller_bottom_progressbar.alpha != 1f) {
+      countDownHidden()
+      countDownHiddenLock()
+    }
   }
 
   override fun callPause() {
     controller_bottom_play_pause.setImageResource(R.drawable.selector_play_state)
     controller_bottom_play_pause.isSelected = true
     job?.cancel()
+    unLock()
     showView()
+    showLock()
   }
 
   override fun callStop() {
@@ -135,11 +166,35 @@ class VideoControllerView @JvmOverloads constructor(
     controller_bottom_seekbar.progress = 0
     controller_bottom_time.text = "00:00:00"
     job?.cancel()
+    jobLock?.cancel()
+    unLock()
     showView()
+    showLock()
   }
 
   override fun callComplete() {
     callStop()
+  }
+
+  private fun lock() {
+    isLocked = true
+    controller_lock_state.isSelected = true
+    job?.cancel()
+    jobLock?.cancel()
+    hiddenView()
+    countDownHiddenLock()
+    controllerListener?.lock()
+  }
+
+  override fun unLock() {
+    isLocked = false
+    controller_lock_state.isSelected = false
+    job?.cancel()
+    jobLock?.cancel()
+    showView()
+    showLock()
+    if (!controller_bottom_play_pause.isSelected) countDownHidden()
+    controllerListener?.unlock()
   }
 
   override fun callTitle(title: String) {
@@ -184,9 +239,14 @@ class VideoControllerView @JvmOverloads constructor(
     controller_bottom_seekbar.isEnabled = canOperate
     if (canOperate) {
       showView()
-      if (!controller_bottom_play_pause.isSelected) countDownHidden()
+      showLock()
+      if (!controller_bottom_play_pause.isSelected) {
+        countDownHidden()
+        countDownHiddenLock()
+      }
     } else {
       hiddenView()
+      hiddenLock()
     }
   }
 
@@ -197,15 +257,29 @@ class VideoControllerView @JvmOverloads constructor(
 
   //<editor-fold defaultstate="collapsed" desc="手势回调">
   override fun callOverClick() {
-    if (controller_bottom_progressbar.alpha == 1f) {
-      showView()
-      if (!controller_bottom_play_pause.isSelected) countDownHidden()
-    } else if (!controller_bottom_play_pause.isSelected) {
-      hiddenView()
+    if (isLocked) { //加锁的情况下
+      if (controller_lock_state.alpha == 1f) {
+        hiddenLock()
+      } else if (controller_lock_state.alpha == 0f) {
+        showLock()
+      }
+    } else { //没有加锁的情况
+      if (controller_bottom_progressbar.alpha == 1f) { //没有显示控制器
+        showView()
+        showLock()
+        if (!controller_bottom_play_pause.isSelected) {
+          countDownHidden()
+          countDownHiddenLock()
+        }
+      } else if (!controller_bottom_play_pause.isSelected) { //显示了控制器，没有处于暂停状态
+        hiddenView()
+        hiddenLock()
+      }
     }
   }
 
   override fun callOverDoubleClick() {
+    if (isLocked) return
     controllerListener?.onPlayOrPause()
   }
 
@@ -226,12 +300,23 @@ class VideoControllerView @JvmOverloads constructor(
       }
     }
   }
+
+  private fun countDownHiddenLock() {
+    jobLock?.cancel()
+    jobLock = GlobalScope.launch(Dispatchers.Main) {
+      delay(5 * 1000)
+      if (isActive && controller_lock_state?.alpha ?: 1f != 1f) {
+        hiddenLock()
+      }
+    }
+  }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="移除">
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
     job?.cancel()
+    jobLock?.cancel()
   }
   //</editor-fold>
 }

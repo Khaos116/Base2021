@@ -591,6 +591,14 @@ class AliVideoView @JvmOverloads constructor(
       stopVideo()
     }
 
+    override fun lock() {
+      callGesture?.callOperate(false)
+    }
+
+    override fun unlock() {
+      callGesture?.callOperate(true)
+    }
+
     override fun fullScreenOrExit() {
       enterOrExitFullScreen()
     }

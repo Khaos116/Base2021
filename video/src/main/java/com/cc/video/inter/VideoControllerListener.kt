@@ -13,5 +13,7 @@ interface VideoControllerListener {
   fun onPause()
   fun seekTo(msc: Long)
   fun onStop()
+  fun lock()
+  fun unlock()
   fun fullScreenOrExit()
 }

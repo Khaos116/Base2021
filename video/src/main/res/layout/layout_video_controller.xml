@@ -42,6 +42,22 @@
         tools:text="这是视频标题的显示"
         />
   </LinearLayout>
+  <!--加锁-->
+  <ImageView
+      android:id="@+id/controller_lock_state"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:alpha="0"
+      android:contentDescription="@null"
+      android:padding="10dp"
+      android:src="@drawable/selector_lock_state"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.1"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:alpha="1"
+      />
   <!--播放控制-->
   <LinearLayout
       android:id="@+id/controller_bottom_container"
