@@ -14,6 +14,7 @@ interface VideoControllerCallListener {
   fun callPause()
   fun callStop()
   fun callComplete()
+  fun unLock()
   fun callTitle(title: String)
   fun callBufferProgress(msc: Long)
   fun callProgress(msc: Long)
