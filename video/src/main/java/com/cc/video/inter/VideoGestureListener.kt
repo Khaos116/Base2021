@@ -23,5 +23,6 @@ interface VideoGestureListener {
   fun seekPreviewTo(msc: Long)
   fun seekTo(msc: Long)
   fun setVolume(volume: Float)
+  fun setPlayerVolume(volume: Float)
   fun setBright(bright: Float)
 }

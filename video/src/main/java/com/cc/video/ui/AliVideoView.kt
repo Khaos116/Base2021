@@ -8,6 +8,7 @@ import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.SurfaceTexture
+import android.media.AudioManager
 import android.provider.Settings
 import android.util.AttributeSet
 import android.view.*
@@ -23,6 +24,7 @@ import com.aliyun.player.nativeclass.CacheConfig
 import com.aliyun.player.nativeclass.TrackInfo
 import com.aliyun.player.source.UrlSource
 import com.blankj.utilcode.util.*
+import com.cc.utils.AudioHelper
 import com.cc.video.ext.*
 import com.cc.video.inter.*
 import kotlin.math.max
@@ -341,9 +343,19 @@ class AliVideoView @JvmOverloads constructor(
   }
 
   //设置播放器音量,范围0~1
-  fun setVolumeVideo(@FloatRange(from = 0.0, to = 1.0) volume: Float) {
+  fun setVolumePlayerVideo(@FloatRange(from = 0.0, to = 1.0) volume: Float) {
     "播放器音量:$volume".logI()
     aliPlayer.volume = volume
+  }
+
+  //最大音量
+  private var maxVolume: Float = 1f
+
+  //设置手机音乐音量
+  fun setVolumeVideo(volume: Float) {
+    "手机音乐音量:$volume".logI()
+    maxVolume = AudioHelper.getInstance().musicMaxVolume * 1f
+    AudioHelper.getInstance().setVolume(AudioManager.STREAM_MUSIC, (volume * maxVolume).toInt(), false)
   }
 
   //设置倍速播放:支持0.5~2倍速的播放
@@ -617,11 +629,11 @@ class AliVideoView @JvmOverloads constructor(
     }
 
     override fun getVolumeCurrent(): Float {
-      return aliPlayer.volume
+      return AudioHelper.getInstance().getCurrentVolume(AudioManager.STREAM_MUSIC) * 1f
     }
 
     override fun getVolumeMax(): Float {
-      return 1f
+      return AudioHelper.getInstance().musicMaxVolume * 1f
     }
 
     override fun getVolumeMin(): Float {
@@ -662,6 +674,10 @@ class AliVideoView @JvmOverloads constructor(
 
     override fun seekTo(msc: Long) {
       seekToVideo(msc)
+    }
+
+    override fun setPlayerVolume(volume: Float) {
+      setVolumePlayerVideo(volume)
     }
 
     override fun setVolume(volume: Float) {
