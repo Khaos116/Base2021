@@ -32,14 +32,56 @@
 
     <com.cc.widget.MarqueeTextView
         android:id="@+id/controller_top_title"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
         android:textColor="@color/media_video_title"
         android:textSize="@dimen/media_video_title_size"
         tools:text="这是视频标题的显示"
+        />
+
+    <TextView
+        android:id="@+id/controller_top_battery_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:textColor="@color/media_video_battery"
+        android:textSize="8sp"
+        android:visibility="gone"
+        tools:ignore="SmallSp"
+        tools:text="100%"
+        tools:visibility="visible"
+        />
+
+    <ImageView
+        android:id="@+id/controller_top_battery_iv"
+        android:layout_width="24dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:contentDescription="@null"
+        android:src="@drawable/level_battery"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
+
+
+    <TextView
+        android:id="@+id/controller_top_sys_time"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:paddingStart="2dp"
+        android:paddingEnd="5dp"
+        android:textColor="@color/media_video_sys_time"
+        android:textSize="12sp"
+        android:visibility="gone"
+        tools:text="23:59"
+        tools:visibility="visible"
         />
   </LinearLayout>
   <!--加锁-->

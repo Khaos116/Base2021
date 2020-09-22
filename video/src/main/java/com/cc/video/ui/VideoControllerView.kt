@@ -1,18 +1,23 @@
 package com.cc.video.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
+import android.content.*
+import android.os.BatteryManager
 import android.util.AttributeSet
-import android.view.*
-import android.widget.SeekBar
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.cc.ext.click
-import com.cc.ext.pressEffectAlpha
+import com.blankj.utilcode.util.TimeUtils
+import com.cc.ext.*
 import com.cc.video.R
+import com.cc.video.ext.logI
 import com.cc.video.inter.*
 import com.cc.video.utils.VideoTimeUtils
 import kotlinx.android.synthetic.main.layout_video_controller.view.*
 import kotlinx.coroutines.*
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 /**
  * Author:CASE
@@ -29,6 +34,13 @@ class VideoControllerView @JvmOverloads constructor(
   //<editor-fold defaultstate="collapsed" desc="变量">
   //操作监听
   private var controllerListener: VideoControllerListener? = null
+
+  //电池监听
+  private var hasRegisterBattery: Boolean = false
+  private var batteryTimeReceiver: BatteryAndTimeReceiver? = null
+
+  //时间显示
+  private var timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
   //是否可以进行操作
   private var canOperateVideo: Boolean = false
@@ -108,15 +120,23 @@ class VideoControllerView @JvmOverloads constructor(
         countDownHiddenLock()
       }
     })
+    //电池监听
+    batteryTimeReceiver = BatteryAndTimeReceiver(
+      controller_top_battery_iv, controller_top_battery_tv, controller_top_sys_time, timeFormat
+    )
   }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="隐藏和显示">
   //展示播放状态
   private fun showView() {
+    controller_top_sys_time?.text = TimeUtils.millis2String(System.currentTimeMillis(), timeFormat)
     controller_bottom_progressbar?.animate()?.alpha(0f)?.start()
     controller_top_container?.animate()?.alpha(1f)?.start()
     controller_bottom_container?.animate()?.alpha(1f)?.start()
+    controller_top_battery_iv?.animate()?.alpha(1f)?.start()
+    controller_top_battery_tv?.animate()?.alpha(1f)?.start()
+    controller_top_sys_time?.animate()?.alpha(1f)?.start()
   }
 
   //隐藏播放状态
@@ -124,6 +144,9 @@ class VideoControllerView @JvmOverloads constructor(
     controller_bottom_progressbar?.animate()?.alpha(1f)?.start()
     controller_top_container?.animate()?.alpha(0f)?.start()
     controller_bottom_container?.animate()?.alpha(0f)?.start()
+    controller_top_battery_iv?.animate()?.alpha(0f)?.start()
+    controller_top_battery_tv?.animate()?.alpha(0f)?.start()
+    controller_top_sys_time?.animate()?.alpha(0f)?.start()
   }
 
   //隐藏锁图标
@@ -145,7 +168,7 @@ class VideoControllerView @JvmOverloads constructor(
   override fun callPlay() {
     controller_bottom_play_pause.setImageResource(R.drawable.selector_play_state)
     controller_bottom_play_pause.isSelected = false
-    if (controller_bottom_progressbar.alpha != 1f) {
+    if (controller_bottom_container.alpha == 1f) {
       countDownHidden()
       countDownHiddenLock()
     }
@@ -228,10 +251,16 @@ class VideoControllerView @JvmOverloads constructor(
 
   override fun enterFullScreen() {
     controller_bottom_full_screen.isSelected = true
+    controller_top_battery_iv.visible()
+    controller_top_battery_tv.visible()
+    controller_top_sys_time.visible()
   }
 
   override fun exitFullScreen() {
     controller_bottom_full_screen.isSelected = false
+    controller_top_battery_iv.gone()
+    controller_top_battery_tv.gone()
+    controller_top_sys_time.gone()
   }
 
   override fun callOperate(canOperate: Boolean) {
@@ -264,7 +293,7 @@ class VideoControllerView @JvmOverloads constructor(
         showLock()
       }
     } else { //没有加锁的情况
-      if (controller_bottom_progressbar.alpha == 1f) { //没有显示控制器
+      if (controller_bottom_container.alpha == 0f) { //没有显示控制器
         showView()
         showLock()
         if (!controller_bottom_play_pause.isSelected) {
@@ -295,7 +324,7 @@ class VideoControllerView @JvmOverloads constructor(
     job?.cancel()
     job = GlobalScope.launch(Dispatchers.Main) {
       delay(5 * 1000)
-      if (isActive && controller_bottom_progressbar?.alpha ?: 1f != 1f) {
+      if (isActive && controller_bottom_container?.alpha ?: 0f != 0f) {
         hiddenView()
       }
     }
@@ -305,18 +334,76 @@ class VideoControllerView @JvmOverloads constructor(
     jobLock?.cancel()
     jobLock = GlobalScope.launch(Dispatchers.Main) {
       delay(5 * 1000)
-      if (isActive && controller_lock_state?.alpha ?: 1f != 1f) {
+      if (isActive && controller_lock_state?.alpha ?: 0f != 0f) {
         hiddenLock()
       }
     }
   }
   //</editor-fold>
 
-  //<editor-fold defaultstate="collapsed" desc="移除">
+  //<editor-fold defaultstate="collapsed" desc="添加和移除">
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    if (!hasRegisterBattery) batteryTimeReceiver?.let {
+      hasRegisterBattery = true
+      con.registerReceiver(it, IntentFilter(Intent.ACTION_BATTERY_CHANGED).apply { //电量变化的监听
+        addAction(Intent.ACTION_POWER_CONNECTED) //充电连接的监听
+        addAction(Intent.ACTION_POWER_DISCONNECTED) //充电断开的监听
+        addAction(Intent.ACTION_TIME_TICK) //系统每分钟会发出该广播
+      })
+    }
+  }
+
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
     job?.cancel()
     jobLock?.cancel()
+    if (hasRegisterBattery) {
+      hasRegisterBattery = false
+      batteryTimeReceiver?.let { con.unregisterReceiver(it) }
+    }
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="电池和系统时间的监听">
+  class BatteryAndTimeReceiver(
+    private val ivBattery: ImageView,
+    private val tvBattery: TextView,
+    private val tvSysTime: TextView,
+    private val timeFormatter: SimpleDateFormat
+  ) : BroadcastReceiver() {
+    //充电状态
+    private var chargeState: Boolean? = null
+
+    //https://developer.android.google.cn/training/monitoring-device-state/battery-monitoring.html?hl=zh-cn
+    override fun onReceive(context: Context?, intent: Intent?) {
+      if (intent?.action == Intent.ACTION_TIME_TICK) {
+        tvSysTime.text = TimeUtils.millis2String(System.currentTimeMillis(), timeFormatter)
+        "更新系统时间:${tvSysTime.text}".logI()
+        return
+      }
+      intent?.extras?.let {
+        //充电状态
+        val status = it.getInt(BatteryManager.EXTRA_STATUS, -1)
+        val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
+        if (isCharging != chargeState) {
+          chargeState = isCharging
+          if (isCharging) {
+            val chargePlug = it.getInt(BatteryManager.EXTRA_PLUGGED, -1)
+            val usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB
+            val acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC
+            ivBattery.drawable?.level = 0
+            "手机正在充电,充电方式:${if (usbCharge) "USB充电" else if (acCharge) "交流电充电" else "未知"}".logI()
+          } else "手机断开充电".logI()
+        }
+        val current = it.getInt(BatteryManager.EXTRA_LEVEL, -1) //获得当前电量
+        val total = it.getInt(BatteryManager.EXTRA_SCALE, -1) //获得总电量
+        val percent = (current * 100f / total).toInt()
+        ivBattery.drawable?.level = if (isCharging) 0 else maxOf(1, percent)
+        tvBattery.text = String.format("%s%%", maxOf(1, percent))
+        "当前手机电量:${percent}%".logI()
+      }
+    }
   }
   //</editor-fold>
 }
