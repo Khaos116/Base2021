@@ -14,4 +14,7 @@
   <string name="page_net_error">似乎没有网络，请点击重试</string>
   <string name="page_fail_error">加载失败，请点击重试</string>
   <string name="skip">跳过</string>
+  <string name="permission_sdcard">必须要给予SD卡权限才能使用</string>
+  <string name="permission_sdcard_never">被永久拒绝授权，请手动授予存储权限</string>
+  <string name="permission_sdcard_must">必须要给予SD卡权限才能使用</string>
 </resources>
