@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--icon图标颜色-->
+  <color name="media_icon_color">#00C9CA</color>
+</resources>

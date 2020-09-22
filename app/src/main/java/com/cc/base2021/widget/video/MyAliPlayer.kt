@@ -9,8 +9,8 @@ import com.aliyun.player.nativeclass.CacheConfig
 import com.aliyun.player.nativeclass.TrackInfo
 import com.aliyun.player.source.UrlSource
 import com.blankj.utilcode.util.*
-import com.cc.base.ext.logE
-import com.cc.base.ext.logI
+import com.cc.ext.logE
+import com.cc.ext.logI
 import com.kk.taurus.playerbase.config.PlayerConfig
 import com.kk.taurus.playerbase.config.PlayerLibrary
 import com.kk.taurus.playerbase.entity.DataSource

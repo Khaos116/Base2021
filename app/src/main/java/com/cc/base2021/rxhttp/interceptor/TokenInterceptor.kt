@@ -1,7 +1,7 @@
 package com.cc.base2021.rxhttp.interceptor
 
 import com.blankj.utilcode.util.EncryptUtils
-import com.cc.base.ext.logE
+import com.cc.ext.logE
 import com.cc.base2021.config.AppConfig
 import com.cc.base2021.config.GlobalErrorHandle
 import com.cc.base2021.constants.ErrorCode

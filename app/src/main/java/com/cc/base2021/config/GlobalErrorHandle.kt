@@ -1,10 +1,10 @@
 package com.cc.base2021.config
 
 import com.blankj.utilcode.util.ActivityUtils
-import com.cc.base.ext.toast
 import com.cc.base2021.R
 import com.cc.base2021.component.login.LoginActivity
 import com.cc.base2021.constants.ErrorCode
+import com.cc.ext.toast
 
 /**
  * Description:

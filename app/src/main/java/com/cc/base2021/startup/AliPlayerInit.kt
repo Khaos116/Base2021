@@ -2,7 +2,7 @@ package com.cc.base2021.startup
 
 import android.content.Context
 import androidx.startup.Initializer
-import com.cc.base.ext.logI
+import com.cc.ext.logI
 import com.cc.base2021.widget.video.MyAliPlayer
 import com.kk.taurus.playerbase.config.PlayerConfig
 import com.kk.taurus.playerbase.config.PlayerLibrary

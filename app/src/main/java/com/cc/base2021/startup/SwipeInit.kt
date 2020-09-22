@@ -6,7 +6,7 @@ import android.graphics.Color
 import androidx.startup.Initializer
 import com.billy.android.swipe.SmartSwipeBack
 import com.billy.android.swipe.SmartSwipeRefresh
-import com.cc.base.ext.logI
+import com.cc.ext.logI
 import com.cc.base.startup.UtilsInit
 import com.cc.base2021.component.guide.GuideActivity
 import com.cc.base2021.component.login.LoginActivity

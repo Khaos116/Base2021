@@ -2,7 +2,7 @@ package com.cc.base2021.rxhttp.repository
 
 import android.annotation.SuppressLint
 import com.blankj.utilcode.util.EncryptUtils
-import com.cc.base.ext.logE
+import com.cc.ext.logE
 import com.cc.base2021.bean.wan.IntegralBean
 import com.cc.base2021.bean.wan.UserBean
 import com.cc.base2021.constants.BaseUrl

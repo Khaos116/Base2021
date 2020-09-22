@@ -2,16 +2,9 @@ package com.cc.base2021.rxhttp.repository
 
 import androidx.annotation.IntRange
 import com.blankj.utilcode.constant.TimeConstants
-import com.cc.base.ext.isNetImageUrl
-import com.cc.base.ext.logE
 import com.cc.base2021.bean.gank.GankAndroidBean
 import com.cc.base2021.bean.gank.GankGirlBean
-import com.cc.base2021.config.RxHttpConfig
 import com.cc.base2021.constants.GankUrls
-import com.cc.base2021.utils.MMkvUtils
-import kotlinx.coroutines.Dispatchers
-import okhttp3.Request
-import rxhttp.*
 import rxhttp.wrapper.cahce.CacheMode
 import rxhttp.wrapper.param.RxHttp
 import rxhttp.wrapper.param.toResponseGank

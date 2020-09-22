@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
-import com.cc.base.utils.PermissionUtils;
+import com.cc.utils.PermissionUtils;
 import java.io.*;
 import java.security.KeyStore;
 import java.security.cert.*;

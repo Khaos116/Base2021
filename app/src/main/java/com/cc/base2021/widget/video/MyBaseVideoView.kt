@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import androidx.lifecycle.*
-import com.cc.base.ext.logE
+import com.cc.ext.logE
 import com.kk.taurus.playerbase.widget.BaseVideoView
 
 /**

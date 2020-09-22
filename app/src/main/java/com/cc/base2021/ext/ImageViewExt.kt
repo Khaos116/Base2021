@@ -5,8 +5,8 @@ import coil.*
 import coil.request.ImageRequest
 import coil.util.CoilUtils
 import com.blankj.utilcode.util.Utils
-import com.cc.base.ext.*
 import com.cc.base2021.R
+import com.cc.ext.logE
 import okhttp3.*
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 

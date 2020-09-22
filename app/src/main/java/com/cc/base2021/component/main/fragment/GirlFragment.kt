@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.billy.android.swipe.SmartSwipeRefresh
 import com.billy.android.swipe.SmartSwipeRefresh.SmartSwipeRefreshDataLoader
 import com.billy.android.swipe.consumer.SlidingConsumer
-import com.cc.base.ext.stopInertiaRolling
+import com.cc.ext.stopInertiaRolling
 import com.cc.base2021.R
 import com.cc.base2021.bean.gank.GankGirlBean
 import com.cc.base2021.bean.local.*

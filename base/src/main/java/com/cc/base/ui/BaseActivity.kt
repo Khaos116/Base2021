@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import com.cc.base.R
-import com.cc.base.ext.logI
-import com.cc.base.utils.CleanLeakUtils
+import com.cc.ext.logI
+import com.cc.utils.CleanLeakUtils
 import com.gyf.immersionbar.ktx.immersionBar
 
 /**

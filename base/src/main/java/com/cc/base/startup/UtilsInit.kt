@@ -4,9 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.startup.Initializer
 import com.blankj.utilcode.util.Utils
-import com.cc.base.ext.logE
-import com.cc.base.ext.logI
-import timber.log.Timber
+import com.cc.ext.logI
 
 /**
  * Author:case

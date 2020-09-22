@@ -14,8 +14,7 @@ import android.widget.*;
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import com.cc.base.ext.ContextExtKt;
-import com.cc.base.ext.StringExtKt;
+import com.cc.ext.StringExtKt;
 
 /**
  * description: 自定义ViewPager指示器.

@@ -8,7 +8,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleRegistry
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.FragmentUtils
-import com.cc.base.ext.*
 import com.cc.base.ui.BaseFragment
 import com.cc.base2021.R
 import com.cc.base2021.R.layout
@@ -16,7 +15,7 @@ import com.cc.base2021.comm.CommActivity
 import com.cc.base2021.component.main.fragment.HomeFragment
 import com.cc.base2021.component.simple.SimpleTimeFragment
 import com.cc.base2021.component.simple.SimpleVideoFragment
-import com.cc.ext.visibleGone
+import com.cc.ext.*
 import com.gyf.immersionbar.BarHide
 import com.gyf.immersionbar.ktx.immersionBar
 import kotlinx.android.synthetic.main.activity_main.*

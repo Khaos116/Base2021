@@ -3,8 +3,7 @@ package com.cc.base2021.component.splash
 import android.content.Context
 import android.media.AudioManager
 import com.blankj.utilcode.util.TimeUtils
-import com.cc.base.ext.*
-import com.cc.base.utils.PermissionUtils
+import com.cc.utils.PermissionUtils
 import com.cc.base2021.R
 import com.cc.base2021.comm.CommActivity
 import com.cc.base2021.component.guide.GuideActivity

@@ -3,8 +3,7 @@ package com.cc.base.startup
 import android.content.Context
 import androidx.startup.Initializer
 import com.cc.base.BuildConfig
-import com.cc.base.ext.logE
-import com.cc.base.ext.logI
+import com.cc.ext.logI
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 
