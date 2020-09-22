@@ -82,6 +82,9 @@ class AliVideoView @JvmOverloads constructor(
   //是否显示了异常View
   private var isShowError = false
 
+  //是否显示了完成
+  private var isShowComplete = false
+
   //当前播放位置
   private var mCurrentPosition = 0L
   //</editor-fold>
@@ -98,6 +101,9 @@ class AliVideoView @JvmOverloads constructor(
 
   //回调手势状态
   private var callGesture: VideoGestureCallListener? = null
+
+  //播放结束的回调
+  private var callComplete: VideoCompleteCallListener? = null
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化">
@@ -179,7 +185,11 @@ class AliVideoView @JvmOverloads constructor(
   private fun addListener() {
     //播放完成事件
     aliPlayer.setOnCompletionListener {
-      if (!aliPlayer.isLoop) resetVideo()
+      if (!aliPlayer.isLoop) {
+        setCompleteViewStatus(true)
+        callComplete?.callComplete()
+        callController?.callComplete()
+      }
     }
     //出错事件
     aliPlayer.setOnErrorListener { callPlayError() }
@@ -269,7 +279,11 @@ class AliVideoView @JvmOverloads constructor(
           callController?.callPlay()
         }
         4 -> callController?.callPause()
-        6 -> callController?.callComplete()
+        6 -> {
+          setCompleteViewStatus(true)
+          callComplete?.callComplete()
+          callController?.callComplete()
+        }
         else -> "播放器状态：$it".logI()
       }
     }
@@ -280,11 +294,24 @@ class AliVideoView @JvmOverloads constructor(
   }
   //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="完成或者异常的状态改变">
+  private fun setErrorViewStatus(error: Boolean) {
+    isShowError = error
+    callController?.callShowErrorOrComplete(isShowError || isShowComplete)
+    if (error) setCanOperate(false)
+  }
+
+  private fun setCompleteViewStatus(complete: Boolean) {
+    isShowComplete = complete
+    callController?.callShowErrorOrComplete(isShowError || isShowComplete)
+    if (complete) setCanOperate(false)
+  }
+  //</editor-fold>
+
   //<editor-fold defaultstate="collapsed" desc="播放出错判断(主要处理手机网络播放状态)">
   @SuppressLint("MissingPermission")
   private fun callPlayError() {
     if (callError == null) return
-    isShowError = true
     if (ContextCompat.checkSelfPermission(con, Manifest.permission.ACCESS_NETWORK_STATE)
       == PackageManager.PERMISSION_GRANTED
     ) {
@@ -295,13 +322,13 @@ class AliVideoView @JvmOverloads constructor(
       } else if (!canUserMobile) { //手机网络，但是不允许使用
         callError?.errorMobileNet()
       } else {
-        isShowError = false
+        setErrorViewStatus(false)
       }
     } else {
       callError?.errorNormal()
     }
     callLoading?.hiddenLoading()
-    if (isShowError) setCanOperate(false)
+    setErrorViewStatus(true)
   }
   //</editor-fold>
 
@@ -395,16 +422,14 @@ class AliVideoView @JvmOverloads constructor(
       if (callError != null)
         if (!canUserMobile && NetworkUtils.isConnected() && !NetworkUtils.isWifiConnected()) {
           aliPlayer.isAutoPlay = false
-          isShowError = true
+          setErrorViewStatus(true)
           callError?.errorMobileNet()
           callLoading?.hiddenLoading()
-          setCanOperate(false)
         } else if (!NetworkUtils.isConnected()) {
           aliPlayer.isAutoPlay = false
-          isShowError = true
+          setErrorViewStatus(true)
           callError?.errorNoNet()
           callLoading?.hiddenLoading()
-          setCanOperate(false)
         }
     }
     isPlaying = aliPlayer.isAutoPlay
@@ -427,16 +452,14 @@ class AliVideoView @JvmOverloads constructor(
       callError != null
     ) {
       if (!canUserMobile && NetworkUtils.isConnected() && !NetworkUtils.isWifiConnected()) {
-        isShowError = true
+        setErrorViewStatus(true)
         callError?.errorMobileNet()
         callLoading?.hiddenLoading()
-        setCanOperate(false)
         return
       } else if (!NetworkUtils.isConnected()) {
-        isShowError = true
+        setErrorViewStatus(true)
         callError?.errorNoNet()
         callLoading?.hiddenLoading()
-        setCanOperate(false)
         return
       }
     }
@@ -556,6 +579,10 @@ class AliVideoView @JvmOverloads constructor(
         over.setCall(operateGesture)
         callGesture = over
       }
+      is VideoCompleteCallListener -> {
+        over.setCall(operateComplete)
+        callComplete = over
+      }
     }
   }
   //</editor-fold>
@@ -611,7 +638,7 @@ class AliVideoView @JvmOverloads constructor(
   //异常控制
   private var operateError = object : VideoErrorListener {
     override fun continuePlay() {
-      isShowError = false
+      setErrorViewStatus(false)
       canUserMobile = true
       Utils.getApp().useMobileNet = true
       if (aliPlayer.duration > 0) {
@@ -622,7 +649,7 @@ class AliVideoView @JvmOverloads constructor(
     }
 
     override fun resetPlay() {
-      isShowError = false
+      setErrorViewStatus(false)
       resetVideo()
       startVideo()
     }
@@ -699,6 +726,15 @@ class AliVideoView @JvmOverloads constructor(
         attributes.screenBrightness = max(0.01f, min(1f, bright))
         con.window.attributes = attributes
       }
+    }
+  }
+
+  //播放结束的重新播放
+  private var operateComplete = object : VideoCompleteListener {
+    override fun resetPlay() {
+      setCompleteViewStatus(false)
+      resetVideo()
+      startVideo()
     }
   }
   //</editor-fold>

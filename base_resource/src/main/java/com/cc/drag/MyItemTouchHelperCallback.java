@@ -1,4 +1,4 @@
-package com.cc.base2021.widget.drag;
+package com.cc.drag;
 
 import android.annotation.SuppressLint;
 import android.graphics.Canvas;

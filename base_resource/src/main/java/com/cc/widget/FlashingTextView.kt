@@ -1,10 +1,9 @@
-package com.cc.widget;
+package com.cc.widget
 
-import android.content.Context;
-import android.graphics.*;
-import android.util.AttributeSet;
-import androidx.appcompat.widget.AppCompatTextView;
-import com.blankj.utilcode.util.ColorUtils;
+import android.content.Context
+import android.graphics.*
+import android.util.AttributeSet
+import androidx.appcompat.widget.AppCompatTextView
 
 /**
  * https://www.jianshu.com/p/a9d09cb7577f
@@ -13,64 +12,54 @@ import com.blankj.utilcode.util.ColorUtils;
  * Date:2020/8/11
  * Time:19:41
  */
-public class FlashingTextView extends AppCompatTextView {
-  private int mWidth;
-  private LinearGradient gradient;
-  private Matrix matrix;
+class FlashingTextView @JvmOverloads constructor(
+  context: Context,
+  attrs: AttributeSet? = null,
+  defStyleAttr: Int = 0
+) : AppCompatTextView(context, attrs, defStyleAttr) {
+  private var mWidth = 0
+  private var mGradient: LinearGradient? = null
+  private var mMatrix: Matrix? = null
+
   //渐变的速度
-  private int deltaX;
-  private int flashColor = Color.WHITE;
+  private var deltaX = 0
+  private var flashColor = Color.WHITE
 
-  public FlashingTextView(Context context) {
-    super(context, null);
-  }
-
-  public FlashingTextView(Context context, AttributeSet attrs) {
-    super(context, attrs);
-    initView(context, attrs);
-  }
-
-  private void initView(Context context, AttributeSet attrs) {
-    Paint paint1 = new Paint();
-    paint1.setColor(ColorUtils.getColor(android.R.color.holo_blue_dark));
-    paint1.setStyle(Paint.Style.FILL);
-  }
-
-  @Override
-  protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-    super.onSizeChanged(w, h, oldw, oldh);
+  override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+    super.onSizeChanged(w, h, oldw, oldh)
     if (mWidth == 0) {
-      mWidth = getMeasuredWidth();
-      Paint paint2 = getPaint();
+      mWidth = measuredWidth
       //颜色渐变器
-      gradient =
-          new LinearGradient(0, 0, mWidth, 0,
-              new int[] { getCurrentTextColor(), flashColor, getCurrentTextColor() },
-              new float[] { 0f, 0.5f, 1.0f }, Shader.TileMode.CLAMP);
-      paint2.setShader(gradient);
-      matrix = new Matrix();
+      mGradient = LinearGradient(
+        0f,
+        0f,
+        mWidth * 1f,
+        0f,
+        intArrayOf(currentTextColor, flashColor, currentTextColor),
+        floatArrayOf(0f, 0.5f, 1.0f),
+        Shader.TileMode.CLAMP
+      )
+      paint.shader = mGradient
+      mMatrix = Matrix()
     }
   }
 
-  @Override
-  protected void onDraw(Canvas canvas) {
-    super.onDraw(canvas);
-    if (matrix != null) {
-      deltaX += mWidth / 5;
+  override fun onDraw(canvas: Canvas) {
+    super.onDraw(canvas)
+    if (mMatrix != null) {
+      deltaX += mWidth / 5
       if (deltaX > 2 * mWidth) {
-        deltaX = -mWidth;
+        deltaX = -mWidth
       }
     }
     //关键代码通过矩阵的平移实现
-    if (matrix != null) {
-      matrix.setTranslate(deltaX, 0);
-    }
-    gradient.setLocalMatrix(matrix);
-    postInvalidateDelayed(120);
+    mMatrix?.setTranslate(deltaX.toFloat(), 0f)
+    mGradient?.setLocalMatrix(mMatrix)
+    postInvalidateDelayed(120)
   }
 
-  public void setFlashColor(int flashColor) {
-    this.flashColor = flashColor;
-    postInvalidate();
+  fun setFlashColor(flashColor: Int) {
+    this.flashColor = flashColor
+    postInvalidate()
   }
 }

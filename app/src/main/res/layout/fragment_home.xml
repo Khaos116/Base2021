@@ -6,7 +6,7 @@
     android:orientation="vertical"
     >
 
-  <com.cc.base2021.widget.SimpleViewpagerIndicator
+  <com.cc.widget.SimpleViewpagerIndicator
       android:id="@+id/homeIndicator"
       android:layout_width="match_parent"
       android:layout_height="48dp"

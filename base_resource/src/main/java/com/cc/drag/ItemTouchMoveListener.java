@@ -1,4 +1,4 @@
-package com.cc.base2021.widget.drag;
+package com.cc.drag;
 
 /**
  * https://github.com/LidongWen/MultiTypeAdapter/blob/master/app/src/main/java/com/wenld/app_multitypeadapter/itemTouch/ItemTouchMoveListener.java

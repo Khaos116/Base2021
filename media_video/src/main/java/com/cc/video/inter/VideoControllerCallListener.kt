@@ -9,6 +9,7 @@ import android.view.MotionEvent
  * Time:16:51
  */
 interface VideoControllerCallListener {
+  fun callShowErrorOrComplete(show: Boolean)
   fun callPrepare()
   fun callPlay()
   fun callPause()

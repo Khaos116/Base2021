@@ -6,4 +6,5 @@
   <string name="video_error_no_net">无网络!</string>
   <string name="video_retry">重试</string>
   <string name="video_continue">继续</string>
+  <string name="video_replay">重新播放</string>
 </resources>

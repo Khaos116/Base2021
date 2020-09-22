@@ -40,6 +40,7 @@ class SimpleVideoFragment : CommFragment() {
     simpleVideoView.addOverView(VideoControllerView(mContext))
     simpleVideoView.addOverView(VideoLoadingView(mContext))
     simpleVideoView.addOverView(VideoErrorView(mContext))
+    simpleVideoView.addOverView(VideoCompleteView(mContext))
     //视频数据
     val videoBean = VideoRandomUtils.instance.randomVideo()
     simpleVideoView.setUrlVideo(

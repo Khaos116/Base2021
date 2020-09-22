@@ -172,6 +172,10 @@ class VideoGestureView @JvmOverloads constructor(
       gesture_seek_view.gone()
     }
   }
+
+  override fun callShowErrorOrComplete(show: Boolean) {
+    canGestureVideo = !show
+  }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="手势回调">

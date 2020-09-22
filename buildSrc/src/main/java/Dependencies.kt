@@ -96,9 +96,6 @@ object Deps {
   //打包资源压缩 https://github.com/smallSohoSolo/McImage/blob/master/README-CN.md
   const val mc_image = "com.smallsoho.mobcase:McImage:1.5.1"
 
-  //解码器和播放视图组件化 https://github.com/jiajunhui/PlayerBase
-  const val player_base = "com.kk.taurus.playerbase:playerbase:3.3.9"
-
   //阿里播放器 https://help.aliyun.com/document_detail/124711.html?spm=a2c4g.11186623.6.1085.11b511f9ytuUNH
   const val ali_player = "com.aliyun.sdk.android:AliyunPlayer:4.5.0-full"
   const val ali_conan = "com.alivc.conan:AlivcConan:0.9.5"

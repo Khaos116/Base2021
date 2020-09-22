@@ -25,4 +25,6 @@
   <!--电池时间信息-->
   <color name="media_video_sys_time">@color/media_icon_color</color>
   <color name="media_video_battery">@color/media_icon_color</color>
+  <!--播放完成相关显示-->
+  <color name="media_video_complete">@color/media_icon_color</color>
 </resources>

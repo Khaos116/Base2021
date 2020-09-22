@@ -132,6 +132,7 @@ class VideoControllerView @JvmOverloads constructor(
   //<editor-fold defaultstate="collapsed" desc="隐藏和显示">
   //展示播放状态
   private fun showView() {
+    if (isShowErrorOrComplete) return
     controller_top_sys_time?.text = TimeUtils.millis2String(System.currentTimeMillis(), timeFormat)
     controller_bottom_progressbar?.animate()?.alpha(0f)?.start()
     controller_top_container?.animate()?.alpha(1f)?.start()
@@ -143,7 +144,7 @@ class VideoControllerView @JvmOverloads constructor(
 
   //隐藏播放状态
   private fun hiddenView() {
-    controller_bottom_progressbar?.animate()?.alpha(1f)?.start()
+    if (!isShowErrorOrComplete) controller_bottom_progressbar?.animate()?.alpha(1f)?.start()
     controller_top_container?.animate()?.alpha(0f)?.start()
     controller_bottom_container?.animate()?.alpha(0f)?.start()
     controller_top_battery_iv?.animate()?.alpha(0f)?.start()
@@ -163,6 +164,25 @@ class VideoControllerView @JvmOverloads constructor(
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="播放器回调">
+  //是否显示了异常和完成
+  private var isShowErrorOrComplete = false
+  override fun callShowErrorOrComplete(show: Boolean) {
+    isShowErrorOrComplete = show
+    if (show) {
+      job?.cancel()
+      jobLock?.cancel()
+      hiddenView()
+      hiddenLock()
+    } else {
+      if (controller_bottom_play_pause.isSelected) {
+        showView()
+        showLock()
+      } else {
+        hiddenView()
+      }
+    }
+  }
+
   override fun callPrepare() {
     callPause()
   }
@@ -180,6 +200,7 @@ class VideoControllerView @JvmOverloads constructor(
     controller_bottom_play_pause.setImageResource(R.drawable.selector_play_state)
     controller_bottom_play_pause.isSelected = true
     job?.cancel()
+    jobLock?.cancel()
     unLock()
     showView()
     showLock()
@@ -198,7 +219,14 @@ class VideoControllerView @JvmOverloads constructor(
   }
 
   override fun callComplete() {
-    callStop()
+    controller_bottom_play_pause.setImageResource(R.drawable.selector_play_state)
+    controller_bottom_play_pause.isSelected = true
+    canOperateVideo = false
+    controller_bottom_seekbar.isEnabled = false
+    job?.cancel()
+    jobLock?.cancel()
+    hiddenView()
+    hiddenLock()
   }
 
   private fun lock() {
@@ -266,7 +294,7 @@ class VideoControllerView @JvmOverloads constructor(
   }
 
   override fun callOperate(canOperate: Boolean) {
-    this.canOperateVideo = canOperate
+    canOperateVideo = canOperate
     controller_bottom_seekbar.isEnabled = canOperate
     if (canOperate) {
       showView()
@@ -288,6 +316,7 @@ class VideoControllerView @JvmOverloads constructor(
 
   //<editor-fold defaultstate="collapsed" desc="手势回调">
   override fun callOverClick() {
+    if (isShowErrorOrComplete) return
     if (isLocked) { //加锁的情况下
       if (controller_lock_state.alpha == 1f) {
         hiddenLock()
@@ -310,7 +339,7 @@ class VideoControllerView @JvmOverloads constructor(
   }
 
   override fun callOverDoubleClick() {
-    if (isLocked) return
+    if (isLocked || isShowErrorOrComplete) return
     controllerListener?.onPlayOrPause()
   }
 

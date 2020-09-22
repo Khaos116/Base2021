@@ -75,7 +75,7 @@
         android:exported="false"
         tools:node="merge">
       <meta-data
-          android:name="com.cc.base2021.startup.AliPlayerInit"
+          android:name="com.cc.base2021.startup.AppLastInit"
           android:value="androidx.startup"/>
     </provider>
   </application>

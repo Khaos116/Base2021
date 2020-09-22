@@ -12,4 +12,5 @@ import android.view.MotionEvent
 interface VideoGestureCallListener {
   fun setCall(call: VideoGestureListener)
   fun callOperate(canOperate: Boolean)
+  fun callShowErrorOrComplete(show: Boolean)
 }

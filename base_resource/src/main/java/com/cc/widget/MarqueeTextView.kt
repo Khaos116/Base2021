@@ -11,7 +11,7 @@ import androidx.appcompat.widget.AppCompatTextView
  * @author: caiyoufei
  * @date: 2020/3/23 18:02
  */
-class MarqueeTextView @kotlin.jvm.JvmOverloads constructor(
+class MarqueeTextView @JvmOverloads constructor(
   context: Context,
   attrs: AttributeSet? = null,
   defStyleAttr: Int = 0

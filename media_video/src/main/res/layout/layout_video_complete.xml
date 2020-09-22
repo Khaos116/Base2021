@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout"
+    >
+
+  <LinearLayout
+      android:id="@+id/complete_view"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:orientation="vertical"
+      android:paddingStart="15dp"
+      android:paddingTop="10dp"
+      android:paddingEnd="15dp"
+      android:paddingBottom="10dp"
+      android:visibility="gone"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:ignore="UseCompoundDrawables"
+      tools:visibility="visible"
+      >
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:contentDescription="@null"
+        android:padding="5dp"
+        android:src="@drawable/svg_media_replay"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:shadowColor="@color/media_video_error_retry"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="1"
+        android:text="@string/video_replay"
+        android:textColor="@color/media_video_complete"
+        android:textSize="15sp"
+        />
+  </LinearLayout>
+</merge>
