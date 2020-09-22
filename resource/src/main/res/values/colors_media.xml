@@ -22,4 +22,7 @@
   <color name="media_video_error_retry_bg">@color/blue_87CEEB</color>
   <!--手势的颜色-->
   <color name="media_video_gesture">@color/media_video_loading_hint</color>
+  <!--电池时间信息-->
+  <color name="media_video_sys_time">@color/media_icon_color</color>
+  <color name="media_video_battery">@color/media_icon_color</color>
 </resources>
