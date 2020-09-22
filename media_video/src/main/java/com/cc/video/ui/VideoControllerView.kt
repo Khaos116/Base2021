@@ -92,6 +92,7 @@ class VideoControllerView @JvmOverloads constructor(
     controller_bottom_stop.click {
       controllerListener?.onStop()
       job?.cancel()
+      jobLock?.cancel()
     }
     controller_lock_state.click {
       if (controller_lock_state.isSelected) {
@@ -110,8 +111,8 @@ class VideoControllerView @JvmOverloads constructor(
 
       override fun onStartTrackingTouch(seekBar: SeekBar) {
         isSeeking = true
-        controllerListener?.onPause()
         job?.cancel()
+        jobLock?.cancel()
       }
 
       override fun onStopTrackingTouch(seekBar: SeekBar) {
