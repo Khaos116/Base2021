@@ -20,6 +20,9 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 /**
+ * 播放器常用控制器,主要实现：
+ * 1.播放器的暂停、播放、停止、全屏、进度拖动、播放加锁
+ * 2.页面返回按钮(触发Activity的onBackPressed)、标题显示、视频时长和进度显示、电池电量、系统时间显示等
  * Author:CASE
  * Date:2020-9-18
  * Time:16:34

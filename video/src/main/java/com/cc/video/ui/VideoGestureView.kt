@@ -17,6 +17,10 @@ import kotlinx.android.synthetic.main.layout_video_gesture.view.*
 import kotlin.math.*
 
 /**
+ * 手势操作控制器，实现：
+ * 1.左右滑动控制播放进度
+ * 2.左边上下滑动控制亮度
+ * 3.右边上下滑动控制音量
  * Author:CASE
  * Date:2020-9-19
  * Time:18:22

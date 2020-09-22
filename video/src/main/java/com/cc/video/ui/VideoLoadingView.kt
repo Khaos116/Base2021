@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.layout_video_loading.view.loading_kbs
 import kotlinx.android.synthetic.main.layout_video_loading.view.loading_view
 
 /**
+ * 播放器回调loading状态显示
  * Author:CASE
  * Date:2020-9-19
  * Time:10:29

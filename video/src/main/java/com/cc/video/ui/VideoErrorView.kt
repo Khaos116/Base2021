@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.layout_video_error.view.*
 import kotlinx.android.synthetic.main.layout_video_error.view.error_retry
 
 /**
+ * 播放器异常回调显示，可以操作重试和移动网络的继续播放
  * Author:CASE
  * Date:2020-9-19
  * Time:14:38
