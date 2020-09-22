@@ -145,7 +145,7 @@ class VideoControllerView @JvmOverloads constructor(
 
   //隐藏播放状态
   private fun hiddenView() {
-    if (!isShowErrorOrComplete) controller_bottom_progressbar?.animate()?.alpha(1f)?.start()
+    controller_bottom_progressbar?.animate()?.alpha(if (isShowErrorOrComplete) 0f else 1f)?.start()
     controller_top_container?.animate()?.alpha(0f)?.start()
     controller_bottom_container?.animate()?.alpha(0f)?.start()
     controller_top_battery_iv?.animate()?.alpha(0f)?.start()
