@@ -1,7 +1,6 @@
-package com.cc.video.inter
+package com.cc.video.inter.call
 
-import android.view.GestureDetector
-import android.view.MotionEvent
+import com.cc.video.inter.operate.VideoGestureListener
 
 /**
  * 播放器根据状态控制是否能执行手势
@@ -12,5 +11,5 @@ import android.view.MotionEvent
 interface VideoGestureCallListener {
   fun setCall(call: VideoGestureListener)
   fun callOperate(canOperate: Boolean)
-  fun callShowErrorOrComplete(show: Boolean)
+  fun callShowInoperableView(show: Boolean)
 }

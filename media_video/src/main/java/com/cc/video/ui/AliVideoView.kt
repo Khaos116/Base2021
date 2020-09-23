@@ -28,7 +28,8 @@ import com.cc.ext.logE
 import com.cc.ext.logI
 import com.cc.utils.AudioHelper
 import com.cc.video.ext.useMobileNet
-import com.cc.video.inter.*
+import com.cc.video.inter.call.*
+import com.cc.video.inter.operate.*
 import kotlin.math.max
 import kotlin.math.min
 
@@ -41,10 +42,10 @@ import kotlin.math.min
  * Time:15:37
  */
 class AliVideoView @JvmOverloads constructor(
-  private val con: Context,
-  attrs: AttributeSet? = null,
-  defStyleAttr: Int = 0,
-  defStyleRes: Int = 0
+    private val con: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
 ) : FrameLayout(con, attrs, defStyleAttr, defStyleRes), LifecycleObserver {
 
   //<editor-fold defaultstate="collapsed" desc="变量区">
@@ -104,6 +105,9 @@ class AliVideoView @JvmOverloads constructor(
 
   //播放结束的回调
   private var callComplete: VideoCompleteCallListener? = null
+
+  //封面显示的回调
+  private var callCover: VideoCoverCallListener? = null
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化">
@@ -113,9 +117,9 @@ class AliVideoView @JvmOverloads constructor(
     addView(mOverParent, ViewGroup.LayoutParams(-1, -1))
     mTextureView.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
       override fun onSurfaceTextureAvailable(
-        surface: SurfaceTexture,
-        width: Int,
-        height: Int
+          surface: SurfaceTexture,
+          width: Int,
+          height: Int
       ) {
         mSurfaceTexture = surface
         //设置播放的surface
@@ -126,9 +130,9 @@ class AliVideoView @JvmOverloads constructor(
       }
 
       override fun onSurfaceTextureSizeChanged(
-        surface: SurfaceTexture,
-        width: Int,
-        height: Int
+          surface: SurfaceTexture,
+          width: Int,
+          height: Int
       ) {
         //画面大小变化的时候重绘界面，立即刷新界面
         aliPlayer.redraw()
@@ -181,7 +185,7 @@ class AliVideoView @JvmOverloads constructor(
   }
   //</editor-fold>
 
-  //<editor-fold defaultstate="collapsed" desc="监听">
+  //<editor-fold defaultstate="collapsed" desc="监听播放器相关事件">
   private fun addListener() {
     //播放完成事件
     aliPlayer.setOnCompletionListener {
@@ -278,7 +282,10 @@ class AliVideoView @JvmOverloads constructor(
           callLoading?.hiddenLoading()
           callController?.callPlay()
         }
-        4 -> callController?.callPause()
+        4 -> {
+          callController?.callPause()
+          callCover?.callShowPlayView()
+        }
         6 -> {
           setCompleteViewStatus(true)
           callComplete?.callComplete()
@@ -297,13 +304,13 @@ class AliVideoView @JvmOverloads constructor(
   //<editor-fold defaultstate="collapsed" desc="完成或者异常的状态改变">
   private fun setErrorViewStatus(error: Boolean) {
     isShowError = error
-    callController?.callShowErrorOrComplete(isShowError || isShowComplete)
+    callController?.callShowInoperableView(isShowError || isShowComplete)
     if (error) setCanOperate(false)
   }
 
   private fun setCompleteViewStatus(complete: Boolean) {
     isShowComplete = complete
-    callController?.callShowErrorOrComplete(isShowError || isShowComplete)
+    callController?.callShowInoperableView(isShowError || isShowComplete)
     if (complete) setCanOperate(false)
   }
   //</editor-fold>
@@ -313,7 +320,7 @@ class AliVideoView @JvmOverloads constructor(
   private fun callPlayError() {
     if (callError == null) return
     if (ContextCompat.checkSelfPermission(con, Manifest.permission.ACCESS_NETWORK_STATE)
-      == PackageManager.PERMISSION_GRANTED
+        == PackageManager.PERMISSION_GRANTED
     ) {
       if (!NetworkUtils.isConnected()) { //无网络
         callError?.errorNoNet()
@@ -401,10 +408,11 @@ class AliVideoView @JvmOverloads constructor(
   fun setUrlVideo(url: String, title: String? = "", cover: String? = "") {
     "播放地址:$url".logI()
     setCanOperate(false)
-    callController?.callStop()
     videoUrl = url
     aliPlayer.setDataSource(UrlSource().apply { uri = url })
     videoTitle = title ?: ""
+    callCover?.callShowAllView()
+    callCover?.callCoverUrl(cover)
     callController?.callTitle(videoTitle)
     videoCover = cover ?: ""
   }
@@ -415,9 +423,9 @@ class AliVideoView @JvmOverloads constructor(
     aliPlayer.prepare()
     callController?.callPrepare()
     if (ContextCompat.checkSelfPermission(
-        con,
-        Manifest.permission.ACCESS_NETWORK_STATE
-      ) == PackageManager.PERMISSION_GRANTED
+            con,
+            Manifest.permission.ACCESS_NETWORK_STATE
+        ) == PackageManager.PERMISSION_GRANTED
     ) {
       if (callError != null)
         if (!canUserMobile && NetworkUtils.isConnected() && !NetworkUtils.isWifiConnected()) {
@@ -445,12 +453,8 @@ class AliVideoView @JvmOverloads constructor(
   //开始播放
   @SuppressLint("MissingPermission")
   fun startVideo() {
-    if (ContextCompat.checkSelfPermission(
-        con,
-        Manifest.permission.ACCESS_NETWORK_STATE
-      ) == PackageManager.PERMISSION_GRANTED &&
-      callError != null
-    ) {
+    if (ContextCompat.checkSelfPermission(con,
+            Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED && callError != null) {
       if (!canUserMobile && NetworkUtils.isConnected() && !NetworkUtils.isWifiConnected()) {
         setErrorViewStatus(true)
         callError?.errorMobileNet()
@@ -513,7 +517,7 @@ class AliVideoView @JvmOverloads constructor(
     } else {
       callController?.enterFullScreen()
       if (con is Activity) con.requestedOrientation =
-        ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+          ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
     }
     isFullScreen = !isFullScreen
   }
@@ -582,6 +586,10 @@ class AliVideoView @JvmOverloads constructor(
       is VideoCompleteCallListener -> {
         over.setCall(operateComplete)
         callComplete = over
+      }
+      is VideoCoverCallListener -> {
+        over.setCall(operateCover)
+        callCover = over
       }
     }
   }
@@ -735,6 +743,13 @@ class AliVideoView @JvmOverloads constructor(
       setCompleteViewStatus(false)
       resetVideo()
       startVideo()
+    }
+  }
+
+  //开始播放的操作
+  private var operateCover = object : VideoCoverListener {
+    override fun startPlay() {
+      prepareStartVideo()
     }
   }
   //</editor-fold>

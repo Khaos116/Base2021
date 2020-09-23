@@ -10,14 +10,10 @@
 
   <LinearLayout
       android:id="@+id/complete_view"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
       android:gravity="center"
       android:orientation="vertical"
-      android:paddingStart="15dp"
-      android:paddingTop="10dp"
-      android:paddingEnd="15dp"
-      android:paddingBottom="10dp"
       android:visibility="gone"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
@@ -28,6 +24,7 @@
       >
 
     <ImageView
+        android:id="@+id/complete_iv"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:contentDescription="@null"
@@ -36,10 +33,11 @@
         />
 
     <TextView
+        android:id="@+id/complete_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:gravity="center"
+        android:paddingTop="5dp"
         android:shadowColor="@color/media_video_error_retry"
         android:shadowDx="1"
         android:shadowDy="1"

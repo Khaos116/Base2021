@@ -1,4 +1,4 @@
-package com.cc.video.inter
+package com.cc.video.inter.operate
 
 /**
  * Author:CASE

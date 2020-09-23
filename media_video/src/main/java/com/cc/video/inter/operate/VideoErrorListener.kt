@@ -1,4 +1,4 @@
-package com.cc.video.inter
+package com.cc.video.inter.operate
 
 /**
  * 播放异常的重新播放操作

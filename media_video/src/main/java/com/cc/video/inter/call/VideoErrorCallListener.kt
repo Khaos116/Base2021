@@ -1,4 +1,6 @@
-package com.cc.video.inter
+package com.cc.video.inter.call
+
+import com.cc.video.inter.operate.VideoErrorListener
 
 /**
  * 播放器回调播放状态

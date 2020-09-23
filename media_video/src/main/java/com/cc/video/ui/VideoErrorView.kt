@@ -8,8 +8,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.blankj.utilcode.util.StringUtils
 import com.cc.ext.*
 import com.cc.video.R
-import com.cc.video.inter.VideoErrorCallListener
-import com.cc.video.inter.VideoErrorListener
+import com.cc.video.inter.call.VideoErrorCallListener
+import com.cc.video.inter.operate.VideoErrorListener
 import kotlinx.android.synthetic.main.layout_video_error.view.*
 import kotlinx.android.synthetic.main.layout_video_error.view.error_retry
 
@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.layout_video_error.view.error_retry
  */
 @SuppressLint("SetTextI18n")
 class VideoErrorView @JvmOverloads constructor(
-    private val con: Context,
+    con: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
@@ -31,11 +31,18 @@ class VideoErrorView @JvmOverloads constructor(
   private var errorListener: VideoErrorListener? = null
   //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="外部设置">
+  //设置是否是直播(直播没有时长，播放进度等)
+  fun setLiveVideo(live: Boolean) {
+
+  }
+  //</editor-fold>
+
   //<editor-fold defaultstate="collapsed" desc="初始化XML">
   init {
     LayoutInflater.from(con).inflate(R.layout.layout_video_error, this, true)
     //按压效果
-    error_retry.pressEffectAlpha(0.95f)
+    error_retry.pressEffectAlpha(0.9f)
     //点击事件
     error_retry.click {
       showError(false)
@@ -45,6 +52,8 @@ class VideoErrorView @JvmOverloads constructor(
         errorListener?.resetPlay()
       }
     }
+    //防止透过去点到其他
+    error_view.click {  }
     //默认不显示
     showError(false)
   }

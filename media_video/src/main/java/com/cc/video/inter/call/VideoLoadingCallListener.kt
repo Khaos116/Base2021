@@ -1,4 +1,4 @@
-package com.cc.video.inter
+package com.cc.video.inter.call
 
 /**
  * 播放器根据加载情况显示loading等

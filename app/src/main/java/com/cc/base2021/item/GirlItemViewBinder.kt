@@ -32,7 +32,7 @@ class GirlItemViewBinder(
       holder.itemView.pressEffectDisable()
       holder.itemView.setOnClickListener(null)
     } else {
-      holder.itemView.pressEffectAlpha(0.95f)
+      holder.itemView.pressEffectAlpha(0.9f)
       holder.itemView.click { onItemClick.invoke(item, holder.layoutPosition) }
     }
     holder.itemView.itemGirlIv.loadImgVerticalScreen(item.images?.firstOrNull())

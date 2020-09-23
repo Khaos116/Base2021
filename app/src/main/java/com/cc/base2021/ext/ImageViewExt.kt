@@ -33,35 +33,49 @@ inline fun ImageView.loadImgSquare(url: String?) {
 }
 
 //横向图片加载
-fun ImageView.loadImgHorizontal(url: String?) {
+fun ImageView.loadImgHorizontal(url: String?,
+    loadingScaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_CENTER,
+    sucScaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_CENTER) {
   if (url.isNullOrBlank()) {
     this.clear()
+    this.scaleType = loadingScaleType
     this.setImageResource(R.drawable.error_720p_horizontal)
   } else {
     if (getTag(R.id.suc_img) == url) return
     val iv = this
+    iv.scaleType = loadingScaleType
     iv.load(url) {
       crossfade(true)
       placeholder(R.drawable.loading_720p_horizontal)
       error(R.drawable.error_720p_horizontal)
-      listener { _, _ -> iv.setTag(R.id.suc_img, url) }
+      listener { _, _ ->
+        iv.scaleType = sucScaleType
+        iv.setTag(R.id.suc_img, url)
+      }
     }
   }
 }
 
 //竖向图片加载
-fun ImageView.loadImgVerticalScreen(url: String?) {
+fun ImageView.loadImgVerticalScreen(url: String?,
+    loadingScaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_CENTER,
+    sucScaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_CENTER) {
   if (url.isNullOrBlank()) {
     this.clear()
+    this.scaleType = loadingScaleType
     this.setImageResource(R.drawable.error_720p_vertical)
   } else {
     if (getTag(R.id.suc_img) == url) return
     val iv = this
+    iv.scaleType = loadingScaleType
     iv.load(url) {
       crossfade(true)
       placeholder(R.drawable.loading_720p_vertical)
       error(R.drawable.error_720p_vertical)
-      listener { _, _ -> iv.setTag(R.id.suc_img, url) }
+      listener { _, _ ->
+        iv.scaleType = sucScaleType
+        iv.setTag(R.id.suc_img, url)
+      }
     }
   }
 }
@@ -78,17 +92,17 @@ fun ImageView.loadCacheFileFullScreen(url: String?) {
         this.load(f)
       } else { //文件不存在，进行下载
         Coil.imageLoader(Utils.getApp()).enqueue(
-          ImageRequest.Builder(Utils.getApp()).data(u).target(
-            onStart = {
-              "缓存图片开始下载".logE()
-            },
-            onSuccess = {
-              "缓存图片下载成功".logE()
-            },
-            onError = {
-              "缓存图片下载失败:${u}".logE()
-            }
-          ).build()
+            ImageRequest.Builder(Utils.getApp()).data(u).target(
+                onStart = {
+                  "缓存图片开始下载".logE()
+                },
+                onSuccess = {
+                  "缓存图片下载成功".logE()
+                },
+                onError = {
+                  "缓存图片下载失败:${u}".logE()
+                }
+            ).build()
         )
       }
     }

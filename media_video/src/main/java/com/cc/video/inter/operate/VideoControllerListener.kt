@@ -1,4 +1,4 @@
-package com.cc.video.inter
+package com.cc.video.inter.operate
 
 /**
  * 播放控制器发送相关操作

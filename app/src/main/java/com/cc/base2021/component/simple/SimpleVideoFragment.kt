@@ -1,10 +1,13 @@
 package com.cc.base2021.component.simple
 
+import android.widget.ImageView
 import com.blankj.utilcode.util.FileUtils
 import com.cc.base2021.R
 import com.cc.base2021.comm.CommFragment
+import com.cc.base2021.ext.loadImgVerticalScreen
 import com.cc.base2021.utils.VideoRandomUtils
 import com.cc.video.ui.*
+import com.cc.video.utils.VideoOverUtils
 import kotlinx.android.synthetic.main.fragment_simple_video.simpleVideoView
 
 /**
@@ -36,20 +39,16 @@ class SimpleVideoFragment : CommFragment() {
     //自动感应生命周期
     simpleVideoView.setLifecycleOwner(this)
     //视频控制器
-    simpleVideoView.addOverView(VideoGestureView(mContext))
-    simpleVideoView.addOverView(VideoControllerView(mContext))
-    simpleVideoView.addOverView(VideoLoadingView(mContext))
-    simpleVideoView.addOverView(VideoErrorView(mContext))
-    simpleVideoView.addOverView(VideoCompleteView(mContext))
+    VideoOverUtils.instance.userStandardController(simpleVideoView) { url, iv ->
+      iv.loadImgVerticalScreen(url, ImageView.ScaleType.CENTER_CROP, ImageView.ScaleType.FIT_CENTER)
+    }
     //视频数据
     val videoBean = VideoRandomUtils.instance.randomVideo()
     simpleVideoView.setUrlVideo(
-      url = videoBean.second,
-      title = FileUtils.getFileName(videoBean.second),
-      cover = videoBean.first
+        url = videoBean.second,
+        title = FileUtils.getFileName(videoBean.second),
+        cover = videoBean.first
     )
-    //播放
-    simpleVideoView.prepareStartVideo()
   }
   //</editor-fold>
 }

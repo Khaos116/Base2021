@@ -9,6 +9,8 @@ import com.cc.ext.gone
 import com.cc.ext.visible
 import com.cc.video.R
 import com.cc.video.inter.*
+import com.cc.video.inter.call.VideoGestureCallListener
+import com.cc.video.inter.operate.VideoGestureListener
 import com.cc.video.utils.VideoTimeUtils
 import kotlinx.android.synthetic.main.layout_video_gesture.view.*
 import kotlin.math.*
@@ -36,6 +38,13 @@ class VideoGestureView @JvmOverloads constructor(
 
   //是否可以滑动屏幕操作
   private var canGestureVideo: Boolean = false
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="外部设置">
+  //设置是否是直播(直播没有时长，播放进度等)
+  fun setLiveVideo(live: Boolean) {
+
+  }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化XML">
@@ -173,7 +182,7 @@ class VideoGestureView @JvmOverloads constructor(
     }
   }
 
-  override fun callShowErrorOrComplete(show: Boolean) {
+  override fun callShowInoperableView(show: Boolean) {
     canGestureVideo = !show
   }
   //</editor-fold>

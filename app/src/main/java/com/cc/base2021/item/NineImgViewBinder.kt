@@ -29,7 +29,7 @@ class NineImgViewBinder(
   override fun onBindViewHolder(holder: ViewHolder, item: String) {
     holder.itemView.itemNineImgTv.loadImgSquare(item)
     if (onItemClick != null) {
-      holder.itemView.pressEffectAlpha(0.95f)
+      holder.itemView.pressEffectAlpha(0.9f)
       holder.itemView.click { onItemClick.invoke(item, holder.layoutPosition, holder.itemView.itemNineImgTv) }
     } else {
       holder.itemView.setOnClickListener(null)

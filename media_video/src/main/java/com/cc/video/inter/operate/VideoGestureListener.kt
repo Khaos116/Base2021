@@ -1,4 +1,4 @@
-package com.cc.video.inter
+package com.cc.video.inter.operate
 
 import androidx.annotation.FloatRange
 import androidx.annotation.IntRange

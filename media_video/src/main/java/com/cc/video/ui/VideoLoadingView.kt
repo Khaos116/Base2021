@@ -9,7 +9,7 @@ import com.cc.ext.gone
 import com.cc.ext.visible
 import com.cc.utils.MySizeUtils
 import com.cc.video.R
-import com.cc.video.inter.VideoLoadingCallListener
+import com.cc.video.inter.call.VideoLoadingCallListener
 import kotlinx.android.synthetic.main.layout_video_loading.view.loading_kbs
 import kotlinx.android.synthetic.main.layout_video_loading.view.loading_view
 
