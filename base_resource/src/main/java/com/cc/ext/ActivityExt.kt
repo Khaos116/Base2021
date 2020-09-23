@@ -36,11 +36,12 @@ val Activity.mActivity: Activity
 //监听键盘高度
 fun Activity.extKeyBoard(keyCall: (statusHeight: Int, navigationHeight: Int, keyBoardHeight: Int) -> Unit) {
   mContentView.post { mContentView.layoutParams.height = mContentView.height } //防止键盘弹出导致整个布局高度变小
+  this.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
   this.window.decorView.setOnApplyWindowInsetsListener(object : View.OnApplyWindowInsetsListener {
     var preKeyOffset: Int = 0 //键盘高度改变才回调
     override fun onApplyWindowInsets(
-      v: View?,
-      insets: WindowInsets?
+        v: View?,
+        insets: WindowInsets?
     ): WindowInsets {
       insets?.let { ins ->
         val navHeight = ins.systemWindowInsetBottom //下面弹窗到屏幕底部的高度，比如键盘弹出后的键盘+虚拟导航键高度
@@ -50,7 +51,7 @@ fun Activity.extKeyBoard(keyCall: (statusHeight: Int, navigationHeight: Int, key
           val decorHeight = mActivity.window.decorView.height //整个布局高度，包含虚拟导航键
           if (decorHeight > 0) { //为了防止手机去设置页修改虚拟导航键高度，导致整个内容显示有问题，所以需要重新设置高度(与上面设置固定高度对应)
             mContentView.layoutParams.height =
-              decorHeight - navHeight.coerceAtMost(ins.stableInsetBottom) //取小值
+                decorHeight - navHeight.coerceAtMost(ins.stableInsetBottom) //取小值
           }
           preKeyOffset = offset
           keyCall.invoke(ins.stableInsetTop, ins.stableInsetBottom, offset)
