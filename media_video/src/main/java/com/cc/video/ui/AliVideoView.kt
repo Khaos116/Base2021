@@ -27,6 +27,7 @@ import com.blankj.utilcode.util.*
 import com.cc.ext.logE
 import com.cc.ext.logI
 import com.cc.utils.AudioHelper
+import com.cc.video.enu.PlayState
 import com.cc.video.ext.useMobileNet
 import com.cc.video.inter.call.*
 import com.cc.video.inter.operate.*
@@ -189,6 +190,7 @@ class AliVideoView @JvmOverloads constructor(
   private fun addListener() {
     //播放完成事件
     aliPlayer.setOnCompletionListener {
+      setPlayState(PlayState.COMPLETE)
       if (!aliPlayer.isLoop) {
         setCompleteViewStatus(true)
         callComplete?.callComplete()
@@ -196,9 +198,13 @@ class AliVideoView @JvmOverloads constructor(
       }
     }
     //出错事件
-    aliPlayer.setOnErrorListener { callPlayError() }
+    aliPlayer.setOnErrorListener {
+      setPlayState(PlayState.ERROR)
+      callPlayError()
+    }
     //准备成功事件
     aliPlayer.setOnPreparedListener {
+      setPlayState(PlayState.PREPARED)
       callLoading?.hiddenLoading()
       if (!isShowError) {
         callController?.callDuration(aliPlayer.duration)
@@ -244,6 +250,7 @@ class AliVideoView @JvmOverloads constructor(
     aliPlayer.setOnLoadingStatusListener(object : IPlayer.OnLoadingStatusListener {
       override fun onLoadingBegin() { //缓冲开始
         if (!isShowError) callLoading?.showLoading()
+        setPlayState(PlayState.BUFFING)
       }
 
       override fun onLoadingProgress(percent: Int, kbps: Float) { //缓冲进度
@@ -252,6 +259,7 @@ class AliVideoView @JvmOverloads constructor(
 
       override fun onLoadingEnd() { //缓冲结束
         callLoading?.hiddenLoading()
+        setPlayState(PlayState.BUFFED)
       }
     })
     //拖动结束
@@ -279,14 +287,17 @@ class AliVideoView @JvmOverloads constructor(
     aliPlayer.setOnStateChangedListener {
       when (it) {
         3 -> {
+          setPlayState(PlayState.START)
           callLoading?.hiddenLoading()
           callController?.callPlay()
         }
         4 -> {
+          setPlayState(PlayState.PAUSE)
           callController?.callPause()
           callCover?.callShowPlayView()
         }
         6 -> {
+          setPlayState(PlayState.COMPLETE)
           setCompleteViewStatus(true)
           callComplete?.callComplete()
           callController?.callComplete()
@@ -406,6 +417,7 @@ class AliVideoView @JvmOverloads constructor(
 
   //设置播放地址
   fun setUrlVideo(url: String, title: String? = "", cover: String? = "") {
+    setPlayState(PlayState.SET_DATA)
     "播放地址:$url".logI()
     setCanOperate(false)
     videoUrl = url
@@ -420,6 +432,7 @@ class AliVideoView @JvmOverloads constructor(
   //准备播放
   @SuppressLint("MissingPermission")
   fun prepareVideo() {
+    setPlayState(PlayState.PREPARING)
     aliPlayer.prepare()
     callController?.callPrepare()
     if (ContextCompat.checkSelfPermission(
@@ -758,6 +771,14 @@ class AliVideoView @JvmOverloads constructor(
   private fun setCanOperate(can: Boolean) {
     callController?.callOperate(can)
     callGesture?.callOperate(can)
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="设置播放状态">
+  private var mPlayState = PlayState.STOP
+  fun setPlayState(state: PlayState) {
+    mPlayState = state
+    mOverParent.setPlayState(state)
   }
   //</editor-fold>
 }

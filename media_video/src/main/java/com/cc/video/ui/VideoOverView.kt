@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.*
 import android.widget.FrameLayout
 import com.cc.ext.removeParent
+import com.cc.video.enu.PlayState
 import com.cc.video.inter.*
 import com.cc.video.inter.call.VideoControllerCallListener
 
@@ -16,10 +17,10 @@ import com.cc.video.inter.call.VideoControllerCallListener
  * Time:14:51
  */
 open class VideoOverView @JvmOverloads constructor(
-  con: Context,
-  attrs: AttributeSet? = null,
-  defStyleAttr: Int = 0,
-  defStyleRes: Int = 0
+    con: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
 ) : FrameLayout(con, attrs, defStyleAttr, defStyleRes) {
   //<editor-fold defaultstate="collapsed" desc="获取子View">
   private var mCacheList = mutableListOf<View>()
@@ -35,29 +36,37 @@ open class VideoOverView @JvmOverloads constructor(
   //<editor-fold defaultstate="collapsed" desc="手势监听">
   private var mGestureDetector: GestureDetector? = null
   private var simpleOnGestureListener: GestureDetector.SimpleOnGestureListener =
-    object : GestureDetector.SimpleOnGestureListener() {
-      override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
-        getAllChildView().filter { it is OverGestureListener }.forEach { (it as OverGestureListener).callOverClick() }
-        return true
-      }
-
-      override fun onDoubleTap(e: MotionEvent?): Boolean {
-        getAllChildView().filter { it is OverGestureListener }.forEach { (it as OverGestureListener).callOverDoubleClick() }
-        return true
-      }
-
-      override fun onDown(e: MotionEvent?): Boolean {
-        getAllChildView().filter { it is OverGestureListener }.forEach { (it as OverGestureListener).callOverTouchDown(e) }
-        return true
-      }
-
-      override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
-        getAllChildView(true).filter { it is OverGestureListener }.forEach {
-          (it as OverGestureListener).callOverScroll(e1, e2, distanceX, distanceY)
+      object : GestureDetector.SimpleOnGestureListener() {
+        override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+          getAllChildView().filter { it is OverGestureListener }
+              .forEach { (it as OverGestureListener).callOverClick() }
+          return true
         }
-        return true
+
+        override fun onDoubleTap(e: MotionEvent?): Boolean {
+          getAllChildView().filter { it is OverGestureListener }
+              .forEach { (it as OverGestureListener).callOverDoubleClick() }
+          return true
+        }
+
+        override fun onDown(e: MotionEvent?): Boolean {
+          getAllChildView().filter { it is OverGestureListener }
+              .forEach { (it as OverGestureListener).callOverTouchDown(e) }
+          return true
+        }
+
+        override fun onScroll(
+            e1: MotionEvent?,
+            e2: MotionEvent?,
+            distanceX: Float,
+            distanceY: Float
+        ): Boolean {
+          getAllChildView(true).filter { it is OverGestureListener }.forEach {
+            (it as OverGestureListener).callOverScroll(e1, e2, distanceX, distanceY)
+          }
+          return true
+        }
       }
-    }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化XML">
@@ -72,7 +81,8 @@ open class VideoOverView @JvmOverloads constructor(
     mGestureDetector?.let { gd ->
       gd.onTouchEvent(event)
       if (event?.action ?: 0 == MotionEvent.ACTION_UP) {
-        getAllChildView().filter { it is OverGestureListener }.forEach { (it as OverGestureListener).callOverTouchUp() }
+        getAllChildView().filter { it is OverGestureListener }
+            .forEach { (it as OverGestureListener).callOverTouchUp() }
       }
       return true
     }
@@ -89,6 +99,33 @@ open class VideoOverView @JvmOverloads constructor(
       addView(v, 0, ViewGroup.LayoutParams(-1, -1))
     } else {
       addView(v, ViewGroup.LayoutParams(-1, -1))
+    }
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="播放器状态">
+  fun setPlayState(state: PlayState) {
+    when (state) {
+      PlayState.SET_DATA -> {
+      }
+      PlayState.PREPARING -> {
+      }
+      PlayState.PREPARED -> {
+      }
+      PlayState.BUFFING -> {
+      }
+      PlayState.BUFFED -> {
+      }
+      PlayState.START -> {
+      }
+      PlayState.PAUSE -> {
+      }
+      PlayState.STOP -> {
+      }
+      PlayState.COMPLETE -> {
+      }
+      PlayState.ERROR -> {
+      }
     }
   }
   //</editor-fold>
