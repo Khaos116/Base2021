@@ -1,5 +1,7 @@
 package com.cc.video.inter.call
 
+import com.cc.video.enu.PlayState
+import com.cc.video.enu.PlayUiState
 import com.cc.video.inter.operate.VideoControllerListener
 
 /**
@@ -9,19 +11,11 @@ import com.cc.video.inter.operate.VideoControllerListener
  * Time:16:51
  */
 interface VideoControllerCallListener {
-  fun callShowInoperableView(show: Boolean)
-  fun callPrepare()
-  fun callPlay()
-  fun callPause()
-  fun callStop()
-  fun callComplete()
-  fun unLock()
-  fun callTitle(title: String)
-  fun callBufferProgress(msc: Long)
-  fun callProgress(msc: Long)
+  fun callPlayState(state: PlayState)
+  fun callUiState(uiState: PlayUiState)
+  fun callVideoInfo(url: String, title: String? = "", cover: String? = "")
   fun callDuration(duration: Long)
-  fun enterFullScreen()
-  fun exitFullScreen()
-  fun callOperate(canOperate: Boolean)
+  fun callPlayProgress(progress: Long)
+  fun callBufferProgress(progress: Long)
   fun setCall(call: VideoControllerListener?)
 }

@@ -8,6 +8,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.cc.ext.gone
 import com.cc.ext.visible
 import com.cc.video.R
+import com.cc.video.enu.PlayState
+import com.cc.video.enu.PlayUiState
 import com.cc.video.inter.*
 import com.cc.video.inter.call.VideoGestureCallListener
 import com.cc.video.inter.operate.VideoGestureListener
@@ -26,10 +28,10 @@ import kotlin.math.*
  */
 @SuppressLint("SetTextI18n")
 class VideoGestureView @JvmOverloads constructor(
-  con: Context,
-  attrs: AttributeSet? = null,
-  defStyleAttr: Int = 0,
-  defStyleRes: Int = 0
+    con: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
 ) : ConstraintLayout(con, attrs, defStyleAttr, defStyleRes), VideoGestureCallListener, OverGestureListener {
 
   //<editor-fold defaultstate="collapsed" desc="变量">
@@ -78,15 +80,14 @@ class VideoGestureView @JvmOverloads constructor(
 
   private fun showProgress() {
     gestureListener?.let { gl ->
-      gl.onPause()
       val cur = gl.getCurrentPosition()
       val max = gl.getDuration()
       downSeconds = cur / 1000
       gesture_seek_view.visible()
       gesture_seek_tv1.text = "+0s"
       gesture_seek_tv2.text = String.format(
-        "%s/%s",
-        VideoTimeUtils.instance.forMatterVideoTime(cur), VideoTimeUtils.instance.forMatterVideoTime(max)
+          "%s/%s",
+          VideoTimeUtils.instance.forMatterVideoTime(cur), VideoTimeUtils.instance.forMatterVideoTime(max)
       )
     }
   }
@@ -122,12 +123,12 @@ class VideoGestureView @JvmOverloads constructor(
   private fun setSeekToPreView(msc: Long) {
     val currentSeconds = msc / 1000
     gesture_seek_tv1.text = String.format(
-      "%s%s", if (currentSeconds >= downSeconds) "+" else "-",
-      VideoTimeUtils.instance.forMatterVideoTimeSeek(abs(currentSeconds - downSeconds))
+        "%s%s", if (currentSeconds >= downSeconds) "+" else "-",
+        VideoTimeUtils.instance.forMatterVideoTimeSeek(abs(currentSeconds - downSeconds))
     )
     gesture_seek_tv2.text = String.format(
-      "%s/%s", VideoTimeUtils.instance.forMatterVideoTime(currentSeconds * 1000),
-      VideoTimeUtils.instance.forMatterVideoTime(gestureListener?.getDuration() ?: 0)
+        "%s/%s", VideoTimeUtils.instance.forMatterVideoTime(currentSeconds * 1000),
+        VideoTimeUtils.instance.forMatterVideoTime(gestureListener?.getDuration() ?: 0)
     )
     gestureListener?.seekPreviewTo(msc)
   }
@@ -171,7 +172,37 @@ class VideoGestureView @JvmOverloads constructor(
     gestureListener = call
   }
 
-  override fun callOperate(canOperate: Boolean) {
+  private var mPlayState = PlayState.SET_DATA
+  override fun callPlayState(state: PlayState) {
+    mPlayState = state
+    if (state == PlayState.SET_DATA || mPlayState == PlayState.PREPARING || mPlayState == PlayState.STOP
+        || mPlayState == PlayState.COMPLETE || mPlayState == PlayState.ERROR) isLockScreen = false
+    checkOperate()
+  }
+
+  private var isLockScreen = false
+  override fun callUiState(uiState: PlayUiState) {
+    when (uiState) {
+      PlayUiState.LOCK_SCREEN -> isLockScreen = true
+      PlayUiState.UNLOCK_SCREEN -> isLockScreen = false
+      else -> {
+      }
+    }
+    checkOperate()
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="设置操作状态">
+  //根据当前播放状态和锁屏状态判断是否可以操作
+  private fun checkOperate() {
+    val canNot = (mPlayState == PlayState.SET_DATA || mPlayState == PlayState.SHOW_MOBILE || mPlayState == PlayState.PREPARING ||
+        mPlayState == PlayState.BUFFING || mPlayState == PlayState.SEEKING || mPlayState == PlayState.STOP ||
+        mPlayState == PlayState.COMPLETE || mPlayState == PlayState.ERROR)
+    callOperate(!canNot && !isLockScreen)
+  }
+
+  //设置是否可以操作
+  private fun callOperate(canOperate: Boolean) {
     canGestureVideo = canOperate
     if (!canOperate) {
       //请求父控件拦截
@@ -180,10 +211,6 @@ class VideoGestureView @JvmOverloads constructor(
       gesture_volume_view.gone()
       gesture_seek_view.gone()
     }
-  }
-
-  override fun callShowInoperableView(show: Boolean) {
-    canGestureVideo = !show
   }
   //</editor-fold>
 

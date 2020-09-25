@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.cc.ext.*
 import com.cc.video.R
+import com.cc.video.enu.PlayState
 import com.cc.video.inter.call.VideoCompleteCallListener
 import com.cc.video.inter.operate.VideoCompleteListener
 import kotlinx.android.synthetic.main.layout_video_complete.view.*
@@ -50,9 +51,8 @@ class VideoCompleteView @JvmOverloads constructor(
   }
   //</editor-fold>
 
-  //<editor-fold defaultstate="collapsed" desc="播放结束的回调">
-  override fun callComplete() {
-    complete_view?.visible()
+  override fun callPlayState(state: PlayState) {
+    if (state == PlayState.COMPLETE) complete_view?.visible()
   }
 
   override fun setCall(call: VideoCompleteListener?) {

@@ -1,13 +1,18 @@
 package com.cc.video.ui
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageManager
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.StringUtils
 import com.cc.ext.*
 import com.cc.video.R
+import com.cc.video.enu.PlayState
 import com.cc.video.inter.call.VideoErrorCallListener
 import com.cc.video.inter.operate.VideoErrorListener
 import kotlinx.android.synthetic.main.layout_video_error.view.*
@@ -21,7 +26,7 @@ import kotlinx.android.synthetic.main.layout_video_error.view.error_retry
  */
 @SuppressLint("SetTextI18n")
 class VideoErrorView @JvmOverloads constructor(
-    con: Context,
+    private val con: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
@@ -53,7 +58,7 @@ class VideoErrorView @JvmOverloads constructor(
       }
     }
     //防止透过去点到其他
-    error_view.click {  }
+    error_view.click { }
     //默认不显示
     showError(false)
   }
@@ -66,22 +71,24 @@ class VideoErrorView @JvmOverloads constructor(
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="播放器回调">
-  override fun errorNormal() {
-    error_info.text = StringUtils.getString(R.string.video_error_default)
-    error_retry.text = StringUtils.getString(R.string.video_retry)
-    showError(true)
-  }
-
-  override fun errorMobileNet() {
-    error_info.text = StringUtils.getString(R.string.video_error_mobile)
-    error_retry.text = StringUtils.getString(R.string.video_continue)
-    showError(true)
-  }
-
-  override fun errorNoNet() {
-    error_info.text = StringUtils.getString(R.string.video_error_no_net)
-    error_retry.text = StringUtils.getString(R.string.video_retry)
-    showError(true)
+  @SuppressLint("MissingPermission")
+  override fun callPlayState(state: PlayState) {
+    if (state == PlayState.SHOW_MOBILE) {
+      error_info.text = StringUtils.getString(R.string.video_error_mobile)
+      error_retry.text = StringUtils.getString(R.string.video_continue)
+      showError(true)
+    } else if (state == PlayState.ERROR) {
+      if (ContextCompat.checkSelfPermission(con, Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED
+          && !NetworkUtils.isConnected()) {
+        error_info.text = StringUtils.getString(R.string.video_error_no_net)
+        error_retry.text = StringUtils.getString(R.string.video_retry)
+        showError(true)
+      } else {
+        error_info.text = StringUtils.getString(R.string.video_error_default)
+        error_retry.text = StringUtils.getString(R.string.video_retry)
+        showError(true)
+      }
+    }
   }
 
   override fun setCall(call: VideoErrorListener) {

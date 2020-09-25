@@ -1,5 +1,6 @@
 package com.cc.video.inter.call
 
+import com.cc.video.enu.PlayState
 import com.cc.video.inter.operate.VideoErrorListener
 
 /**
@@ -9,8 +10,6 @@ import com.cc.video.inter.operate.VideoErrorListener
  * Time:10:21
  */
 interface VideoErrorCallListener {
-  fun errorNormal()
-  fun errorMobileNet()
-  fun errorNoNet()
+  fun callPlayState(state: PlayState)
   fun setCall(call: VideoErrorListener)
 }

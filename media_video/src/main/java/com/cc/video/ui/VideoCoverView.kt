@@ -7,6 +7,7 @@ import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.cc.ext.*
 import com.cc.video.R
+import com.cc.video.enu.PlayState
 import com.cc.video.inter.call.VideoCoverCallListener
 import com.cc.video.inter.operate.VideoCoverListener
 import kotlinx.android.synthetic.main.layout_video_cover.view.cover_bg
@@ -35,33 +36,33 @@ abstract class VideoCoverView @JvmOverloads constructor(
     //按压效果
     cover_btn.pressEffectAlpha(0.9f)
     //点击事件
-    cover_btn.click {
-      coverListener?.startPlay()
-      callHiddenView()
-    }
+    cover_btn.click { coverListener?.startPlay() }
     //防止触发后面的事件
     cover_bg.click { }
-    this.callHiddenView()
+    cover_bg.gone()
+    cover_btn.gone()
   }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="播放器回调">
-  override fun callCoverUrl(url: String?) {
-    url?.let { loadVideoCover(it, cover_bg) }
+  override fun callVideoInfo(url: String, title: String?, cover: String?) {
+    cover?.let { loadVideoCover(it, cover_bg) }
   }
 
-  override fun callShowAllView() {
-    cover_bg.visible()
-    cover_btn.visible()
-  }
-
-  override fun callShowPlayView() {
-    cover_btn.visible()
-  }
-
-  override fun callHiddenView() {
-    cover_bg.gone()
-    cover_btn.gone()
+  override fun callPlayState(state: PlayState) {
+    if (state == PlayState.SET_DATA || state == PlayState.PREPARING) {
+      cover_bg.visible()
+      cover_btn.gone()
+    } else if (state == PlayState.PREPARED) {
+      cover_bg.visible()
+      cover_btn.visible()
+    } else if (state == PlayState.PAUSE) {
+      cover_bg.gone()
+      cover_btn.visible()
+    } else {
+      cover_bg.gone()
+      cover_btn.gone()
+    }
   }
 
   override fun setCall(call: VideoCoverListener?) {

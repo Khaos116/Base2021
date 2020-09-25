@@ -19,29 +19,29 @@ class VideoOverUtils private constructor() {
 
   fun userStandardController(videoView: AliVideoView, callCover: (url: String?, iv: ImageView) -> Unit) {
     val mContext = videoView.context
-    videoView.addOverView(VideoGestureView(mContext).apply { setLiveVideo(false) })
-    videoView.addOverView(VideoControllerView(mContext).apply { setLiveVideo(false) })
-    videoView.addOverView(VideoLoadingView(mContext))
-    videoView.addOverView(VideoErrorView(mContext).apply { setLiveVideo(false) })
-    videoView.addOverView(VideoCompleteView(mContext).apply { setLiveVideo(false) })
-    videoView.addOverView(object : VideoCoverView(mContext) {
-      override fun loadVideoCover(url: String, iv: ImageView) {
-        callCover.invoke(url, iv)
-      }
+    videoView.setOverView(VideoOverView(mContext).apply {
+      addOverChildView(VideoGestureView(mContext).apply { setLiveVideo(false) })
+      addOverChildView(VideoControllerView(mContext).apply { setLiveVideo(false) })
+      addOverChildView(VideoLoadingView(mContext))
+      addOverChildView(VideoErrorView(mContext).apply { setLiveVideo(false) })
+      addOverChildView(VideoCompleteView(mContext).apply { setLiveVideo(false) })
+      addOverChildView(object : VideoCoverView(mContext) {
+        override fun loadVideoCover(url: String, iv: ImageView) = callCover.invoke(url, iv)
+      })
     })
   }
 
   fun userLiveController(videoView: AliVideoView, callCover: (url: String?, iv: ImageView) -> Unit) {
     val mContext = videoView.context
-    videoView.addOverView(VideoGestureView(mContext).apply { setLiveVideo(true) })
-    videoView.addOverView(VideoControllerView(mContext).apply { setLiveVideo(true) })
-    videoView.addOverView(VideoLoadingView(mContext))
-    videoView.addOverView(VideoErrorView(mContext).apply { setLiveVideo(true) })
-    videoView.addOverView(VideoCompleteView(mContext).apply { setLiveVideo(true) })
-    videoView.addOverView(object : VideoCoverView(mContext) {
-      override fun loadVideoCover(url: String, iv: ImageView) {
-        callCover.invoke(url, iv)
-      }
+    videoView.setOverView(VideoOverView(mContext).apply {
+      addOverChildView(VideoGestureView(mContext).apply { setLiveVideo(true) })
+      addOverChildView(VideoControllerView(mContext).apply { setLiveVideo(true) })
+      addOverChildView(VideoLoadingView(mContext))
+      addOverChildView(VideoErrorView(mContext).apply { setLiveVideo(true) })
+      addOverChildView(VideoCompleteView(mContext).apply { setLiveVideo(true) })
+      addOverChildView(object : VideoCoverView(mContext) {
+        override fun loadVideoCover(url: String, iv: ImageView) = callCover.invoke(url, iv)
+      })
     })
   }
 }

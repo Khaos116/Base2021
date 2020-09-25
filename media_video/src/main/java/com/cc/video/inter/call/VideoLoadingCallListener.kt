@@ -1,5 +1,7 @@
 package com.cc.video.inter.call
 
+import com.cc.video.enu.PlayState
+
 /**
  * 播放器根据加载情况显示loading等
  * Author:CASE
@@ -7,7 +9,6 @@ package com.cc.video.inter.call
  * Time:10:20
  */
 interface VideoLoadingCallListener {
-  fun showLoading()
-  fun hiddenLoading()
-  fun showBuffer(percent: Int, kbps: Float)
+  fun callPlayState(state: PlayState)
+  fun callBufferPercent(percent: Int, kbps: Float)
 }

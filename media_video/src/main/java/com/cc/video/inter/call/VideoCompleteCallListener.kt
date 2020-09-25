@@ -1,5 +1,6 @@
 package com.cc.video.inter.call
 
+import com.cc.video.enu.PlayState
 import com.cc.video.inter.operate.VideoCompleteListener
 
 /**
@@ -8,6 +9,6 @@ import com.cc.video.inter.operate.VideoCompleteListener
  * Time:18:43
  */
 interface VideoCompleteCallListener {
-  fun callComplete()
+  fun callPlayState(state: PlayState)
   fun setCall(call: VideoCompleteListener?)
 }
