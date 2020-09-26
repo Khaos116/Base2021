@@ -340,8 +340,9 @@ open class VideoOverView @JvmOverloads constructor(
     //判断显示和隐藏
     this.visibleGone(playState != PlayState.SET_DATA)
     when (playState) {
-      PlayState.ERROR, PlayState.SHOW_MOBILE -> setOverError()
+      PlayState.ERROR -> setOverError()
       PlayState.PREPARING -> setOverCover()
+      PlayState.SHOW_MOBILE -> setOverMobile()
       PlayState.PREPARED,
       PlayState.BUFFING,
       PlayState.BUFFED,
@@ -388,6 +389,10 @@ open class VideoOverView @JvmOverloads constructor(
 
   private fun setOverCover() {
     getAllChildView(true).forEach { it.visibleGone(it is VideoCoverCallListener) }
+  }
+
+  private fun setOverMobile() {
+    getAllChildView(true).forEach { it.visibleGone(it is VideoCoverCallListener || it is VideoErrorCallListener) }
   }
   //</editor-fold>
 

@@ -46,18 +46,20 @@ abstract class VideoCoverView @JvmOverloads constructor(
 
   //<editor-fold defaultstate="collapsed" desc="播放器回调">
   private var changeUrl: Boolean = false
+  private var showByMobile: Boolean = false
   override fun callVideoInfo(url: String, title: String?, cover: String?) {
     changeUrl = true
     cover?.let { loadVideoCover(it, cover_bg) }
   }
 
   override fun callPlayState(state: PlayState) {
-    if (state == PlayState.SET_DATA || state == PlayState.PREPARING) {
+    if (state == PlayState.SET_DATA || state == PlayState.PREPARING || state == PlayState.SHOW_MOBILE) {
+      showByMobile = (state == PlayState.SHOW_MOBILE)
       cover_bg.visibleGone(changeUrl)
       cover_btn.gone()
     } else if (state == PlayState.PREPARED) {
-      cover_bg.visibleGone(changeUrl)
-      cover_btn.visibleGone(changeUrl)
+      cover_bg.visibleGone(!showByMobile && changeUrl)
+      cover_btn.visibleGone(!showByMobile && changeUrl)
       changeUrl = false
     } else if (state == PlayState.PAUSE) {
       cover_bg.gone()
