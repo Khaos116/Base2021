@@ -7,7 +7,8 @@ import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.*
-import android.media.AudioManager
+import android.media.*
+import android.os.Build
 import android.util.AttributeSet
 import android.view.*
 import android.widget.FrameLayout
@@ -427,6 +428,11 @@ class AliVideoView @JvmOverloads constructor(
 
   private fun callPlayState(state: PlayState) {
     if (state != PlayState.SET_DATA && mPlayState == state) return //防止同样的状态回调多次
+    if (state == PlayState.START) {
+      if (!hasAudioFocus) requestAudioFocusByVideo()
+    } else if (state == PlayState.PAUSE || state == PlayState.COMPLETE || state == PlayState.ERROR || state == PlayState.STOP) {
+      if (hasAudioFocus) releaseAudioFocusByVideo()
+    }
     mPlayState = state
     callOutInfo?.callPlayState(state)
   }
@@ -484,6 +490,66 @@ class AliVideoView @JvmOverloads constructor(
       return false
     }
     return true
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="音频焦点">
+  private var mAm = con.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+  private var mAudioFocusRequest: AudioFocusRequest? = null
+  private var hasAudioFocus = false
+  private var audioListener = AudioManager.OnAudioFocusChangeListener { focusChange ->
+    hasAudioFocus = focusChange == AudioManager.AUDIOFOCUS_GAIN
+    when (focusChange) {
+      AudioManager.AUDIOFOCUS_GAIN -> { //获得焦点，这里可以进行恢复播放
+        setMuteVideo(false)
+        if (mPlayState == PlayState.PAUSE) startVideo()
+        "音频焦点监听:GAIN恢复播放".logI()
+      }
+      AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> { //表示音频焦点请求者需要短暂占有焦点，这里一般需要pause播放
+        if (mPlayState == PlayState.START) pauseVideo()
+        "音频焦点监听:LOSS_TRANSIENT暂停播放".logI()
+      }
+      AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> { //表示音频焦点请求者需要占有焦点，但是我也可以继续播放，只是需要降低音量或音量置为0
+        setMuteVideo(true)
+        "音频焦点监听:LOSS_TRANSIENT_CAN_DUCK静音播放".logI()
+      }
+      AudioManager.AUDIOFOCUS_LOSS -> { //表示音频焦点请求者需要长期占有焦点，这里一般需要stop播放和释放
+        stopVideo()
+        "音频焦点监听:LOSS停止播放".logI()
+      }
+    }
+  }
+
+  private fun requestAudioFocusByVideo(): Boolean {
+    hasAudioFocus = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      val mAudioAttributes = AudioAttributes.Builder()
+          .setUsage(AudioAttributes.USAGE_MEDIA)
+          .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+          .build()
+      val audioFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+          .setAudioAttributes(mAudioAttributes)
+          .setAcceptsDelayedFocusGain(true)
+          .setOnAudioFocusChangeListener(audioListener)
+          .build()
+      mAudioFocusRequest = audioFocusRequest
+      mAm.requestAudioFocus(audioFocusRequest) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
+    } else {
+      mAm.requestAudioFocus(audioListener,
+          AudioManager.STREAM_MUSIC,
+          AudioManager.AUDIOFOCUS_GAIN) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
+    }
+    "请求音频焦点:$hasAudioFocus".logI()
+    return hasAudioFocus
+  }
+
+  private fun releaseAudioFocusByVideo() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      mAudioFocusRequest?.let { mAm.abandonAudioFocusRequest(it) }
+    } else {
+      mAm.abandonAudioFocus(audioListener)
+    }
+    hasAudioFocus = false
+    "释放音频焦点".logI()
   }
   //</editor-fold>
 }
