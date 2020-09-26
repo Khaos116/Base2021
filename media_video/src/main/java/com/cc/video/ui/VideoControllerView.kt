@@ -437,8 +437,7 @@ class VideoControllerView @JvmOverloads constructor(
       intent?.extras?.let {
         //充电状态
         val status = it.getInt(BatteryManager.EXTRA_STATUS, -1)
-        val isCharging =
-            status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
+        val isCharging = (status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL)
         if (isCharging != chargeState) {
           chargeState = isCharging
           if (isCharging) {
