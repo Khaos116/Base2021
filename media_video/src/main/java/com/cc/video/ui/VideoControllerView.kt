@@ -427,6 +427,9 @@ class VideoControllerView @JvmOverloads constructor(
     //充电状态
     private var chargeState: Boolean? = null
 
+    //防止刷新太快
+    private var lastBatteryTime: Long = 0
+
     //https://developer.android.google.cn/training/monitoring-device-state/battery-monitoring.html?hl=zh-cn
     override fun onReceive(context: Context?, intent: Intent?) {
       if (intent?.action == Intent.ACTION_TIME_TICK) {
@@ -448,6 +451,8 @@ class VideoControllerView @JvmOverloads constructor(
             "手机正在充电,充电方式:${if (usbCharge) "USB充电" else if (acCharge) "交流电充电" else "未知"}".logI()
           } else "手机断开充电".logI()
         }
+        if (System.currentTimeMillis() - lastBatteryTime < 10 * 1000) return //最小10秒刷新一次电量
+        lastBatteryTime = System.currentTimeMillis()
         val current = it.getInt(BatteryManager.EXTRA_LEVEL, -1) //获得当前电量
         val total = it.getInt(BatteryManager.EXTRA_SCALE, -1) //获得总电量
         val percent = (current * 100f / total).toInt()
