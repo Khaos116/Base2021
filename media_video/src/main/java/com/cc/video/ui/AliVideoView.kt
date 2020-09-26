@@ -39,10 +39,10 @@ import com.cc.video.inter.call.VideoOverCallListener
  * Time:15:37
  */
 class AliVideoView @JvmOverloads constructor(
-  private val con: Context,
-  attrs: AttributeSet? = null,
-  defStyleAttr: Int = 0,
-  defStyleRes: Int = 0
+    private val con: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
 ) : FrameLayout(con, attrs, defStyleAttr, defStyleRes), LifecycleObserver {
 
   //<editor-fold defaultstate="collapsed" desc="变量区">
@@ -198,6 +198,8 @@ class AliVideoView @JvmOverloads constructor(
     //播放器状态改变事件
     aliPlayer.setOnStateChangedListener {
       when (it) {
+        1 -> callPlayState(PlayState.PREPARING)
+        2 -> callPlayState(PlayState.PREPARED)
         3 -> callPlayState(PlayState.START)
         4 -> callPlayState(PlayState.PAUSE)
         6 -> callPlayState(PlayState.COMPLETE)
@@ -304,7 +306,7 @@ class AliVideoView @JvmOverloads constructor(
   fun startVideo() {
     if (mPlayState == PlayState.START) {
       return
-    } else if (videoUrl.isBlank()) {
+    } else if (videoUrl.isBlank() || !canNetUse()) {
       callPlayState(PlayState.ERROR)
     } else if (mPlayState == PlayState.PREPARING) {
       isAutoPlay = true
@@ -465,12 +467,20 @@ class AliVideoView @JvmOverloads constructor(
   @SuppressLint("MissingPermission")
   private fun checkMobileNet(): Boolean {
     if (ContextCompat.checkSelfPermission(con, Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED
-      && !canUserMobile && NetworkUtils.isConnected() && !NetworkUtils.isWifiConnected()
-    ) {
+        && !canUserMobile && NetworkUtils.isConnected() && !NetworkUtils.isWifiConnected()) {
       callPlayState(PlayState.SHOW_MOBILE)
       return true
     }
     return false
+  }
+
+  @SuppressLint("MissingPermission")
+  private fun canNetUse(): Boolean {
+    if (ContextCompat.checkSelfPermission(con, Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED
+        && !NetworkUtils.isConnected()) {
+      return false
+    }
+    return true
   }
   //</editor-fold>
 }
