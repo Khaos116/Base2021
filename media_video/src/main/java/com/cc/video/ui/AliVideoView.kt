@@ -414,13 +414,14 @@ class AliVideoView @JvmOverloads constructor(
 
   //<editor-fold defaultstate="collapsed" desc="对外回调播放信息">
   private var callOutInfo: VideoOverCallListener? = null
-  private var mPlayState = PlayState.STOP
+  private var mPlayState = PlayState.SET_DATA
 
   private fun callUiState(uiState: PlayUiState) {
     callOutInfo?.callUiState(uiState)
   }
 
   private fun callPlayState(state: PlayState) {
+    if (state != PlayState.SET_DATA && mPlayState == state) return //防止同样的状态回调多次
     mPlayState = state
     callOutInfo?.callPlayState(state)
   }
