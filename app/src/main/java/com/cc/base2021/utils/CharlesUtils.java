@@ -3,7 +3,7 @@ package com.cc.base2021.utils;
 import android.annotation.SuppressLint;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
+import com.cc.ext.StringExtKt;
 import com.cc.utils.PermissionUtils;
 import java.io.*;
 import java.security.KeyStore;
@@ -45,7 +45,7 @@ public class CharlesUtils {
    */
   public FileInputStream getCharlesInputStream(String sdRootPemName) {
     if (!isWifiProxy()) {
-      Log.e("CharlesUtils", "没有使用代理，不用抓包");
+      StringExtKt.logE("没有使用代理，不用抓包");
       return null;
     }
     if (PermissionUtils.Companion.getInstance().hasSDPermission()) {
@@ -54,16 +54,16 @@ public class CharlesUtils {
         if (pemFile.exists()) {
           return new FileInputStream(pemFile);
         } else {
-          Log.e("CharlesUtils", "SD卡没有pem文件");
+          StringExtKt.logE("SD卡没有pem文件");
           return null;
         }
       } catch (FileNotFoundException e) {
-        Log.e("CharlesUtils", "读取SD卡pem文件失败");
+        StringExtKt.logE("读取SD卡pem文件失败");
         e.printStackTrace();
         return null;
       }
     } else {
-      Log.e("CharlesUtils", "没有SD卡权限读取pem文件");
+      StringExtKt.logE("没有SD卡权限读取pem文件");
       return null;
     }
   }
@@ -97,13 +97,13 @@ public class CharlesUtils {
         //获得sslSocketFactory对象
         SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
         builder.sslSocketFactory(sslSocketFactory, trustManager);
-        Log.e("CharlesUtils", "开启抓包");
+        StringExtKt.logE("开启抓包");
       } else {
-        Log.e("CharlesUtils", "验证pem文件失败");
+        StringExtKt.logE("验证pem文件失败");
       }
     } catch (Exception e) {
       e.printStackTrace();
-      Log.e("CharlesUtils", "验证pem文件失败:" + e.getMessage());
+      StringExtKt.logE("验证pem文件失败:" + e.getMessage());
     }
   }
 
