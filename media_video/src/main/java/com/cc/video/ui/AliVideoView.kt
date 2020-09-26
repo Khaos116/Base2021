@@ -311,7 +311,7 @@ class AliVideoView @JvmOverloads constructor(
     } else if (mPlayState == PlayState.PREPARED || mPlayState == PlayState.PAUSE) {
       aliPlayer.start()
       callPlayState(PlayState.START)
-    } else if (mPlayState == PlayState.SET_DATA && !checkMobileNet()) {
+    } else if ((mPlayState == PlayState.SET_DATA || mPlayState == PlayState.SHOW_MOBILE) && !checkMobileNet()) {
       isAutoPlay = true
       prepareVideo()
     }
