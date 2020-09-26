@@ -8,7 +8,6 @@ import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.*
 import android.media.AudioManager
-import android.provider.Settings
 import android.util.AttributeSet
 import android.view.*
 import android.widget.FrameLayout
@@ -29,10 +28,7 @@ import com.cc.utils.AudioHelper
 import com.cc.video.enu.PlayState
 import com.cc.video.enu.PlayUiState
 import com.cc.video.ext.useMobileNet
-import com.cc.video.inter.call.*
-import com.cc.video.inter.operate.*
-import kotlin.math.max
-import kotlin.math.min
+import com.cc.video.inter.call.VideoOverCallListener
 
 /**
  * 基于阿里播放器的视频播放控件，实现视频播放和各种回调、控制等。由内部添加的VideoOverView控件管理各种相关控制器
@@ -43,10 +39,10 @@ import kotlin.math.min
  * Time:15:37
  */
 class AliVideoView @JvmOverloads constructor(
-    private val con: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0,
-    defStyleRes: Int = 0
+  private val con: Context,
+  attrs: AttributeSet? = null,
+  defStyleAttr: Int = 0,
+  defStyleRes: Int = 0
 ) : FrameLayout(con, attrs, defStyleAttr, defStyleRes), LifecycleObserver {
 
   //<editor-fold defaultstate="collapsed" desc="变量区">
@@ -80,11 +76,7 @@ class AliVideoView @JvmOverloads constructor(
     setBackgroundColor(Color.BLACK)
     addView(mTextureView, 0, ViewGroup.LayoutParams(-1, -1))
     mTextureView.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
-      override fun onSurfaceTextureAvailable(
-          surface: SurfaceTexture,
-          width: Int,
-          height: Int
-      ) {
+      override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
         mSurfaceTexture = surface
         //设置播放的surface
         mSurface = Surface(surface)
@@ -93,11 +85,7 @@ class AliVideoView @JvmOverloads constructor(
         aliPlayer.redraw()
       }
 
-      override fun onSurfaceTextureSizeChanged(
-          surface: SurfaceTexture,
-          width: Int,
-          height: Int
-      ) {
+      override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
         //画面大小变化的时候重绘界面，立即刷新界面
         aliPlayer.redraw()
       }
@@ -152,7 +140,12 @@ class AliVideoView @JvmOverloads constructor(
   //<editor-fold defaultstate="collapsed" desc="监听播放器相关事件">
   private fun addListener() {
     //播放完成事件
-    aliPlayer.setOnCompletionListener { if (!aliPlayer.isLoop) callPlayState(PlayState.COMPLETE) }
+    aliPlayer.setOnCompletionListener {
+      if (!aliPlayer.isLoop) {
+        callPlayState(PlayState.COMPLETE)
+        if (isFullScreen) enterOrExitFullScreen()
+      }
+    }
     //出错事件
     aliPlayer.setOnErrorListener { callPlayState(PlayState.ERROR) }
     //准备成功事件
@@ -471,7 +464,8 @@ class AliVideoView @JvmOverloads constructor(
   @SuppressLint("MissingPermission")
   private fun checkMobileNet(): Boolean {
     if (ContextCompat.checkSelfPermission(con, Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED
-        && !canUserMobile && NetworkUtils.isConnected() && !NetworkUtils.isWifiConnected()) {
+      && !canUserMobile && NetworkUtils.isConnected() && !NetworkUtils.isWifiConnected()
+    ) {
       callPlayState(PlayState.SHOW_MOBILE)
       return true
     }
