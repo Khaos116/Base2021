@@ -20,10 +20,10 @@ import kotlinx.android.synthetic.main.layout_video_cover.view.cover_btn
  * Time:10:07
  */
 abstract class VideoCoverView @JvmOverloads constructor(
-    con: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0,
-    defStyleRes: Int = 0
+  con: Context,
+  attrs: AttributeSet? = null,
+  defStyleAttr: Int = 0,
+  defStyleRes: Int = 0
 ) : ConstraintLayout(con, attrs, defStyleAttr, defStyleRes), VideoCoverCallListener {
   //<editor-fold defaultstate="collapsed" desc="变量">
   //操作
@@ -45,17 +45,20 @@ abstract class VideoCoverView @JvmOverloads constructor(
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="播放器回调">
+  private var changeUrl: Boolean = false
   override fun callVideoInfo(url: String, title: String?, cover: String?) {
+    changeUrl = true
     cover?.let { loadVideoCover(it, cover_bg) }
   }
 
   override fun callPlayState(state: PlayState) {
     if (state == PlayState.SET_DATA || state == PlayState.PREPARING) {
-      cover_bg.visible()
+      cover_bg.visibleGone(changeUrl)
       cover_btn.gone()
     } else if (state == PlayState.PREPARED) {
-      cover_bg.visible()
-      cover_btn.visible()
+      cover_bg.visibleGone(changeUrl)
+      cover_btn.visibleGone(changeUrl)
+      changeUrl = false
     } else if (state == PlayState.PAUSE) {
       cover_bg.gone()
       cover_btn.visible()
