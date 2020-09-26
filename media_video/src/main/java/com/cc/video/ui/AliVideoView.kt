@@ -289,9 +289,8 @@ class AliVideoView @JvmOverloads constructor(
   fun setUrlVideo(url: String, title: String? = "", cover: String? = "") {
     videoUrl = url
     "播放地址:$url".logI()
-    callPlayState(PlayState.SET_DATA)
-    aliPlayer.setDataSource(UrlSource().apply { uri = url })
     callVideoInfo(url, title, cover)
+    aliPlayer.setDataSource(UrlSource().apply { uri = url })
     if (!checkMobileNet()) prepareVideo()
   }
 
@@ -456,6 +455,7 @@ class AliVideoView @JvmOverloads constructor(
 
   private fun callVideoInfo(url: String, title: String? = "", cover: String? = "") {
     callOutInfo?.callVideoInfo(url, title, cover)
+    callPlayState(PlayState.SET_DATA)
   }
   //</editor-fold>
 
