@@ -200,7 +200,10 @@ class AliVideoView @JvmOverloads constructor(
       when (it) {
         1 -> callPlayState(PlayState.PREPARING)
         2 -> callPlayState(PlayState.PREPARED)
-        3 -> callPlayState(PlayState.START)
+        3 -> {
+          callPlayState(PlayState.BUFFED) //防止loading不显示(没有网络的情况下，会一直在loading，但是连上后开始播放不消失)
+          callPlayState(PlayState.START)
+        }
         4 -> callPlayState(PlayState.PAUSE)
         6 -> callPlayState(PlayState.COMPLETE)
         else -> "播放器状态：$it".logI()
