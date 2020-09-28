@@ -78,18 +78,18 @@ class VideoRandomUtils private constructor() {
       //https://blog.csdn.net/XiaoYuWen1242466468/article/details/90287886
       Pair(
           "rtmp://202.69.69.180:443/webcast/bshdlive-pc",
-          "rtmp://202.69.69.180:443/webcast/bshdlive-pc"
+          "rtmp://202.69.69.180:443/webcast/bshdlive-pc"//香港财经
       ),
       Pair(
           "rtmp://mobliestream.c3tv.com:554/live/goodtv.sdp",
-          "rtmp://mobliestream.c3tv.com:554/live/goodtv.sdp"
+          "rtmp://mobliestream.c3tv.com:554/live/goodtv.sdp"//韩国GoodTV
       ),
       Pair(
-          "rtmp://ns8.indexforce.com/home/mystream",
+          "rtmp://ns8.indexforce.com/home/mystream",//美国1
           "rtmp://ns8.indexforce.com/home/mystream"
       ),
       Pair(
-          "rtmp://media3.scctv.net/live/scctv_800",
+          "rtmp://media3.scctv.net/live/scctv_800",//美国2
           "rtmp://media3.scctv.net/live/scctv_800"
       )
   )
