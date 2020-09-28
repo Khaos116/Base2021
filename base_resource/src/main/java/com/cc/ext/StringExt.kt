@@ -3,6 +3,7 @@ package com.cc.ext
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.ToastUtils
 import timber.log.Timber
+import java.util.Locale
 import java.util.regex.Pattern
 
 /**
@@ -48,5 +49,15 @@ inline fun String?.isNetImageUrl(): Boolean {
     false
   } else {
     Pattern.compile(".*?(gif|jpeg|png|jpg|bmp)").matcher(this).matches()
+  }
+}
+
+inline fun String?.isLiveUrl(): Boolean {
+  return if (this.isNullOrEmpty()) {
+    false
+  } else {
+    this.toLowerCase(Locale.getDefault()).run {
+      startsWith("rtmp") || startsWith("rtsp")
+    }
   }
 }
