@@ -417,7 +417,9 @@ class AliVideoView @JvmOverloads constructor(
 
   @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
   private fun onPauseVideo() {
-    if (mPlayState == PlayState.START || mPlayState == PlayState.BUFFED) {
+    if (mPlayState == PlayState.START ||
+        mPlayState == PlayState.BUFFED ||
+        mPlayState == PlayState.SEEKED) {
       needResumePlay = true
       pauseVideo()
     }
@@ -520,7 +522,9 @@ class AliVideoView @JvmOverloads constructor(
         "音频焦点监听:GAIN恢复播放".logI()
       }
       AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> { //表示音频焦点请求者需要短暂占有焦点，这里一般需要pause播放
-        if (mPlayState == PlayState.START || mPlayState == PlayState.BUFFED) pauseVideo()
+        if (mPlayState == PlayState.START ||
+            mPlayState == PlayState.BUFFED ||
+            mPlayState == PlayState.SEEKED) pauseVideo()
         "音频焦点监听:LOSS_TRANSIENT暂停播放".logI()
       }
       AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> { //表示音频焦点请求者需要占有焦点，但是我也可以继续播放，只是需要降低音量或音量置为0

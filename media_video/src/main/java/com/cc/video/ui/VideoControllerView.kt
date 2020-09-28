@@ -103,7 +103,8 @@ class VideoControllerView @JvmOverloads constructor(
     }
     controller_bottom_play_pause.click {
       if (controller_bottom_container.alpha != 1f) return@click
-      if (mPlayState == PlayState.PAUSE || mPlayState == PlayState.START || mPlayState == PlayState.BUFFED) {
+      if (mPlayState == PlayState.PAUSE || mPlayState == PlayState.START
+          || mPlayState == PlayState.BUFFED || mPlayState == PlayState.SEEKED) {
         controllerListener?.onPlayOrPause()
         countDownHidden()
         countDownHiddenLock()

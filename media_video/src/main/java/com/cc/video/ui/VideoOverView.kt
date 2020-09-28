@@ -163,7 +163,7 @@ open class VideoOverView @JvmOverloads constructor(
     override fun onPlayOrPause() {
       if (mPlayState == PlayState.PAUSE) {
         getVideoView()?.startVideo()
-      } else if (mPlayState == PlayState.START || mPlayState == PlayState.BUFFED) {
+      } else if (mPlayState == PlayState.START || mPlayState == PlayState.BUFFED || mPlayState == PlayState.SEEKED) {
         getVideoView()?.pauseVideo()
       }
     }
