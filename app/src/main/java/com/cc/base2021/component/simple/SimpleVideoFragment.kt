@@ -6,7 +6,7 @@ import com.cc.base2021.R
 import com.cc.base2021.comm.CommFragment
 import com.cc.base2021.ext.loadImgVerticalScreen
 import com.cc.base2021.utils.VideoRandomUtils
-import com.cc.video.ui.*
+import com.cc.ext.isLiveUrl
 import com.cc.video.utils.VideoOverUtils
 import kotlinx.android.synthetic.main.fragment_simple_video.simpleVideoView
 
@@ -38,12 +38,14 @@ class SimpleVideoFragment : CommFragment() {
   override fun lazyInit() {
     //自动感应生命周期
     simpleVideoView.setLifecycleOwner(this)
-    //视频控制器
-    VideoOverUtils.instance.userStandardController(simpleVideoView) { url, iv ->
-      iv.loadImgVerticalScreen(url, ImageView.ScaleType.CENTER_CROP, ImageView.ScaleType.FIT_CENTER)
-    }
     //视频数据
     val videoBean = VideoRandomUtils.instance.randomVideo()
+    //视频控制器
+    if (videoBean.second.isLiveUrl()) VideoOverUtils.instance.useLiveController(simpleVideoView) { url, iv ->
+      iv.loadImgVerticalScreen(url, ImageView.ScaleType.CENTER_CROP, ImageView.ScaleType.FIT_CENTER)
+    } else VideoOverUtils.instance.useStandardController(simpleVideoView) { url, iv ->
+      iv.loadImgVerticalScreen(url, ImageView.ScaleType.CENTER_CROP, ImageView.ScaleType.FIT_CENTER)
+    }
     simpleVideoView.setUrlVideo(
         url = videoBean.second,
         title = FileUtils.getFileName(videoBean.second),
