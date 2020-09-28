@@ -19,79 +19,65 @@ class VideoRandomUtils private constructor() {
 
   //视频资源封面和播放地址
   private var resourceList = mutableListOf(
+      //普通播放地址
+      //Pair(
+      //    "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
+      //    "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
+      //),
+      //Pair(
+      //    "https://www.w3schools.com/html/movie.mp4",
+      //    "https://www.w3schools.com/html/movie.mp4"
+      //),
+      //Pair(
+      //    "https://media.w3.org/2010/05/sintel/trailer.mp4",
+      //    "https://media.w3.org/2010/05/sintel/trailer.mp4"
+      //),
+      //电影预告片 https://www.yugaopian.cn/
       Pair(
-          "https://cms-bucket.nosdn.127.net/eb411c2810f04ffa8aaafc42052b233820180418095416.jpeg",
-          "http://vfx.mtime.cn/Video/2019/02/04/mp4/190204084208765161.mp4"
+          "https://vod.pipi.cn/43903a81vodtransgzp1251246104/bbd4f07a5285890808066187974/v.f42906.mp4",
+          "https://vod.pipi.cn/43903a81vodtransgzp1251246104/bbd4f07a5285890808066187974/v.f42906.mp4"
       ),
       Pair(
-          "https://cms-bucket.nosdn.127.net/cb37178af1584c1588f4a01e5ecf323120180418133127.jpeg",
-          "http://vfx.mtime.cn/Video/2019/03/21/mp4/190321153853126488.mp4"
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/ff5db9495285890807841001288/v.f42906.mp4",
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/ff5db9495285890807841001288/v.f42906.mp4"
       ),
       Pair(
-          "https://cms-bucket.nosdn.127.net/eb411c2810f04ffa8aaafc42052b233820180418095416.jpeg",
-          "http://vfx.mtime.cn/Video/2019/03/19/mp4/190319222227698228.mp4"
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/ccff07ce5285890807898977876/v.f42906.mp4",
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/ccff07ce5285890807898977876/v.f42906.mp4"
       ),
       Pair(
-          "https://cms-bucket.nosdn.127.net/cb37178af1584c1588f4a01e5ecf323120180418133127.jpeg",
-          "http://vfx.mtime.cn/Video/2019/03/19/mp4/190319212559089721.mp4"
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/09035e1b5285890807960446399/v.f42906.mp4",
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/09035e1b5285890807960446399/v.f42906.mp4"
       ),
       Pair(
-          "https://cms-bucket.nosdn.127.net/eb411c2810f04ffa8aaafc42052b233820180418095416.jpeg",
-          "http://vfx.mtime.cn/Video/2019/03/18/mp4/190318231014076505.mp4"
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/87d0caf85285890807055577675/v.f42906.mp4",
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/87d0caf85285890807055577675/v.f42906.mp4"
       ),
       Pair(
-          "https://cms-bucket.nosdn.127.net/cb37178af1584c1588f4a01e5ecf323120180418133127.jpeg",
-          "http://vfx.mtime.cn/Video/2019/03/18/mp4/190318214226685784.mp4"
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/6be0b3615285890808105900224/v.f42906.mp4",
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/6be0b3615285890808105900224/v.f42906.mp4"
       ),
-      Pair(
-          "https://cms-bucket.nosdn.127.net/eb411c2810f04ffa8aaafc42052b233820180418095416.jpeg",
-          "http://vfx.mtime.cn/Video/2019/03/19/mp4/190319104618910544.mp4"
-      ),
-      Pair(
-          "https://cms-bucket.nosdn.127.net/cb37178af1584c1588f4a01e5ecf323120180418133127.jpeg",
-          "http://vfx.mtime.cn/Video/2019/03/19/mp4/190319125415785691.mp4"
-      ),
-      Pair(
-          "https://cms-bucket.nosdn.127.net/eb411c2810f04ffa8aaafc42052b233820180418095416.jpeg",
-          "http://vfx.mtime.cn/Video/2019/03/17/mp4/190317150237409904.mp4"
-      ),
-      Pair(
-          "https://cms-bucket.nosdn.127.net/cb37178af1584c1588f4a01e5ecf323120180418133127.jpeg",
-          "http://vfx.mtime.cn/Video/2019/03/14/mp4/190314223540373995.mp4"
-      ),
-      Pair(
-          "https://cms-bucket.nosdn.127.net/eb411c2810f04ffa8aaafc42052b233820180418095416.jpeg",
-          "http://vfx.mtime.cn/Video/2019/03/14/mp4/190314102306987969.mp4"
-      ),
-      Pair(
-          "https://cms-bucket.nosdn.127.net/cb37178af1584c1588f4a01e5ecf323120180418133127.jpeg",
-          "http://vfx.mtime.cn/Video/2019/03/13/mp4/190313094901111138.mp4"
-      ),
-      Pair(
-          "https://cms-bucket.nosdn.127.net/eb411c2810f04ffa8aaafc42052b233820180418095416.jpeg",
-          "http://vfx.mtime.cn/Video/2019/03/12/mp4/190312143927981075.mp4"
-      ),
-      Pair(
-          "https://cms-bucket.nosdn.127.net/cb37178af1584c1588f4a01e5ecf323120180418133127.jpeg",
-          "http://vfx.mtime.cn/Video/2019/03/12/mp4/190312083533415853.mp4"
-      ),
-      //https://blog.csdn.net/XiaoYuWen1242466468/article/details/90287886
+      //直播地址 https://blog.csdn.net/XiaoYuWen1242466468/article/details/90287886
       Pair(
           "rtmp://202.69.69.180:443/webcast/bshdlive-pc",
-          "rtmp://202.69.69.180:443/webcast/bshdlive-pc"//香港财经
+          "rtmp://202.69.69.180:443/webcast/bshdlive-pc" //香港财经
       ),
       Pair(
           "rtmp://mobliestream.c3tv.com:554/live/goodtv.sdp",
-          "rtmp://mobliestream.c3tv.com:554/live/goodtv.sdp"//韩国GoodTV
+          "rtmp://mobliestream.c3tv.com:554/live/goodtv.sdp" //韩国GoodTV
       ),
-      Pair(
-          "rtmp://ns8.indexforce.com/home/mystream",//美国1
-          "rtmp://ns8.indexforce.com/home/mystream"
-      ),
-      Pair(
-          "rtmp://media3.scctv.net/live/scctv_800",//美国2
-          "rtmp://media3.scctv.net/live/scctv_800"
-      )
+      //Pair(
+      //    "rtmp://ns8.indexforce.com/home/mystream", //美国1
+      //    "rtmp://ns8.indexforce.com/home/mystream"
+      //),
+      //Pair(
+      //    "rtmp://media3.scctv.net/live/scctv_800", //美国2
+      //    "rtmp://media3.scctv.net/live/scctv_800"
+      //),
+      //Pair(
+      //    "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov", //动漫
+      //    "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+      //)
   )
 
   //获取随机视频数量
