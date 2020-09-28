@@ -1,17 +1,22 @@
 package com.cc.base2021.ext
 
+import android.graphics.Bitmap
+import android.media.MediaMetadataRetriever
 import android.widget.ImageView
 import coil.*
 import coil.fetch.VideoFrameFileFetcher
 import coil.fetch.VideoFrameUriFetcher
 import coil.request.ImageRequest
 import coil.util.CoilUtils
-import com.blankj.utilcode.util.Utils
+import com.blankj.utilcode.util.*
 import com.cc.base2021.R
-import com.cc.ext.*
+import com.cc.base2021.config.AppConfig
+import com.cc.ext.logE
 import com.cc.utils.MediaUtils
-import okhttp3.*
+import kotlinx.coroutines.*
+import okhttp3.Cache
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import java.io.File
 
 /**
  * Author:case
@@ -125,6 +130,41 @@ fun ImageView.loadCacheFileFullScreen(url: String?) {
                 }
             ).build()
         )
+      }
+    }
+  }
+}
+
+//加载视频网络封面(type:0-方形，1-横向，2-竖向)
+fun ImageView.loadNetVideoCover(url: String?, type: Int = 0) {
+  url?.let {
+    val cacheFile = File(AppConfig.VIDEO_OVER_CACHE_DIR, EncryptUtils.encryptMD5ToString(it))
+    if (cacheFile.exists()) {
+      load(cacheFile)
+      return
+    }
+    GlobalScope.launch(Dispatchers.Main) {
+      scaleType = ImageView.ScaleType.CENTER_CROP
+      when (type) {
+        1 -> setImageResource(R.drawable.loading_720p_horizontal)
+        2 -> setImageResource(R.drawable.loading_720p_vertical)
+        else -> setImageResource(R.drawable.loading_square)
+      }
+      val retriever = MediaMetadataRetriever()
+      retriever.setDataSource(it, HashMap())
+      //获得第10帧图片 这里的第一个参数 以微秒为单位
+      val bit = retriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
+      retriever.release()
+      if (bit != null) {
+        ImageUtils.save(bit, cacheFile, Bitmap.CompressFormat.PNG)
+        setImageBitmap(bit)
+        scaleType = ImageView.ScaleType.FIT_CENTER
+      } else {
+        when (type) {
+          1 -> setImageResource(R.drawable.error_720p_horizontal)
+          2 -> setImageResource(R.drawable.error_720p_vertical)
+          else -> setImageResource(R.drawable.error_square)
+        }
       }
     }
   }

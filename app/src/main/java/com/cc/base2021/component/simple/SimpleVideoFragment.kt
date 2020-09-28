@@ -1,10 +1,9 @@
 package com.cc.base2021.component.simple
 
-import android.widget.ImageView
 import com.blankj.utilcode.util.FileUtils
 import com.cc.base2021.R
 import com.cc.base2021.comm.CommFragment
-import com.cc.base2021.ext.loadImgVerticalScreen
+import com.cc.base2021.ext.loadNetVideoCover
 import com.cc.base2021.utils.VideoRandomUtils
 import com.cc.ext.isLiveUrl
 import com.cc.video.utils.VideoOverUtils
@@ -41,10 +40,9 @@ class SimpleVideoFragment : CommFragment() {
     //视频数据
     val videoBean = VideoRandomUtils.instance.randomVideo()
     //视频控制器
-    if (videoBean.second.isLiveUrl()) VideoOverUtils.instance.useLiveController(simpleVideoView) { url, iv ->
-      iv.loadImgVerticalScreen(url, ImageView.ScaleType.CENTER_CROP, ImageView.ScaleType.FIT_CENTER)
-    } else VideoOverUtils.instance.useStandardController(simpleVideoView) { url, iv ->
-      iv.loadImgVerticalScreen(url, ImageView.ScaleType.CENTER_CROP, ImageView.ScaleType.FIT_CENTER)
+    VideoOverUtils.instance.run {
+      if (videoBean.second.isLiveUrl()) useLiveController(simpleVideoView) { url, iv -> iv.loadNetVideoCover(url) }
+      else useStandardController(simpleVideoView) { url, iv -> iv.loadNetVideoCover(url) }
     }
     simpleVideoView.setUrlVideo(
         url = videoBean.second,
