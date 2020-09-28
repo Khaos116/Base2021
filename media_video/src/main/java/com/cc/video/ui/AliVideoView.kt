@@ -343,6 +343,7 @@ class AliVideoView @JvmOverloads constructor(
   //停止播放
   fun stopVideo() {
     aliPlayer.stop()
+    callPlayState(PlayState.BUFFED)
     callPlayState(PlayState.STOP)
   }
 
@@ -356,12 +357,14 @@ class AliVideoView @JvmOverloads constructor(
   //重置
   fun resetVideo() {
     aliPlayer.reset()
+    callPlayState(PlayState.BUFFED)
     callPlayState(PlayState.SET_DATA)
   }
 
   //释放,释放后播放器将不可再被使用
   fun releaseVideo() {
     aliPlayer.release()
+    callPlayState(PlayState.BUFFED)
     callPlayState(PlayState.SET_DATA)
   }
 
