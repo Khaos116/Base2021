@@ -48,7 +48,18 @@ inline fun String?.isNetImageUrl(): Boolean {
   } else if (!this.startsWith("http", true)) {
     false
   } else {
-    Pattern.compile(".*?(gif|jpeg|png|jpg|bmp)").matcher(this).matches()
+    Pattern.compile(".*?(gif|jpeg|png|jpg|bmp)").matcher(this.toLowerCase(Locale.getDefault())).matches()
+  }
+}
+
+inline fun String?.isVideoUrl(): Boolean {
+  return if (this.isNullOrEmpty()) {
+    false
+  } else if (!this.toLowerCase(Locale.getDefault()).startsWith("http", true)) {
+    false
+  } else {
+    Pattern.compile(".*?(avi|rmvb|rm|asf|divx|mpg|mpeg|mpe|wmv|mp4|mkv|vob)")
+        .matcher(this.toLowerCase(Locale.getDefault())).matches()
   }
 }
 
