@@ -2,11 +2,14 @@ package com.cc.base2021.ext
 
 import android.widget.ImageView
 import coil.*
+import coil.fetch.VideoFrameFileFetcher
+import coil.fetch.VideoFrameUriFetcher
 import coil.request.ImageRequest
 import coil.util.CoilUtils
 import com.blankj.utilcode.util.Utils
 import com.cc.base2021.R
-import com.cc.ext.logE
+import com.cc.ext.*
+import com.cc.utils.MediaUtils
 import okhttp3.*
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
@@ -23,7 +26,12 @@ inline fun ImageView.loadImgSquare(url: String?) {
   } else {
     if (getTag(R.id.suc_img) == url) return
     val iv = this
-    iv.load(url) {
+    iv.load(url, if (!url.startsWith("http") && MediaUtils.instance.isVideoFile(url)) ImageLoader.Builder(context)
+        .componentRegistry {
+          add(VideoFrameFileFetcher(context))
+          add(VideoFrameUriFetcher(context))
+        }
+        .build() else context.imageLoader) {
       crossfade(true)
       placeholder(R.drawable.loading_square)
       error(R.drawable.error_square)
@@ -44,7 +52,12 @@ fun ImageView.loadImgHorizontal(url: String?,
     if (getTag(R.id.suc_img) == url) return
     val iv = this
     iv.scaleType = loadingScaleType
-    iv.load(url) {
+    iv.load(url, if (!url.startsWith("http") && MediaUtils.instance.isVideoFile(url)) ImageLoader.Builder(context)
+        .componentRegistry {
+          add(VideoFrameFileFetcher(context))
+          add(VideoFrameUriFetcher(context))
+        }
+        .build() else context.imageLoader) {
       crossfade(true)
       placeholder(R.drawable.loading_720p_horizontal)
       error(R.drawable.error_720p_horizontal)
@@ -68,11 +81,16 @@ fun ImageView.loadImgVerticalScreen(url: String?,
     if (getTag(R.id.suc_img) == url) return
     val iv = this
     iv.scaleType = loadingScaleType
-    iv.load(url) {
+    iv.load(url, if (!url.startsWith("http") && MediaUtils.instance.isVideoFile(url)) ImageLoader.Builder(context)
+        .componentRegistry {
+          add(VideoFrameFileFetcher(context))
+          add(VideoFrameUriFetcher(context))
+        }
+        .build() else context.imageLoader) {
       crossfade(true)
       placeholder(R.drawable.loading_720p_vertical)
       error(R.drawable.error_720p_vertical)
-      listener { _, _ ->
+      listener(onError = { r, e -> "图片加载失败:${r.data},e=${e.message ?: "null"}".logE() }) { _, _ ->
         iv.scaleType = sucScaleType
         iv.setTag(R.id.suc_img, url)
       }
@@ -89,7 +107,10 @@ fun ImageView.loadCacheFileFullScreen(url: String?) {
     url.toHttpUrlOrNull()?.let { u ->
       val f = CoilUtils.createDefaultCache(Utils.getApp()).directory.listFiles().orEmpty().find { it.name.contains(Cache.key(u)) }
       if (f?.exists() == true) { //文件存在直接加载
-        this.load(f)
+        this.load(f, imageLoader = ImageLoader.Builder(context).componentRegistry {
+          add(VideoFrameFileFetcher(context))
+          add(VideoFrameUriFetcher(context))
+        }.build())
       } else { //文件不存在，进行下载
         Coil.imageLoader(Utils.getApp()).enqueue(
             ImageRequest.Builder(Utils.getApp()).data(u).target(
