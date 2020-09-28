@@ -154,7 +154,6 @@ class AliVideoView @JvmOverloads constructor(
     aliPlayer.setOnErrorListener { callPlayState(PlayState.ERROR) }
     //准备成功事件
     aliPlayer.setOnPreparedListener {
-      "onPrepared".logI()
       callDuration(aliPlayer.duration)
       callPlayState(PlayState.PREPARED)
       if (isAutoPlay) startVideo()
@@ -313,7 +312,6 @@ class AliVideoView @JvmOverloads constructor(
   //准备播放
   private fun prepareVideo() {
     callPlayState(PlayState.PREPARING)
-    "prepareVideo".logI()
     aliPlayer.prepare()
   }
 
