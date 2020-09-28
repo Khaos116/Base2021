@@ -143,6 +143,7 @@ fun ImageView.loadNetVideoCover(url: String?, type: Int = 0) {
       load(cacheFile)
       return
     }
+    getTag(R.id.id_retriever)?.let { r -> (r as MediaMetadataRetriever).release() }
     GlobalScope.launch(Dispatchers.Main) {
       scaleType = ImageView.ScaleType.CENTER_CROP
       when (type) {
@@ -152,9 +153,11 @@ fun ImageView.loadNetVideoCover(url: String?, type: Int = 0) {
       }
       val retriever = MediaMetadataRetriever()
       retriever.setDataSource(it, HashMap())
+      setTag(R.id.id_retriever, retriever)
       //获得第10帧图片 这里的第一个参数 以微秒为单位
       val bit = retriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
       retriever.release()
+      setTag(R.id.id_retriever, null)
       if (bit != null) {
         ImageUtils.save(bit, cacheFile, Bitmap.CompressFormat.PNG)
         setImageBitmap(bit)

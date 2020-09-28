@@ -2,4 +2,5 @@
 <resources>
   <item name="suc_img" type="id"/>
   <item name="tag_banner" type="id"/>
+  <item name="id_retriever" type="id"/>
 </resources>
