@@ -20,64 +20,96 @@ class VideoRandomUtils private constructor() {
   //视频资源封面和播放地址
   private var resourceList = mutableListOf(
       //普通播放地址
-      //Pair(
-      //    "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
-      //    "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
-      //),
-      //Pair(
-      //    "https://www.w3schools.com/html/movie.mp4",
-      //    "https://www.w3schools.com/html/movie.mp4"
-      //),
-      //Pair(
-      //    "https://media.w3.org/2010/05/sintel/trailer.mp4",
-      //    "https://media.w3.org/2010/05/sintel/trailer.mp4"
-      //),
+      Pair(
+          "Big Buck Bunny(点播)",
+          "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
+      ),
+      Pair(
+          "Trailer",
+          "https://media.w3.org/2010/05/sintel/trailer.mp4"
+      ),
       //电影预告片 https://www.yugaopian.cn/
       Pair(
-          "https://vod.pipi.cn/43903a81vodtransgzp1251246104/bbd4f07a5285890808066187974/v.f42906.mp4",
-          "https://vod.pipi.cn/43903a81vodtransgzp1251246104/bbd4f07a5285890808066187974/v.f42906.mp4"
+          "温暖的抱抱 2020-12-31",
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/aa5308fc5285890804986750388/v.f42906.mp4"
       ),
       Pair(
-          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/ff5db9495285890807841001288/v.f42906.mp4",
-          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/ff5db9495285890807841001288/v.f42906.mp4"
+          "赤狐书生 2020-11-01",
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/f904d50d5285890806304637095/v.f42906.mp4"
       ),
       Pair(
-          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/ccff07ce5285890807898977876/v.f42906.mp4",
-          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/ccff07ce5285890807898977876/v.f42906.mp4"
+          "新神榜：哪吒重生  2020",
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/e1b5eeea5285890806379037311/v.f42906.mp4"
       ),
       Pair(
-          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/09035e1b5285890807960446399/v.f42906.mp4",
-          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/09035e1b5285890807960446399/v.f42906.mp4"
+          "未知嫌疑人 2020-09-10",
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/c3f671d05285890807168094119/v.f42906.mp4"
       ),
       Pair(
-          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/87d0caf85285890807055577675/v.f42906.mp4",
+          "八佰 2020-08-21",
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/83cc73365285890806554816089/v.f42906.mp4"
+      ),
+      Pair(
+          "花木兰 2020-09-11",
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/2cb008ef5285890807135914942/v.f42906.mp4"
+      ),
+      Pair(
+          "木兰：横空出世 2020-10-03",
+          "https://vod.pipi.cn/43903a81vodtransgzp1251246104/2d1fc7685285890807909124510/v.f42906.mp4"
+      ),
+      Pair(
+          "一点就到家 2020-10-04",
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/67c6e6575285890807968082814/v.f42906.mp4"
+      ),
+      Pair(
+          "送你一朵小红花 2020-12-31",
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/720db5425285890808000731940/v.f42906.mp4"
+      ),
+      Pair(
+          "我和我的家乡 2020-10-01",
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/8c2eb53e5285890807999880271/v.f42906.mp4"
+      ),
+      Pair(
+          "假面饭店 2020-09-04",
           "https://vod.pipi.cn/fec9203cvodtransbj1251246104/87d0caf85285890807055577675/v.f42906.mp4"
       ),
       Pair(
-          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/6be0b3615285890808105900224/v.f42906.mp4",
-          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/6be0b3615285890808105900224/v.f42906.mp4"
+          "飞奔去月球 2020",
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/bb68c7515285890807928280731/v.f42906.mp4"
+      ),
+      Pair(
+          "夺冠 2020-09-25",
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/84ec486e5285890807863862400/v.f42906.mp4"
+      ),
+      Pair(
+          "姜子牙 2020-10-01",
+          "https://vod.pipi.cn/43903a81vodtransgzp1251246104/bbd4f07a5285890808066187974/v.f42906.mp4"
+      ),
+      Pair(
+          "拆弹专家2 2020",
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/6715a2145285890808041382798/v.f42906.mp4"
+      ),
+      Pair(
+          "急先锋 2020-09-30",
+          "https://vod.pipi.cn/fe5b84bcvodcq1251246104/658e4b085285890797861659749/f0.mp4"
+      ),
+      Pair(
+          "82号古宅 2020-05-15",
+          "https://vod.pipi.cn/fec9203cvodtransbj1251246104/ccff07ce5285890807898977876/v.f42906.mp4"
       ),
       //直播地址 https://blog.csdn.net/XiaoYuWen1242466468/article/details/90287886
       Pair(
-          "rtmp://202.69.69.180:443/webcast/bshdlive-pc",
-          "rtmp://202.69.69.180:443/webcast/bshdlive-pc" //香港财经
+          "香港财经(RTMP)",
+          "rtmp://202.69.69.180:443/webcast/bshdlive-pc"
       ),
       Pair(
-          "rtmp://mobliestream.c3tv.com:554/live/goodtv.sdp",
-          "rtmp://mobliestream.c3tv.com:554/live/goodtv.sdp" //韩国GoodTV
+          "韩国GoodTV(RTMP)",
+          "rtmp://mobliestream.c3tv.com:554/live/goodtv.sdp"
       ),
-      //Pair(
-      //    "rtmp://ns8.indexforce.com/home/mystream", //美国1
-      //    "rtmp://ns8.indexforce.com/home/mystream"
-      //),
-      //Pair(
-      //    "rtmp://media3.scctv.net/live/scctv_800", //美国2
-      //    "rtmp://media3.scctv.net/live/scctv_800"
-      //),
-      //Pair(
-      //    "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov", //动漫
-      //    "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
-      //)
+      Pair(
+          "Big Buck Bunny(直播)", //动漫
+          "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+      )
   )
 
   //获取随机视频数量
@@ -90,9 +122,9 @@ class VideoRandomUtils private constructor() {
       result.add(
           VideoBean(
               id = idStart + i,
-              thumb = pair.first,
+              thumb = pair.second,
               url = pair.second,
-              title = "这是第${i + idStart}个视频"
+              title = pair.first
           )
       )
     }

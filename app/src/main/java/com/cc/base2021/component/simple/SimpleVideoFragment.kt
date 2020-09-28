@@ -46,8 +46,8 @@ class SimpleVideoFragment : CommFragment() {
     }
     simpleVideoView.setUrlVideo(
         url = videoBean.second,
-        title = FileUtils.getFileName(videoBean.second),
-        cover = videoBean.first
+        cover = videoBean.second,
+        title = videoBean.first
     )
   }
   //</editor-fold>
