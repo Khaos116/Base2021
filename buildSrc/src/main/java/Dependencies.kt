@@ -88,7 +88,7 @@ object Deps {
   const val multitype = "com.drakeet.multitype:multitype:4.2.0"
 
   //SVGA动画 https://github.com/svga/SVGAPlayer-Android/blob/master/readme.zh.md
-  const val svga = "com.github.yyued:SVGAPlayer-Android:2.5.11"
+  const val svga = "com.github.yyued:SVGAPlayer-Android:2.5.12"
 
   //图片选择器 https://github.com/LuckSiege/PictureSelector
   const val pic_select = "com.github.LuckSiege.PictureSelector:picture_library:v2.5.9"

@@ -146,6 +146,7 @@ class SplashActivity : CommActivity() {
   override fun finish() {
     super.finish()
     disposable?.dispose()
+    splashSVGA?.clear()
     splashSVGA?.callback = null
     (getSystemService(Context.AUDIO_SERVICE) as AudioManager).adjustStreamVolume(
       AudioManager.STREAM_MUSIC,
