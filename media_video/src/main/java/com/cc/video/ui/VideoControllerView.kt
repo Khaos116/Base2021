@@ -103,7 +103,7 @@ class VideoControllerView @JvmOverloads constructor(
     }
     controller_bottom_play_pause.click {
       if (controller_bottom_container.alpha != 1f) return@click
-      if (mPlayState == PlayState.PAUSE || mPlayState == PlayState.START) {
+      if (mPlayState == PlayState.PAUSE || mPlayState == PlayState.START || mPlayState == PlayState.BUFFED) {
         controllerListener?.onPlayOrPause()
         countDownHidden()
         countDownHiddenLock()
@@ -275,7 +275,8 @@ class VideoControllerView @JvmOverloads constructor(
   //检查是否可以进行操作
   private fun checkOperate(state: PlayState) {
     canOperateVideo = !(state == PlayState.SET_DATA || state == PlayState.SHOW_MOBILE || state == PlayState.PREPARING ||
-        state == PlayState.SEEKING || state == PlayState.STOP || state == PlayState.COMPLETE || state == PlayState.ERROR)
+        state == PlayState.SEEKING || state == PlayState.STOP || state == PlayState.COMPLETE || state == PlayState.ERROR ||
+        state == PlayState.BUFFED)
     controller_bottom_seekbar.isEnabled = canOperateVideo
   }
 
