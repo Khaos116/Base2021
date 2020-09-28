@@ -4,6 +4,7 @@ object Versions {
   internal const val kotlin = "1.4.10"
   internal const val okHttp = "4.8.1"
   internal const val rxHttp = "2.4.0"
+  internal const val coil = "1.0.0-rc3"
 }
 
 object Deps {
@@ -82,7 +83,8 @@ object Deps {
   const val swipex = "com.billy.android:smart-swipe-x:1.1.0"
 
   //图片加载 https://github.com/coil-kt/coil
-  const val coil = "io.coil-kt:coil:0.13.0"
+  const val coil = "io.coil-kt:coil:${Versions.coil}"
+  const val coil_video_file = "io.coil-kt:coil-video:${Versions.coil}"
 
   //多类型适配器 https://github.com/drakeet/MultiType
   const val multitype = "com.drakeet.multitype:multitype:4.2.0"
