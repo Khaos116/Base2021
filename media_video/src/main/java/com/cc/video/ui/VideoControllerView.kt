@@ -275,8 +275,7 @@ class VideoControllerView @JvmOverloads constructor(
   //检查是否可以进行操作
   private fun checkOperate(state: PlayState) {
     canOperateVideo = !(state == PlayState.SET_DATA || state == PlayState.SHOW_MOBILE || state == PlayState.PREPARING ||
-        state == PlayState.SEEKING || state == PlayState.STOP || state == PlayState.COMPLETE || state == PlayState.ERROR ||
-        state == PlayState.BUFFED)
+        state == PlayState.SEEKING || state == PlayState.STOP || state == PlayState.COMPLETE || state == PlayState.ERROR)
     controller_bottom_seekbar.isEnabled = canOperateVideo
   }
 
