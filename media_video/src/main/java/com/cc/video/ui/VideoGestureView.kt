@@ -40,12 +40,15 @@ class VideoGestureView @JvmOverloads constructor(
 
   //是否可以滑动屏幕操作
   private var canGestureVideo: Boolean = false
+
+  //是否是直播
+  private var isLive: Boolean = false
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="外部设置">
   //设置是否是直播(直播没有时长，播放进度等)
   fun setLiveVideo(live: Boolean) {
-
+    isLive = live
   }
   //</editor-fold>
 
@@ -142,6 +145,7 @@ class VideoGestureView @JvmOverloads constructor(
   //<editor-fold defaultstate="collapsed" desc="手势滑动计算">
   private var newPositionVideo: Long = 0
   private fun onHorizontalSlide(percent: Float) {
+    if (isLive) return //直播不能拖动进度
     gestureListener?.let { gl ->
       if (gesture_seek_view.visibility != View.VISIBLE) showProgress()
       //最大进度不能超过总时长的一半

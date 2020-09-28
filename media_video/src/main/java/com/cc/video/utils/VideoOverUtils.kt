@@ -33,6 +33,8 @@ class VideoOverUtils private constructor() {
 
   fun userLiveController(videoView: AliVideoView, callCover: (url: String?, iv: ImageView) -> Unit) {
     val mContext = videoView.context
+    videoView.setLive(true)
+    videoView.setCacheVideo { mEnable = false } //关闭缓存
     videoView.setOverView(VideoOverView(mContext).apply {
       addOverChildView(VideoGestureView(mContext).apply { setLiveVideo(true) })
       addOverChildView(VideoControllerView(mContext).apply { setLiveVideo(true) })

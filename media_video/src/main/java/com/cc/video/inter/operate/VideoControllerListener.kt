@@ -16,4 +16,5 @@ interface VideoControllerListener {
   fun lock()
   fun unlock()
   fun fullScreenOrExit()
+  fun refreshPlay() //直播的刷新播放
 }

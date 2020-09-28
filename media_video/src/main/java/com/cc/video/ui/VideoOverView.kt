@@ -30,10 +30,10 @@ import kotlin.math.min
  * Time:14:51
  */
 open class VideoOverView @JvmOverloads constructor(
-  con: Context,
-  attrs: AttributeSet? = null,
-  defStyleAttr: Int = 0,
-  defStyleRes: Int = 0
+    con: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
 ) : FrameLayout(con, attrs, defStyleAttr, defStyleRes), VideoOverCallListener {
   //<editor-fold defaultstate="collapsed" desc="获取子View">
   private var mCacheList = mutableListOf<View>()
@@ -49,37 +49,37 @@ open class VideoOverView @JvmOverloads constructor(
   //<editor-fold defaultstate="collapsed" desc="手势监听">
   private var mGestureDetector: GestureDetector? = null
   private var simpleOnGestureListener: GestureDetector.SimpleOnGestureListener =
-    object : GestureDetector.SimpleOnGestureListener() {
-      override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
-        getAllChildView().filter { it is OverGestureListener }
-          .forEach { (it as OverGestureListener).callOverClick() }
-        return true
-      }
-
-      override fun onDoubleTap(e: MotionEvent?): Boolean {
-        getAllChildView().filter { it is OverGestureListener }
-          .forEach { (it as OverGestureListener).callOverDoubleClick() }
-        return true
-      }
-
-      override fun onDown(e: MotionEvent?): Boolean {
-        getAllChildView().filter { it is OverGestureListener }
-          .forEach { (it as OverGestureListener).callOverTouchDown(e) }
-        return true
-      }
-
-      override fun onScroll(
-        e1: MotionEvent?,
-        e2: MotionEvent?,
-        distanceX: Float,
-        distanceY: Float
-      ): Boolean {
-        getAllChildView(true).filter { it is OverGestureListener }.forEach {
-          (it as OverGestureListener).callOverScroll(e1, e2, distanceX, distanceY)
+      object : GestureDetector.SimpleOnGestureListener() {
+        override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+          getAllChildView().filter { it is OverGestureListener }
+              .forEach { (it as OverGestureListener).callOverClick() }
+          return true
         }
-        return true
+
+        override fun onDoubleTap(e: MotionEvent?): Boolean {
+          getAllChildView().filter { it is OverGestureListener }
+              .forEach { (it as OverGestureListener).callOverDoubleClick() }
+          return true
+        }
+
+        override fun onDown(e: MotionEvent?): Boolean {
+          getAllChildView().filter { it is OverGestureListener }
+              .forEach { (it as OverGestureListener).callOverTouchDown(e) }
+          return true
+        }
+
+        override fun onScroll(
+            e1: MotionEvent?,
+            e2: MotionEvent?,
+            distanceX: Float,
+            distanceY: Float
+        ): Boolean {
+          getAllChildView(true).filter { it is OverGestureListener }.forEach {
+            (it as OverGestureListener).callOverScroll(e1, e2, distanceX, distanceY)
+          }
+          return true
+        }
       }
-    }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化XML">
@@ -95,7 +95,7 @@ open class VideoOverView @JvmOverloads constructor(
       gd.onTouchEvent(event)
       if (event?.action ?: 0 == MotionEvent.ACTION_UP) {
         getAllChildView().filter { it is OverGestureListener }
-          .forEach { (it as OverGestureListener).callOverTouchUp() }
+            .forEach { (it as OverGestureListener).callOverTouchUp() }
       }
       return true
     }
@@ -194,6 +194,13 @@ open class VideoOverView @JvmOverloads constructor(
 
     override fun fullScreenOrExit() {
       getVideoView()?.enterOrExitFullScreen()
+    }
+
+    override fun refreshPlay() {
+      getVideoView()?.let {
+        it.resetVideo()
+        it.startVideo()
+      }
     }
   }
 

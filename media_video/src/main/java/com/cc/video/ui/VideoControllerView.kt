@@ -36,8 +36,7 @@ class VideoControllerView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
-) : ConstraintLayout(con, attrs, defStyleAttr, defStyleRes), VideoControllerCallListener,
-    OverGestureListener {
+) : ConstraintLayout(con, attrs, defStyleAttr, defStyleRes), VideoControllerCallListener, OverGestureListener {
   //<editor-fold defaultstate="collapsed" desc="变量">
   //操作监听
   private var controllerListener: VideoControllerListener? = null
@@ -62,6 +61,9 @@ class VideoControllerView @JvmOverloads constructor(
   //是否加锁
   private var isLocked = false
 
+  //是否是直播
+  private var isLive = false
+
   //当前播放状态
   private var mPlayState: PlayState = PlayState.SET_DATA
   //</editor-fold>
@@ -69,7 +71,12 @@ class VideoControllerView @JvmOverloads constructor(
   //<editor-fold defaultstate="collapsed" desc="外部设置">
   //设置是否是直播(直播没有时长，播放进度等)
   fun setLiveVideo(live: Boolean) {
-
+    isLive = live
+    controller_bottom_duration.visibleGone(!live)
+    controller_bottom_time.visibleGone(!live)
+    controller_bottom_progressbar.visibleGone(!live)
+    controller_bottom_seekbar.visibleInvisible(!live)
+    controller_bottom_stop.setImageResource(if (isLive) R.drawable.svg_media_refresh else R.drawable.svg_media_stop)
   }
   //</editor-fold>
 
@@ -114,9 +121,13 @@ class VideoControllerView @JvmOverloads constructor(
     }
     controller_bottom_stop.click {
       if (controller_bottom_container.alpha != 1f) return@click
-      controllerListener?.onStop()
-      job?.cancel()
-      jobLock?.cancel()
+      if (isLive) {
+        controllerListener?.refreshPlay()
+      } else {
+        controllerListener?.onStop()
+        job?.cancel()
+        jobLock?.cancel()
+      }
     }
     controller_lock_state.click {
       if (!canOperateVideo) return@click
@@ -171,7 +182,8 @@ class VideoControllerView @JvmOverloads constructor(
   //展示播放状态
   private fun showControllerView() {
     job?.cancel()
-    controller_top_sys_time?.text = TimeUtils.millis2String(System.currentTimeMillis(), timeFormat)
+    controller_top_sys_time?.text =
+        TimeUtils.millis2String(System.currentTimeMillis(), timeFormat)
     controller_bottom_progressbar?.animate()?.alpha(0f)?.start()
     controller_top_container?.animate()?.alpha(1f)?.start()
     controller_bottom_container?.animate()?.alpha(1f)?.start()
@@ -263,8 +275,7 @@ class VideoControllerView @JvmOverloads constructor(
   //检查是否可以进行操作
   private fun checkOperate(state: PlayState) {
     canOperateVideo = !(state == PlayState.SET_DATA || state == PlayState.SHOW_MOBILE || state == PlayState.PREPARING ||
-        state == PlayState.BUFFING || state == PlayState.SEEKING || state == PlayState.STOP ||
-        state == PlayState.COMPLETE || state == PlayState.ERROR)
+        state == PlayState.SEEKING || state == PlayState.STOP || state == PlayState.COMPLETE || state == PlayState.ERROR)
     controller_bottom_seekbar.isEnabled = canOperateVideo
   }
 
@@ -364,7 +375,13 @@ class VideoControllerView @JvmOverloads constructor(
     if (!isLocked && canOperateVideo) controllerListener?.onPlayOrPause()
   }
 
-  override fun callOverScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float) {}
+  override fun callOverScroll(
+      e1: MotionEvent?,
+      e2: MotionEvent?,
+      distanceX: Float,
+      distanceY: Float
+  ) {
+  }
 
   override fun callOverTouchDown(e: MotionEvent?) {}
 
@@ -440,7 +457,8 @@ class VideoControllerView @JvmOverloads constructor(
       intent?.extras?.let {
         //充电状态
         val status = it.getInt(BatteryManager.EXTRA_STATUS, -1)
-        val isCharging = (status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL)
+        val isCharging =
+            (status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL)
         if (isCharging != chargeState) {
           chargeState = isCharging
           if (isCharging) {

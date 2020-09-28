@@ -70,6 +70,9 @@ class AliVideoView @JvmOverloads constructor(
 
   //内部自己判断是否需要自动播放
   private var isAutoPlay = false
+
+  //是否是直播
+  private var isLive = false
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化">
@@ -227,9 +230,15 @@ class AliVideoView @JvmOverloads constructor(
     callOutInfo = overView
   }
 
+  //设置是否是直播
+  fun setLive(live: Boolean) {
+    isLive = live
+  }
+
   //设置缓存相关
   fun setCacheVideo(dsl: (CacheConfig.() -> Unit)? = null) {
     dsl?.invoke(mCacheConfig)
+    aliPlayer.setCacheConfig(mCacheConfig)
   }
 
   //获取缓存文件地址
@@ -339,6 +348,7 @@ class AliVideoView @JvmOverloads constructor(
 
   //跳转到,不精准
   fun seekToVideo(position: Long) {
+    if (isLive) return
     callPlayState(PlayState.SEEKING)
     aliPlayer.seekTo(position)
   }
