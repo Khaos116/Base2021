@@ -189,9 +189,11 @@ class AliVideoView @JvmOverloads constructor(
     aliPlayer.setOnSeekCompleteListener { callPlayState(PlayState.SEEKED) }
     //字幕相关
     aliPlayer.setOnSubtitleDisplayListener(object : IPlayer.OnSubtitleDisplayListener {
-      override fun onSubtitleShow(id: Long, data: String) {} //显示字幕
+      override fun onSubtitleExtAdded(trackIndex: Int, url: String?) {}
 
-      override fun onSubtitleHide(id: Long) {} //隐藏字幕
+      override fun onSubtitleShow(trackIndex: Int, id: Long, data: String?) {} //显示字幕
+
+      override fun onSubtitleHide(trackIndex: Int, id: Long) {} //隐藏字幕
     })
     //切换流
     aliPlayer.setOnTrackChangedListener(object : IPlayer.OnTrackChangedListener {
