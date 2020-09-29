@@ -3,7 +3,7 @@ object Versions {
   internal const val sdkTarget = 30
   internal const val kotlin = "1.4.10"
   internal const val okHttp = "4.8.1"
-  internal const val rxHttp = "2.4.0"
+  internal const val rxHttp = "2.4.1"
   internal const val coil = "1.0.0-rc3"
 }
 
@@ -98,7 +98,8 @@ object Deps {
   //打包资源压缩 https://github.com/smallSohoSolo/McImage/blob/master/README-CN.md
   const val mc_image = "com.smallsoho.mobcase:McImage:1.5.1"
 
-  //阿里播放器 https://help.aliyun.com/document_detail/124711.html?spm=a2c4g.11186623.6.1085.11b511f9ytuUNH
-  const val ali_player = "com.aliyun.sdk.android:AliyunPlayer:4.5.0-full"
-  const val ali_conan = "com.alivc.conan:AlivcConan:0.9.5"
+  //阿里播放器官网 https://help.aliyun.com/document_detail/124711.html?spm=a2c4g.11186623.6.1085.11b511f9ytuUNH
+  //阿里播放器Github https://github.com/alibaba/CicadaPlayer/tree/release/0.1/platform/Android
+  const val ali_player = "com.aliyun.sdk.android:AliyunPlayer:5.1.6-full"
+  const val ali_conan = "com.alivc.conan:AlivcConan:1.0.4"
 }
