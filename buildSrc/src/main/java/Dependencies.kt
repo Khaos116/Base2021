@@ -17,15 +17,15 @@ object Deps {
   const val kotlin_stdlib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
 
   //系统相关 https://maven.aliyun.com/mvn/search
-  const val core_ktx = "androidx.core:core-ktx:1.3.1"
-  const val activity_ktx = "androidx.activity:activity-ktx:1.2.0-alpha07"
-  const val appcompat = "androidx.appcompat:appcompat:1.3.0-alpha01"
-  const val fragment = "androidx.fragment:fragment:1.3.0-alpha07"
+  const val core_ktx = "androidx.core:core-ktx:1.5.0-alpha03"
+  const val activity_ktx = "androidx.activity:activity-ktx:1.2.0-alpha08"
+  const val appcompat = "androidx.appcompat:appcompat:1.3.0-alpha02"
+  const val fragment = "androidx.fragment:fragment:1.3.0-alpha08"
   const val material = "com.google.android.material:material:1.3.0-alpha02"
-  const val constraint = "androidx.constraintlayout:constraintlayout:1.1.3"
+  const val constraint = "androidx.constraintlayout:constraintlayout:2.0.1"
 
   //启动初始化 https://developer.android.google.cn/topic/libraries/app-startup
-  const val startup = "androidx.startup:startup-runtime:1.0.0-alpha03"
+  const val startup = "androidx.startup:startup-runtime:1.0.0-beta01"
 
   //分包 https://developer.android.google.cn/studio/build/multidex?hl=zh_cn#mdex-gradle
   const val multidex = "androidx.multidex:multidex:2.0.1"
