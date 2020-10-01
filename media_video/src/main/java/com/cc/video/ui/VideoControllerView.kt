@@ -103,15 +103,19 @@ class VideoControllerView @JvmOverloads constructor(
     }
     controller_bottom_play_pause.click {
       if (controller_bottom_container.alpha != 1f) return@click
-      if (mPlayState == PlayState.PAUSE || mPlayState == PlayState.START
-          || mPlayState == PlayState.BUFFED || mPlayState == PlayState.SEEKED) {
-        controllerListener?.onPlayOrPause()
-        countDownHidden()
-        countDownHiddenLock()
-      } else if (mPlayState == PlayState.STOP || mPlayState == PlayState.COMPLETE || mPlayState == PlayState.ERROR) {
-        controllerListener?.onPlay()
-        countDownHidden()
-        countDownHiddenLock()
+      when (mPlayState) {
+        PlayState.PAUSE, PlayState.START, PlayState.BUFFED, PlayState.SEEKED -> {
+          controllerListener?.onPlayOrPause()
+          countDownHidden()
+          countDownHiddenLock()
+        }
+        PlayState.STOP, PlayState.COMPLETE, PlayState.ERROR -> {
+          controllerListener?.onPlay()
+          countDownHidden()
+          countDownHiddenLock()
+        }
+        else -> {
+        }
       }
     }
     controller_bottom_full_screen.click {
