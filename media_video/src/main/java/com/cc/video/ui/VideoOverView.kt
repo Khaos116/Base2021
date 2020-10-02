@@ -9,14 +9,10 @@ import android.provider.Settings.System
 import android.util.AttributeSet
 import android.view.*
 import android.widget.FrameLayout
-import com.blankj.utilcode.util.Utils
-import com.cc.ext.logE
-import com.cc.ext.removeParent
-import com.cc.ext.visibleGone
+import com.cc.ext.*
 import com.cc.utils.AudioHelper
 import com.cc.video.enu.PlayState
 import com.cc.video.enu.PlayUiState
-import com.cc.video.ext.useMobileNet
 import com.cc.video.inter.OverGestureListener
 import com.cc.video.inter.call.*
 import com.cc.video.inter.operate.*
