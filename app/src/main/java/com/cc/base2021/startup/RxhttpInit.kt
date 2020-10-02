@@ -3,7 +3,7 @@ package com.cc.base2021.startup
 import android.content.Context
 import androidx.startup.Initializer
 import com.cc.ext.logI
-import com.cc.base.startup.UtilsInit
+import com.cc.startup.UtilsInit
 import com.cc.base2021.config.RxHttpConfig
 
 /**
