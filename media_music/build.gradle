@@ -20,6 +20,9 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
     }
   }
+
+  //使用Kotlin实验特性  https://www.jianshu.com/p/f9a8d2244bf3
+  androidExtensions { experimental = true }
 }
 
 dependencies {
@@ -29,4 +32,8 @@ dependencies {
   implementation Deps.core_ktx
   implementation Deps.appcompat
   implementation Deps.constraint
+  implementation Deps.startup
+  implementation Deps.utilcodex
+  implementation Deps.ali_player
+  implementation Deps.ali_conan
 }

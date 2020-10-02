@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <dimen name="media_music_ali_height">36dp</dimen>
+  <dimen name="media_music_info_height">24dp</dimen>
+  <dimen name="media_music_cover_height">60dp</dimen>
+  <dimen name="media_music_time_size">12sp</dimen>
+  <dimen name="media_music_song_size">16sp</dimen>
+  <dimen name="media_music_singer_size">10sp</dimen>
+</resources>

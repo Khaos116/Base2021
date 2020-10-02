@@ -19,3 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+#noinspection ShrinkerUnresolvedReference
+-keep class com.cc.music.bean.** { *; }
+-keep class com.cc.music.enu.** { *; }

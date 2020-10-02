@@ -2,4 +2,12 @@
 <resources>
   <!--icon图标颜色-->
   <color name="media_icon_color">#00C9CA</color>
+  <!--进度条颜色-->
+  <color name="media_seek_bg">#808A87</color>
+  <color name="media_seek_progress">@color/media_icon_color</color>
+  <color name="media_seek_buffer">#3300C9CA</color>
+
+  <color name="media_music_time">@color/media_icon_color</color>
+  <color name="media_music_song_name">@color/purple_9933FA</color>
+  <color name="media_music_singer_name">@color/yellow_FF6100</color>
 </resources>
