@@ -137,7 +137,7 @@
         android:layout_width="@dimen/media_video_title_height"
         android:layout_height="match_parent"
         android:contentDescription="@null"
-        android:padding="8dp"
+        android:padding="5dp"
         android:src="@drawable/svg_media_stop"
         />
 
