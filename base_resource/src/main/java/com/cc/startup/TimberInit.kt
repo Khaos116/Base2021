@@ -1,8 +1,8 @@
-package com.cc.base.startup
+package com.cc.startup
 
 import android.content.Context
 import androidx.startup.Initializer
-import com.cc.base.BuildConfig
+import com.cc.BuildConfig
 import com.cc.ext.logI
 import timber.log.Timber
 import timber.log.Timber.DebugTree

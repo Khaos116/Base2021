@@ -1,4 +1,4 @@
-package com.cc.base.startup
+package com.cc.startup
 
 import android.app.Application
 import android.content.Context
