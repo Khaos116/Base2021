@@ -51,18 +51,7 @@ class MusicPlayService : AbstractService() {
     //添加监听
     addListener()
     //配置缓存
-    CacheConfig().apply {
-      //开启缓存功能
-      mEnable = true
-      //能够缓存的单个文件最大时长。超过此长度则不缓存
-      mMaxDurationS = 2 * 60 * 60 //2小时
-      //缓存目录的位置
-      mDir = PathUtils.getExternalAppMusicPath()
-      //缓存目录的最大大小。超过此大小，将会删除最旧的缓存文件
-      mMaxSizeMB = 2 * 1024 //2GB
-      //设置缓存配置给到播放器
-      aliPlayer.setCacheConfig(this)
-    }
+    aliPlayer.setCacheConfig(getCacheConfig())
     //开启硬解，默认开启(硬解初始化失败时，自动切换为软解，保证视频的正常播放)
     aliPlayer.enableHardwareDecoder(true)
     //网络重试时间和次数
@@ -86,6 +75,20 @@ class MusicPlayService : AbstractService() {
       mStartBufferDuration = 1 * 1000 //1秒
       //设置配置给播放器
       aliPlayer.config = this
+    }
+  }
+
+  //获取播放器缓存配置
+  private fun getCacheConfig(): CacheConfig {
+    return CacheConfig().apply {
+      //开启缓存功能
+      mEnable = true
+      //能够缓存的单个文件最大时长。超过此长度则不缓存
+      mMaxDurationS = 2 * 60 * 60 //2小时
+      //缓存目录的位置
+      mDir = PathUtils.getExternalAppMusicPath()
+      //缓存目录的最大大小。超过此大小，将会删除最旧的缓存文件
+      mMaxSizeMB = 2 * 1024 //2GB
     }
   }
   //</editor-fold>
@@ -115,7 +118,7 @@ class MusicPlayService : AbstractService() {
       when (infoBean.code) {
         InfoCode.AutoPlayStart -> callPlayState(PlayState.START)
         InfoCode.LoopingStart -> callPlayState(PlayState.START)
-        InfoCode.CacheSuccess -> "缓存成功:${GsonUtils.toJson(infoBean)}".logI()
+        InfoCode.CacheSuccess -> "缓存成功:${mCurrentMusic?.songName ?: ""}".logI()
         InfoCode.CacheError -> if ("url is local source" != infoBean.extraMsg) "缓存失败:${infoBean.extraMsg}".logE()
         InfoCode.SwitchToSoftwareVideoDecoder -> "切换到软解".logE()
         InfoCode.CurrentPosition -> callPlayProgress(infoBean.extraValue)
@@ -210,9 +213,18 @@ class MusicPlayService : AbstractService() {
     setAutoPlayMusic(true)
     mCurrentMusic = music
     aliPlayer.stop()
+    //音乐播放地址MD5
+    val md5Name = EncryptUtils.encryptMD5ToString(music.url)
+    //缓存地址(因为放在一个文件夹会覆盖，所以每首MP3单独一个目录)
+    val cacheDir = File(PathUtils.getExternalAppMusicPath(), md5Name)
+    if (!cacheDir.exists()) cacheDir.mkdirs()
+    //创建歌曲名称
+    if (!music.songName.isNullOrBlank()) File(cacheDir, music.songName ?: "").createNewFile()
+    //设置缓存目录
+    aliPlayer.setCacheConfig(getCacheConfig().apply { mDir = cacheDir.path })
     aliPlayer.setDataSource(UrlSource().apply {
       uri = music.url
-      cacheFilePath = File(PathUtils.getExternalAppMusicPath(), EncryptUtils.encryptMD5ToString(music.url)).path
+      cacheFilePath = File(cacheDir, "${md5Name}.mp3").path
     })
     prepareMusic()
   }
