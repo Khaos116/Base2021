@@ -13,8 +13,7 @@ import com.cc.base2021.R
 import com.cc.base2021.R.layout
 import com.cc.base2021.comm.CommActivity
 import com.cc.base2021.component.main.fragment.HomeFragment
-import com.cc.base2021.component.simple.SimpleTimeFragment
-import com.cc.base2021.component.simple.SimpleVideoFragment
+import com.cc.base2021.component.simple.*
 import com.cc.ext.*
 import com.gyf.immersionbar.BarHide
 import com.gyf.immersionbar.ktx.immersionBar
@@ -38,15 +37,14 @@ class MainActivity : CommActivity() {
   //<editor-fold defaultstate="collapsed" desc="变量">
   //页面
   private lateinit var homeFragment: BaseFragment
-  private lateinit var dynFragment: BaseFragment
-  private lateinit var mineFragment: BaseFragment
+  private lateinit var videoFragment: BaseFragment
+  private lateinit var musicFragment: BaseFragment
 
   //当前页面
   private var currentFragment: BaseFragment? = null
 
   //子列表合集，方便外部调用选中那个
   private var fragmentList = mutableListOf<BaseFragment>()
-
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化View">
@@ -54,11 +52,10 @@ class MainActivity : CommActivity() {
     mainRootView.setPadding(0, mStatusBarHeight, 0, 0)
     //初始化
     homeFragment = HomeFragment.newInstance()
-    //dynFragment = SimpleFragment.newInstance("B")
-    dynFragment = SimpleVideoFragment.newInstance()
-    mineFragment = SimpleTimeFragment.newInstance("请求北京时间")
+    videoFragment = SimpleVideoFragment.newInstance()
+    musicFragment = SimpleMusicFragment.newInstance()
     //添加
-    fragmentList = mutableListOf(homeFragment, dynFragment, mineFragment)
+    fragmentList = mutableListOf(homeFragment, videoFragment, musicFragment)
     //设置选中
     selectFragment(0)
     setSelectIndex(0)
