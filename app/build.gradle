@@ -175,6 +175,7 @@ android.applicationVariants.all { variant ->
 
 //三方依赖
 dependencies {
+  implementation project(path: ':media_music')
   implementation project(path: ':media_video')
   implementation project(path: ':base_resource')
   implementation project(path: ':base')

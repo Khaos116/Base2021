@@ -22,7 +22,6 @@ class MyApplication : BaseApplication(), ImageLoaderFactory {
           .cache(CoilUtils.createDefaultCache(this))
           .build()
       }
-
       .build()
   }
 }
