@@ -12,7 +12,7 @@ import com.cc.ext.logI
  */
 class AppLastInit : Initializer<Int> {
   override fun create(context: Context): Int {
-    "App全部初始化完成".logI()
+    "App初始化完成".logI()
     return 0
   }
 
