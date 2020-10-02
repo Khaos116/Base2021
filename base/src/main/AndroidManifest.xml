@@ -28,16 +28,5 @@
     <meta-data
         android:name="design_height_in_dp"
         android:value="640"/>
-    <!--https://blog.csdn.net/qq_40909351/article/details/106726204-->
-    <provider
-        android:name="androidx.startup.InitializationProvider"
-        android:authorities="${applicationId}.androidx-startup"
-        android:exported="false"
-        tools:node="merge">
-      <meta-data
-          android:name="com.cc.base.startup.UtilsInit"
-          android:value="androidx.startup"/>
-    </provider>
-
   </application>
 </manifest>
