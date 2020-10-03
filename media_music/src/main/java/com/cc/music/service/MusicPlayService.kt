@@ -1,9 +1,13 @@
 package com.cc.music.service
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageManager
 import android.media.*
 import android.os.Build
 import android.os.IBinder
+import androidx.core.content.ContextCompat
 import com.aliyun.player.AliPlayerFactory
 import com.aliyun.player.IPlayer
 import com.aliyun.player.bean.InfoCode
@@ -166,8 +170,18 @@ class MusicPlayService : AbstractService() {
     } else if (state == PlayState.PAUSE || state == PlayState.COMPLETE || state == PlayState.ERROR || state == PlayState.STOP) {
       if (hasAudioFocus) releaseAudioFocusByVideo()
     }
+    if (state == PlayState.ERROR) checkErrorNext()
     mPlayState = state
     mIMusicCall.forEach { it.callPlayState(state.name) }
+  }
+
+  //播放出错检查是否有网络，如果有则继续下一首
+  @SuppressLint("MissingPermission")
+  private fun checkErrorNext() {
+    if (ContextCompat.checkSelfPermission(Utils.getApp(),
+            Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED && NetworkUtils.isConnected()) {
+      nextMusic(true)
+    }
   }
 
   private fun callDuration(duration: Long) {
