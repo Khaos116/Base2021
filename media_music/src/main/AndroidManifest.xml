@@ -18,6 +18,7 @@
         android:name=".service.MusicPlayService"
         android:enabled="true"
         android:exported="true"
+        android:process=":musicService"
         tools:ignore="ExportedService"/>
   </application>
 </manifest>
