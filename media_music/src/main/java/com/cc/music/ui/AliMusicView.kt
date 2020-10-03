@@ -1,11 +1,16 @@
 package com.cc.music.ui
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageManager
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.*
+import android.widget.ImageView
+import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleObserver
 import com.blankj.utilcode.util.*
 import com.cc.ext.*
@@ -73,7 +78,6 @@ class AliMusicView @JvmOverloads constructor(
       callPlayModeMusic(newMode.name)
       setModeMusic(newMode)
     }
-
     music_controller_seekbar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
       override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
         if (fromUser && music_controller_seekbar.max > 0) {
@@ -102,7 +106,7 @@ class AliMusicView @JvmOverloads constructor(
       PlayState.PAUSE -> music_controller_play_pause.isSelected = true
       PlayState.ERROR -> {
         music_controller_play_pause.isSelected = true
-        StringUtils.getString(R.string.play_music_error).toast()
+        checkNoNet()
       }
       PlayState.STOP, PlayState.COMPLETE -> {
         music_controller_seekbar.secondaryProgress = 0
@@ -111,6 +115,14 @@ class AliMusicView @JvmOverloads constructor(
         music_controller_play_pause.isSelected = true
       }
       else -> music_controller_play_pause.isSelected = false
+    }
+  }
+
+  @SuppressLint("MissingPermission")
+  private fun checkNoNet() {
+    if (ContextCompat.checkSelfPermission(Utils.getApp(),
+            Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED && !NetworkUtils.isConnected()) {
+      StringUtils.getString(R.string.play_music_error_net).toast()
     }
   }
 
