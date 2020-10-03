@@ -22,6 +22,7 @@ import com.cc.music.enu.PlayState
 import com.cc.music.startup.mMusicPlayerService
 import com.cc.music.utils.MusicTimeUtils
 import kotlinx.android.synthetic.main.layout_ali_music.view.*
+import kotlinx.coroutines.*
 
 /**
  * http://music.163.com/song/media/outer/url?id=562598065.mp3
@@ -101,20 +102,22 @@ class AliMusicView @JvmOverloads constructor(
   //<editor-fold defaultstate="collapsed" desc="内部调用">
   //更新播放状态
   private fun callPlayStateMusic(state: String) {
-    mPlayState = PlayState.valueOf(state)
-    when (mPlayState) {
-      PlayState.PAUSE -> music_controller_play_pause.isSelected = true
-      PlayState.ERROR -> {
-        music_controller_play_pause.isSelected = true
-        checkNoNet()
+    GlobalScope.launch(Dispatchers.Main) {
+      mPlayState = PlayState.valueOf(state)
+      when (mPlayState) {
+        PlayState.PAUSE -> music_controller_play_pause.isSelected = true
+        PlayState.ERROR -> {
+          music_controller_play_pause.isSelected = true
+          checkNoNet()
+        }
+        PlayState.STOP, PlayState.COMPLETE -> {
+          music_controller_seekbar.secondaryProgress = 0
+          music_controller_seekbar.progress = 0
+          music_controller_time.text = MusicTimeUtils.instance.forMatterMusicTime(0)
+          music_controller_play_pause.isSelected = true
+        }
+        else -> music_controller_play_pause.isSelected = false
       }
-      PlayState.STOP, PlayState.COMPLETE -> {
-        music_controller_seekbar.secondaryProgress = 0
-        music_controller_seekbar.progress = 0
-        music_controller_time.text = MusicTimeUtils.instance.forMatterMusicTime(0)
-        music_controller_play_pause.isSelected = true
-      }
-      else -> music_controller_play_pause.isSelected = false
     }
   }
 
@@ -128,23 +131,27 @@ class AliMusicView @JvmOverloads constructor(
 
   //更新播放模式
   private fun callPlayModeMusic(mode: String) {
-    mPlayMode = PlayMode.valueOf(mode)
-    music_controller_play_mode.setImageResource(
-        when (mPlayMode) {
-          PlayMode.PLAY_RANDOM -> R.drawable.svg_media_random
-          PlayMode.PLAY_IN_ORDER -> R.drawable.svg_media_in_order
-          PlayMode.LOOP_ALL -> R.drawable.svg_media_loop_all
-          PlayMode.LOOP_ONE -> R.drawable.svg_media_loop_one
-        }
-    )
+    GlobalScope.launch(Dispatchers.Main) {
+      mPlayMode = PlayMode.valueOf(mode)
+      music_controller_play_mode.setImageResource(
+          when (mPlayMode) {
+            PlayMode.PLAY_RANDOM -> R.drawable.svg_media_random
+            PlayMode.PLAY_IN_ORDER -> R.drawable.svg_media_in_order
+            PlayMode.LOOP_ALL -> R.drawable.svg_media_loop_all
+            PlayMode.LOOP_ONE -> R.drawable.svg_media_loop_one
+          }
+      )
+    }
   }
 
   private fun fillSongInfo(json: String?) {
-    json?.let {
-      val music = GsonUtils.fromJson<MusicBean>(it, MusicBean::class.java)
-      music_song_name.text = music.songName
-      music_singer_name.text = music.singerName
-      callLoadCover?.invoke(music?.songCover, music_song_cover)
+    GlobalScope.launch(Dispatchers.Main) {
+      json?.let {
+        val music = GsonUtils.fromJson<MusicBean>(it, MusicBean::class.java)
+        music_song_name.text = music.songName
+        music_singer_name.text = music.singerName
+        callLoadCover?.invoke(music?.songCover, music_song_cover)
+      }
     }
   }
   //</editor-fold>
@@ -236,26 +243,44 @@ class AliMusicView @JvmOverloads constructor(
 
   //<editor-fold defaultstate="collapsed" desc="回调监听">
   private var callBackMusic = object : IMusicCall.Stub() {
-    override fun callMusicInfo(musicJson: String?) = fillSongInfo(musicJson)
+    override fun callMusicInfo(musicJson: String?) {
+      GlobalScope.launch(Dispatchers.Main) {
+        fillSongInfo(musicJson)
+      }
+    }
 
-    override fun callPlayMode(mode: String) = callPlayModeMusic(mode)
+    override fun callPlayMode(mode: String) {
+      GlobalScope.launch(Dispatchers.Main) {
+        callPlayModeMusic(mode)
+      }
+    }
 
-    override fun callPlayState(state: String) = callPlayStateMusic(state)
+    override fun callPlayState(state: String) {
+      GlobalScope.launch(Dispatchers.Main) {
+        callPlayStateMusic(state)
+      }
+    }
 
     override fun callPlayDuration(duration: Long) {
-      music_controller_seekbar.max = duration.toInt() / 1000
-      music_controller_duration.text = MusicTimeUtils.instance.forMatterMusicTime(duration)
+      GlobalScope.launch(Dispatchers.Main) {
+        music_controller_seekbar.max = duration.toInt() / 1000
+        music_controller_duration.text = MusicTimeUtils.instance.forMatterMusicTime(duration)
+      }
     }
 
     override fun callPlayProgress(progress: Long) {
       if (!isSeeking) {
-        music_controller_seekbar.progress = progress.toInt() / 1000
-        music_controller_time.text = MusicTimeUtils.instance.forMatterMusicTime(progress)
+        GlobalScope.launch(Dispatchers.Main) {
+          music_controller_seekbar.progress = progress.toInt() / 1000
+          music_controller_time.text = MusicTimeUtils.instance.forMatterMusicTime(progress)
+        }
       }
     }
 
     override fun callBufferProgress(progress: Long) {
-      music_controller_seekbar.secondaryProgress = progress.toInt() / 1000
+      GlobalScope.launch(Dispatchers.Main) {
+        music_controller_seekbar.secondaryProgress = progress.toInt() / 1000
+      }
     }
 
     override fun callBufferPercent(percent: Int, kbps: Float) {
