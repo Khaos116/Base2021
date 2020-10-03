@@ -181,7 +181,7 @@ class MusicPlayService : AbstractService() {
     "歌曲\"${mCurrentMusic?.songName ?: ""}\"播放出错".logE()
     if (ContextCompat.checkSelfPermission(Utils.getApp(),
             Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED && NetworkUtils.isConnected()) {
-      nextMusic(true)
+      nextMusic(false)
     }
   }
 
@@ -270,7 +270,8 @@ class MusicPlayService : AbstractService() {
 
   //设置循环播放
   private fun setLoopMusic(loop: Boolean) {
-    aliPlayer.isLoop = loop
+    mPlayMode = if (loop) PlayMode.LOOP_ONE else PlayMode.PLAY_IN_ORDER
+    mIMusicCall.forEach { it.callPlayMode(mPlayMode.name) }
   }
 
   //设置循环播放
@@ -337,6 +338,8 @@ class MusicPlayService : AbstractService() {
     if (mListMusics.isNullOrEmpty()) return
     if (mPlayMode == PlayMode.PLAY_RANDOM) {
       setCurrentPlayMusic((Math.random() * mListMusics.size).toInt())
+    } else if (autoNext && mPlayMode == PlayMode.LOOP_ONE) {
+      mCurrentMusic?.let { m -> setCurrentPlayMusic(m) }
     } else {
       val temp = mCurrentMusic
       val index = if (temp == null) {
