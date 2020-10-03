@@ -21,9 +21,6 @@ import com.cc.music.IMusicOperate
 import com.cc.music.bean.MusicBean
 import com.cc.music.enu.PlayMode
 import com.cc.music.enu.PlayState
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.io.File
 
 /**
@@ -175,7 +172,7 @@ class MusicPlayService : AbstractService() {
     }
     if (state == PlayState.ERROR) checkErrorNext()
     mPlayState = state
-    GlobalScope.launch(Dispatchers.Main) { mIMusicCall.forEach { it.callPlayState(state.name) } }
+    mIMusicCall.forEach { it.callPlayState(state.name) }
   }
 
   //播放出错检查是否有网络，如果有则继续下一首
@@ -189,25 +186,25 @@ class MusicPlayService : AbstractService() {
   }
 
   private fun callDuration(duration: Long) {
-    GlobalScope.launch(Dispatchers.Main) { mIMusicCall.forEach { it.callPlayDuration(duration) } }
+    mIMusicCall.forEach { it.callPlayDuration(duration) }
   }
 
   private fun callBufferPercent(percent: Int, kbps: Float) {
-    GlobalScope.launch(Dispatchers.Main) { mIMusicCall.forEach { it.callBufferPercent(percent, kbps) } }
+    mIMusicCall.forEach { it.callBufferPercent(percent, kbps) }
   }
 
   private fun callPlayProgress(progress: Long) {
     mPlayProgress = progress
-    GlobalScope.launch(Dispatchers.Main) { mIMusicCall.forEach { it.callPlayProgress(progress) } }
+    mIMusicCall.forEach { it.callPlayProgress(progress) }
   }
 
   private fun callBufferProgress(progress: Long) {
     mBufferProgress = progress
-    GlobalScope.launch(Dispatchers.Main) { mIMusicCall.forEach { it.callBufferProgress(progress) } }
+    mIMusicCall.forEach { it.callBufferProgress(progress) }
   }
 
   private fun callMusic(music: MusicBean) {
-    GlobalScope.launch(Dispatchers.Main) { mIMusicCall.forEach { it.callMusicInfo(GsonUtils.toJson(music)) } }
+    mIMusicCall.forEach { it.callMusicInfo(GsonUtils.toJson(music)) }
   }
   //</editor-fold>
 
@@ -274,13 +271,13 @@ class MusicPlayService : AbstractService() {
   //设置循环播放
   private fun setLoopMusic(loop: Boolean) {
     mPlayMode = if (loop) PlayMode.LOOP_ONE else PlayMode.PLAY_IN_ORDER
-    GlobalScope.launch(Dispatchers.Main) { mIMusicCall.forEach { it.callPlayMode(mPlayMode.name) } }
+    mIMusicCall.forEach { it.callPlayMode(mPlayMode.name) }
   }
 
   //设置循环播放
   private fun setPlayModeMusic(mode: PlayMode) {
     mPlayMode = mode
-    GlobalScope.launch(Dispatchers.Main) { mIMusicCall.forEach { it.callPlayMode(mode.name) } }
+    mIMusicCall.forEach { it.callPlayMode(mode.name) }
   }
 
   //准备播放
