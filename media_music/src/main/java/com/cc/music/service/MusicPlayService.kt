@@ -1,6 +1,6 @@
 package com.cc.music.service
 
-import android.content.*
+import android.content.Context
 import android.media.*
 import android.os.Build
 import android.os.IBinder
@@ -383,8 +383,6 @@ class MusicPlayService : AbstractService() {
 
   //<editor-fold defaultstate="collapsed" desc="IBinder-外部操作播放器">
   override fun initBinder(): IBinder {
-    val pid = android.os.Process.myPid()
-    "播放服务PID=$pid".logE()
     return object : IMusicOperate.Stub() {
       override fun setPlayLoop(loop: Boolean) = setLoopMusic(loop)
 
