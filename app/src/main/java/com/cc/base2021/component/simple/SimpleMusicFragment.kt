@@ -28,8 +28,6 @@ class SimpleMusicFragment : CommFragment() {
 
   //<editor-fold defaultstate="collapsed" desc="初始化">
   override fun lazyInit() {
-    val pid = android.os.Process.myPid()
-    "UI绘制的PID=$pid".logE()
     musicView.callLoadCover = { url, iv -> iv.loadImgSquare(url) }
     musicView.setMusicList(MusicRandomUtils.instance.musicList)
     musicView.startMusic()
