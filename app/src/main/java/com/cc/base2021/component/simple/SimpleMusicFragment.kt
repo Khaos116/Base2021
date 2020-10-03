@@ -4,7 +4,6 @@ import com.cc.base2021.R
 import com.cc.base2021.comm.CommFragment
 import com.cc.base2021.ext.loadImgSquare
 import com.cc.base2021.utils.MusicRandomUtils
-import com.cc.ext.logE
 import kotlinx.android.synthetic.main.fragment_simple_music.musicView
 
 /**
