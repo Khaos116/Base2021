@@ -107,7 +107,6 @@ class MusicPlayService : AbstractService() {
     }
     //准备成功事件
     aliPlayer.setOnPreparedListener {
-      mCurrentMusic?.let { m -> callMusic(m) }
       callDuration(aliPlayer.duration)
       callPlayState(PlayState.PREPARED)
       if (isAutoPlay) startMusic()
@@ -140,10 +139,7 @@ class MusicPlayService : AbstractService() {
     aliPlayer.setOnStateChangedListener {
       when (it) {
         1 -> callPlayState(PlayState.PREPARING)
-        2 -> {
-          mCurrentMusic?.let { m -> callMusic(m) }
-          callPlayState(PlayState.PREPARED)
-        }
+        2 -> callPlayState(PlayState.PREPARED)
         3 -> {
           callPlayState(PlayState.BUFFED) //防止loading不显示(没有网络的情况下，会一直在loading，但是连上后开始播放不消失)
           callPlayState(PlayState.START)
@@ -222,6 +218,7 @@ class MusicPlayService : AbstractService() {
     if (!music.songName.isNullOrBlank()) File(cacheDir, music.songName ?: "").createNewFile()
     //设置缓存目录
     aliPlayer.setCacheConfig(getCacheConfig().apply { mDir = cacheDir.path })
+    callMusic(music)
     aliPlayer.setDataSource(UrlSource().apply {
       uri = music.url
       cacheFilePath = File(cacheDir, "${md5Name}.mp3").path
