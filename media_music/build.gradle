@@ -36,4 +36,5 @@ dependencies {
   implementation Deps.utilcodex
   implementation Deps.ali_player
   implementation Deps.ali_conan
+  implementation Deps.timber
 }
