@@ -30,6 +30,7 @@ import com.cc.video.enu.PlayState
 import com.cc.video.enu.PlayUiState
 import com.cc.video.ext.useMobileNet
 import com.cc.video.inter.call.VideoOverCallListener
+import java.io.File
 
 /**
  * 基于阿里播放器的视频播放控件，实现视频播放和各种回调、控制等。由内部添加的VideoOverView控件管理各种相关控制器
@@ -47,7 +48,6 @@ class AliVideoView @JvmOverloads constructor(
 ) : FrameLayout(con, attrs, defStyleAttr, defStyleRes), LifecycleObserver {
 
   //<editor-fold defaultstate="collapsed" desc="变量区">
-
   //视频显示控件
   private var mTextureView = TextureView(con)
   private var mSurfaceTexture: SurfaceTexture? = null
@@ -101,19 +101,8 @@ class AliVideoView @JvmOverloads constructor(
     }
     //添加监听
     addListener()
-    //配置缓存
-    mCacheConfig.apply {
-      //开启缓存功能
-      mEnable = true
-      //能够缓存的单个文件最大时长。超过此长度则不缓存
-      mMaxDurationS = 2 * 60 * 60 //2小时
-      //缓存目录的位置
-      mDir = PathUtils.getExternalAppMoviesPath()
-      //缓存目录的最大大小。超过此大小，将会删除最旧的缓存文件
-      mMaxSizeMB = 2 * 1024 //2GB
-      //设置缓存配置给到播放器
-      aliPlayer.setCacheConfig(this)
-    }
+    //设置缓存配置给到播放器
+    aliPlayer.setCacheConfig(getCacheConfig())
     //开启硬解，默认开启(硬解初始化失败时，自动切换为软解，保证视频的正常播放)
     aliPlayer.enableHardwareDecoder(true)
     //网络重试时间和次数
@@ -137,6 +126,21 @@ class AliVideoView @JvmOverloads constructor(
       mStartBufferDuration = 1 * 1000 //1秒
       //设置配置给播放器
       aliPlayer.config = this
+    }
+  }
+
+  //获取缓存配置
+  private fun getCacheConfig(): CacheConfig {
+    //配置缓存
+    return CacheConfig().apply {
+      //开启缓存功能
+      mEnable = true
+      //能够缓存的单个文件最大时长。超过此长度则不缓存
+      mMaxDurationS = 2 * 60 * 60 //2小时
+      //缓存目录的位置
+      mDir = PathUtils.getExternalAppMoviesPath()
+      //缓存目录的最大大小。超过此大小，将会删除最旧的缓存文件
+      mMaxSizeMB = 2 * 1024 //2GB
     }
   }
   //</editor-fold>
@@ -307,7 +311,16 @@ class AliVideoView @JvmOverloads constructor(
     videoUrl = url
     "播放地址:$url".logI()
     callVideoInfo(url, title, cover)
-    aliPlayer.setDataSource(UrlSource().apply { uri = url })
+    //视频播放地址MD5
+    val md5Name = EncryptUtils.encryptMD5ToString(url)
+    //缓存地址(因为放在一个文件夹会覆盖，所以每个视频单独一个目录)
+    val cacheDir = File(PathUtils.getExternalAppMusicPath(), md5Name)
+    if (!cacheDir.exists()) cacheDir.mkdirs()
+    aliPlayer.setCacheConfig(getCacheConfig().apply { mDir = cacheDir.path })
+    aliPlayer.setDataSource(UrlSource().apply {
+      uri = url
+      cacheFilePath = File(cacheDir, "${md5Name}.mp4").path
+    })
     if (!checkMobileNet()) prepareVideo()
   }
 
