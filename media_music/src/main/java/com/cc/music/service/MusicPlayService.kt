@@ -178,6 +178,7 @@ class MusicPlayService : AbstractService() {
   //播放出错检查是否有网络，如果有则继续下一首
   @SuppressLint("MissingPermission")
   private fun checkErrorNext() {
+    "歌曲\"${mCurrentMusic?.songName ?: ""}\"播放出错".logE()
     if (ContextCompat.checkSelfPermission(Utils.getApp(),
             Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED && NetworkUtils.isConnected()) {
       nextMusic(true)
