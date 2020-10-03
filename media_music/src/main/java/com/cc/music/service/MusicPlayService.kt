@@ -300,7 +300,7 @@ class MusicPlayService : AbstractService() {
     } else if (mPlayState == PlayState.PREPARED || mPlayState == PlayState.PAUSE) {
       aliPlayer.start()
       callPlayState(PlayState.START)
-    } else if ((mPlayState == PlayState.SET_DATA || mPlayState == PlayState.STOP)) {
+    } else if ((mPlayState == PlayState.SET_DATA || mPlayState == PlayState.STOP || mPlayState == PlayState.COMPLETE)) {
       isAutoPlay = true
       prepareMusic()
     }
