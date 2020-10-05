@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="play_music_error_net">播放出错请检查网络</string>
+  <string name="unknown">未知</string>
+  <string name="is_playing">正在播放</string>
 </resources>
