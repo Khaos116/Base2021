@@ -60,7 +60,7 @@ class MusicNotification {
       mNotification = Builder(service, mMusicChannelId)
           .setSmallIcon(R.drawable.svg_media_notification)
           .setWhen(System.currentTimeMillis())
-          .setContentIntent(getDefaultIntent(PlayController.DETAIL.ordinal))
+          .setContentIntent(getDefaultIntent(PlayController.DETAIL))
           .setCustomBigContentView(getContentView(true))
           .setCustomContentView(getContentView(false))
           .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -72,19 +72,13 @@ class MusicNotification {
       mNotification = Builder(service, mMusicChannelId)
           .setWhen(System.currentTimeMillis())
           .setSmallIcon(R.drawable.svg_media_notification)
-          .setContentIntent(getDefaultIntent(PlayController.DETAIL.ordinal))
+          .setContentIntent(getDefaultIntent(PlayController.DETAIL))
           .setContent(getContentView(false))
           .setPriority(NotificationCompat.PRIORITY_HIGH)
           .setTicker(StringUtils.getString(R.string.is_playing))
           .setOngoing(true)
           .build()
     }
-  }
-  //</editor-fold>
-
-  //<editor-fold defaultstate="collapsed" desc="点击事件">
-  private fun getDefaultIntent(flags: Int): PendingIntent {
-    return PendingIntent.getService(Utils.getApp(), 1, Intent(), flags)
   }
   //</editor-fold>
 
@@ -105,7 +99,7 @@ class MusicNotification {
     mRemoteViews2?.setTextViewText(R.id.notification_song_name, musicBean.songName ?: StringUtils.getString(R.string.unknown))
     mRemoteViews2?.setTextViewText(R.id.notification_singer_name, musicBean.singerName ?: StringUtils.getString(R.string.unknown))
     val app = Utils.getApp()
-    if (app is ResourceApplication) app.loadImage(musicBean.songCover) { bit ->
+    if (app is ResourceApplication) app.loadNotificationImage(musicBean.songCover) { bit ->
       mRemoteViews1?.setImageViewBitmap(R.id.notification_cover, bit)
       mRemoteViews2?.setImageViewBitmap(R.id.notification_cover, bit)
     }
@@ -182,16 +176,21 @@ class MusicNotification {
   private fun getContentView(showBigView: Boolean): RemoteViews {
     val pn = AppUtils.getAppPackageName()
     val rv = RemoteViews(pn, if (showBigView) R.layout.notification_music_big else R.layout.notification_music_small)
-    rv.setPendingIntentTemplate(R.id.notification_controller_previous, getDefaultIntent(PlayController.PREVIOUS.ordinal))
-    rv.setPendingIntentTemplate(R.id.notification_controller_next, getDefaultIntent(PlayController.NEXT.ordinal))
-    rv.setPendingIntentTemplate(R.id.notification_controller_play_pause, getDefaultIntent(PlayController.PLAY_PAUSE.ordinal))
-    rv.setPendingIntentTemplate(R.id.notification_controller_close, getDefaultIntent(PlayController.CLOSE.ordinal))
-    rv.setPendingIntentTemplate(R.id.notification_root, getDefaultIntent(PlayController.DETAIL.ordinal))
+    rv.setOnClickPendingIntent(R.id.notification_controller_previous, getDefaultIntent(PlayController.PREVIOUS))
+    rv.setOnClickPendingIntent(R.id.notification_controller_next, getDefaultIntent(PlayController.NEXT))
+    rv.setOnClickPendingIntent(R.id.notification_controller_play_pause, getDefaultIntent(PlayController.PLAY_PAUSE))
+    rv.setOnClickPendingIntent(R.id.notification_controller_close, getDefaultIntent(PlayController.CLOSE))
+    rv.setOnClickPendingIntent(R.id.notification_root, getDefaultIntent(PlayController.DETAIL))
     if (showBigView) {
       mRemoteViews1 = rv
       mRemoteViews1?.setTextViewText(R.id.notification_app_name, AppUtils.getAppName())
     } else mRemoteViews2 = rv
     return rv
+  }
+
+  //PendingIntent获取
+  private fun getDefaultIntent(action: PlayController): PendingIntent {
+    return PendingIntent.getBroadcast(mService, notificationID, Intent(action.name), PendingIntent.FLAG_UPDATE_CURRENT)
   }
   //</editor-fold>
 }
