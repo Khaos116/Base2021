@@ -131,6 +131,18 @@ class MusicNotification {
     if (mPlayState == state) return
     mPlayState = state
     if (state == PlayState.START) showNotification()
+    when (state) {
+      PlayState.START, PlayState.BUFFED, PlayState.SEEKED -> {
+        mRemoteViews1?.setImageViewResource(R.id.notification_controller_play_pause, R.drawable.svg_media_pause)
+        mRemoteViews2?.setImageViewResource(R.id.notification_controller_play_pause, R.drawable.svg_media_pause)
+      }
+      PlayState.PAUSE, PlayState.STOP, PlayState.COMPLETE, PlayState.ERROR -> {
+        mRemoteViews1?.setImageViewResource(R.id.notification_controller_play_pause, R.drawable.svg_media_play)
+        mRemoteViews2?.setImageViewResource(R.id.notification_controller_play_pause, R.drawable.svg_media_play)
+      }
+      else -> {
+      }
+    }
     mNotification?.let { n -> mNotificationManager?.notify(notificationID, n) }
   }
 
@@ -179,6 +191,7 @@ class MusicNotification {
     rv.setOnClickPendingIntent(R.id.notification_controller_previous, getDefaultIntent(PlayController.PREVIOUS))
     rv.setOnClickPendingIntent(R.id.notification_controller_next, getDefaultIntent(PlayController.NEXT))
     rv.setOnClickPendingIntent(R.id.notification_controller_play_pause, getDefaultIntent(PlayController.PLAY_PAUSE))
+    rv.setOnClickPendingIntent(R.id.notification_controller_play_mode, getDefaultIntent(PlayController.MODE_CHANGE))
     rv.setOnClickPendingIntent(R.id.notification_controller_close, getDefaultIntent(PlayController.CLOSE))
     rv.setOnClickPendingIntent(R.id.notification_root, getDefaultIntent(PlayController.DETAIL))
     if (showBigView) {

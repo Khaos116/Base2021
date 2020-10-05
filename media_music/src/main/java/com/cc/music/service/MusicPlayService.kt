@@ -99,6 +99,15 @@ class MusicPlayService : AbstractService() {
         PlayController.NEXT.name -> nextMusic()
         PlayController.PREVIOUS.name -> prepareMusic()
         PlayController.CLOSE.name -> stopSelf()
+        PlayController.MODE_CHANGE.name -> {
+          val newMode = when (mPlayMode) {
+            PlayMode.LOOP_ALL -> PlayMode.LOOP_ONE
+            PlayMode.LOOP_ONE -> PlayMode.PLAY_IN_ORDER
+            PlayMode.PLAY_IN_ORDER -> PlayMode.PLAY_RANDOM
+            PlayMode.PLAY_RANDOM -> PlayMode.LOOP_ALL
+          }
+          setPlayModeMusic(newMode)
+        }
         else -> {
         }
       }
@@ -552,6 +561,7 @@ class MusicPlayService : AbstractService() {
         addAction(PlayController.NEXT.name)
         addAction(PlayController.PREVIOUS.name)
         addAction(PlayController.CLOSE.name)
+        addAction(PlayController.MODE_CHANGE.name)
       })
     }
   }
