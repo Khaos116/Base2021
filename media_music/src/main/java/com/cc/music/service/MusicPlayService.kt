@@ -3,6 +3,7 @@ package com.cc.music.service
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.*
 import android.os.Build
@@ -21,6 +22,7 @@ import com.cc.music.IMusicOperate
 import com.cc.music.bean.MusicBean
 import com.cc.music.enu.PlayMode
 import com.cc.music.enu.PlayState
+import com.cc.music.ui.MusicNotification
 import java.io.File
 
 /**
@@ -48,6 +50,9 @@ class MusicPlayService : AbstractService() {
 
   //播放信息回调到外面
   private var mIMusicCall: MutableList<IMusicCall> = mutableListOf()
+
+  //通知栏
+  private var mNotificationMusic: MusicNotification? = null
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化">
@@ -166,13 +171,14 @@ class MusicPlayService : AbstractService() {
     if (state != PlayState.SET_DATA && mPlayState == state) return
     "当前播放状态:${state.name}".logI()
     if (state == PlayState.START) {
-      if (!hasAudioFocus) requestAudioFocusByVideo()
+      if (!hasAudioFocus) requestAudioFocusByMusic()
     } else if (state == PlayState.PAUSE || state == PlayState.COMPLETE || state == PlayState.ERROR || state == PlayState.STOP) {
-      if (hasAudioFocus) releaseAudioFocusByVideo()
+      if (hasAudioFocus) releaseAudioFocusByMusic()
     }
     if (state == PlayState.ERROR) checkErrorNext()
     mPlayState = state
     mIMusicCall.forEach { it.callPlayState(state.name) }
+    mNotificationMusic?.callPlayState(state)
   }
 
   //播放出错检查是否有网络，如果有则继续下一首
@@ -187,6 +193,7 @@ class MusicPlayService : AbstractService() {
 
   private fun callDuration(duration: Long) {
     mIMusicCall.forEach { it.callPlayDuration(duration) }
+    mNotificationMusic?.callDuration(duration)
   }
 
   private fun callBufferPercent(percent: Int, kbps: Float) {
@@ -196,6 +203,7 @@ class MusicPlayService : AbstractService() {
   private fun callPlayProgress(progress: Long) {
     mPlayProgress = progress
     mIMusicCall.forEach { it.callPlayProgress(progress) }
+    mNotificationMusic?.callProgress(progress)
   }
 
   private fun callBufferProgress(progress: Long) {
@@ -205,6 +213,7 @@ class MusicPlayService : AbstractService() {
 
   private fun callMusic(music: MusicBean) {
     mIMusicCall.forEach { it.callMusicInfo(GsonUtils.toJson(music)) }
+    mNotificationMusic?.callSongInfo(music)
   }
   //</editor-fold>
 
@@ -272,12 +281,14 @@ class MusicPlayService : AbstractService() {
   private fun setLoopMusic(loop: Boolean) {
     mPlayMode = if (loop) PlayMode.LOOP_ONE else PlayMode.PLAY_IN_ORDER
     mIMusicCall.forEach { it.callPlayMode(mPlayMode.name) }
+    mNotificationMusic?.callPlayMode(mPlayMode)
   }
 
   //设置循环播放
   private fun setPlayModeMusic(mode: PlayMode) {
     mPlayMode = mode
     mIMusicCall.forEach { it.callPlayMode(mode.name) }
+    mNotificationMusic?.callPlayMode(mode)
   }
 
   //准备播放
@@ -398,6 +409,8 @@ class MusicPlayService : AbstractService() {
 
   //<editor-fold defaultstate="collapsed" desc="IBinder-外部操作播放器">
   override fun initBinder(): IBinder {
+    mNotificationMusic = MusicNotification()
+    mNotificationMusic?.initNotification(this)
     return object : IMusicOperate.Stub() {
       override fun setPlayLoop(loop: Boolean) = setLoopMusic(loop)
 
@@ -479,7 +492,7 @@ class MusicPlayService : AbstractService() {
     }
   }
 
-  private fun requestAudioFocusByVideo(): Boolean {
+  private fun requestAudioFocusByMusic(): Boolean {
     hasAudioFocus = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       val mAudioAttributes = AudioAttributes.Builder()
           .setUsage(AudioAttributes.USAGE_MEDIA)
@@ -501,7 +514,7 @@ class MusicPlayService : AbstractService() {
     return hasAudioFocus
   }
 
-  private fun releaseAudioFocusByVideo() {
+  private fun releaseAudioFocusByMusic() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       mAudioFocusRequest?.let { mAm.abandonAudioFocusRequest(it) }
     } else {
@@ -509,6 +522,15 @@ class MusicPlayService : AbstractService() {
     }
     hasAudioFocus = false
     "释放音频焦点".logI()
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="生命周期">
+  override fun stopService(name: Intent?): Boolean {
+    releaseMusic()
+    releaseAudioFocusByMusic()
+    mNotificationMusic?.hideNotification()
+    return super.stopService(name)
   }
   //</editor-fold>
 }
