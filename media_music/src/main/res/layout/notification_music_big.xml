@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/notification_root"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:orientation="vertical"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="64dp"
+      android:orientation="horizontal"
+      >
+
+    <ImageView
+        android:id="@+id/notification_cover"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@color/green_6B8E23"
+        android:contentDescription="@null"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        >
+
+      <TextView
+          android:id="@+id/notification_app_name"
+          android:layout_width="match_parent"
+          android:layout_height="0dp"
+          android:layout_weight="1"
+          android:ellipsize="end"
+          android:gravity="center_vertical"
+          android:maxLines="1"
+          android:paddingStart="8dp"
+          android:paddingEnd="8dp"
+          android:textColor="@color/black"
+          android:textSize="@dimen/media_music_singer_size"
+          tools:text="Base2021"
+          />
+
+      <TextView
+          android:id="@+id/notification_song_name"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:ellipsize="end"
+          android:gravity="center_vertical"
+          android:maxLines="1"
+          android:paddingStart="8dp"
+          android:paddingEnd="8dp"
+          android:singleLine="true"
+          android:textColor="@color/media_music_song_name"
+          android:textSize="@dimen/media_music_song_size"
+          tools:text="孤单不可怕"
+          />
+
+      <TextView
+          android:id="@+id/notification_singer_name"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="4dp"
+          android:ellipsize="end"
+          android:gravity="center_vertical"
+          android:maxLines="1"
+          android:paddingStart="8dp"
+          android:paddingEnd="8dp"
+          android:textColor="@color/media_music_singer_name"
+          android:textSize="@dimen/media_music_singer_size"
+          tools:text="牙仙子"
+          />
+    </LinearLayout>
+  </LinearLayout>
+
+  <LinearLayout
+      android:id="@+id/notification_controller_container"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/media_music_ali_height"
+      android:layout_gravity="bottom"
+      android:gravity="center_vertical"
+      android:orientation="horizontal"
+      >
+
+    <TextView
+        android:id="@+id/notification_controller_time"
+        android:layout_width="35dp"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:textColor="@color/media_music_time"
+        android:textSize="@dimen/media_music_time_size"
+        tools:text="00:00"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="/"
+        android:textColor="@color/media_music_time"
+        android:textSize="@dimen/media_music_time_size"
+        tools:ignore="HardcodedText"
+        />
+
+    <TextView
+        android:id="@+id/notification_controller_duration"
+        android:layout_width="35dp"
+        android:layout_height="match_parent"
+        android:ellipsize="end"
+        android:gravity="center_vertical|end"
+        android:maxLines="1"
+        android:textColor="@color/media_music_time"
+        android:textSize="@dimen/media_music_time_size"
+        tools:text="05:20"
+        />
+
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        />
+
+    <ImageView
+        android:id="@+id/notification_controller_previous"
+        android:layout_width="@dimen/media_music_ali_height"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:padding="6dp"
+        android:src="@drawable/svg_media_previous"
+        />
+
+    <ImageView
+        android:id="@+id/notification_controller_next"
+        android:layout_width="@dimen/media_music_ali_height"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:padding="6dp"
+        android:src="@drawable/svg_media_next"
+        />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        />
+
+    <ImageView
+        android:id="@+id/notification_controller_play_pause"
+        android:layout_width="@dimen/media_music_ali_height"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:padding="8dp"
+        android:src="@drawable/selector_play_state"
+        />
+
+    <ImageView
+        android:id="@+id/notification_controller_play_mode"
+        android:layout_width="@dimen/media_music_ali_height"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:padding="8dp"
+        android:src="@drawable/svg_media_loop_all"
+        />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        />
+
+    <ImageView
+        android:id="@+id/notification_controller_close"
+        android:layout_width="@dimen/media_music_ali_height"
+        android:layout_height="@dimen/media_music_ali_height"
+        android:contentDescription="@null"
+        android:padding="2dp"
+        android:src="@drawable/svg_media_close"
+        />
+  </LinearLayout>
+</FrameLayout>
