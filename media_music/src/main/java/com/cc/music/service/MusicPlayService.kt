@@ -543,6 +543,7 @@ class MusicPlayService : AbstractService() {
   }
   //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="生命周期">
   override fun onCreate() {
     super.onCreate()
     mOperateReceiver?.let {
