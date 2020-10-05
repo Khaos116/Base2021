@@ -189,8 +189,14 @@ class MusicNotification {
   }
 
   //PendingIntent获取
-  private fun getDefaultIntent(action: PlayController): PendingIntent {
-    return PendingIntent.getBroadcast(mService, notificationID, Intent(action.name), PendingIntent.FLAG_UPDATE_CURRENT)
+  private fun getDefaultIntent(controller: PlayController): PendingIntent {
+    return if (controller == PlayController.DETAIL) {
+      val nowPlayingIntent = Intent(mService, IntentActivity::class.java).apply { action = controller.name }
+      nowPlayingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+      PendingIntent.getActivity(mService, 0, Intent(nowPlayingIntent), PendingIntent.FLAG_UPDATE_CURRENT)
+    } else {
+      PendingIntent.getBroadcast(mService, notificationID, Intent(controller.name), PendingIntent.FLAG_UPDATE_CURRENT)
+    }
   }
   //</editor-fold>
 }
