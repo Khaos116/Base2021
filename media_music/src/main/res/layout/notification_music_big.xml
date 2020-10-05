@@ -19,8 +19,9 @@
         android:id="@+id/notification_cover"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:background="@color/green_6B8E23"
+        android:background="@color/media_music_cover_bg"
         android:contentDescription="@null"
+        android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />

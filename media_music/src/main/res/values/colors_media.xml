@@ -10,4 +10,6 @@
   <color name="media_music_time">@color/media_icon_color</color>
   <color name="media_music_song_name">@color/purple_9933FA</color>
   <color name="media_music_singer_name">@color/yellow_FF6100</color>
+
+  <color name="media_music_cover_bg">@color/blue_87CEEB</color>
 </resources>
