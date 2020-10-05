@@ -10,5 +10,5 @@ import android.graphics.Bitmap
  */
 abstract class ResourceApplication : Application() {
   //通知栏图片加载
-  abstract fun loadImage(url: String?, callback: (bit: Bitmap?) -> Unit)
+  abstract fun loadNotificationImage(url: String?, callback: (bit: Bitmap?) -> Unit)
 }

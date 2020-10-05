@@ -28,7 +28,7 @@ class MyApplication : BaseApplication(), ImageLoaderFactory {
         .build()
   }
 
-  override fun loadImage(url: String?, callback: (bit: Bitmap?) -> Unit) {
+  override fun loadNotificationImage(url: String?, callback: (bit: Bitmap?) -> Unit) {
     if (url.isNullOrBlank()) return
     Coil.imageLoader(this)
         .enqueue(ImageRequest.Builder(this).data(url)
