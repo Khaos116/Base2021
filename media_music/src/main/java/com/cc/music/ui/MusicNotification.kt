@@ -1,15 +1,14 @@
 package com.cc.music.ui
 
-import android.R.id
 import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.widget.ImageView
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Builder
 import com.blankj.utilcode.util.*
+import com.cc.ResourceApplication
 import com.cc.ext.logE
 import com.cc.music.R
 import com.cc.music.bean.MusicBean
@@ -41,9 +40,6 @@ class MusicNotification {
 
   //通知
   private var notificationID: Int = 0x123
-
-  //加载封面
-  var callCover: ((url: String, iv: ImageView) -> Unit)? = null
 
   //播放器服务
   private var mService: MusicPlayService? = null
@@ -108,6 +104,11 @@ class MusicNotification {
     mRemoteViews1?.setTextViewText(R.id.notification_singer_name, musicBean.singerName ?: StringUtils.getString(R.string.unknown))
     mRemoteViews2?.setTextViewText(R.id.notification_song_name, musicBean.songName ?: StringUtils.getString(R.string.unknown))
     mRemoteViews2?.setTextViewText(R.id.notification_singer_name, musicBean.singerName ?: StringUtils.getString(R.string.unknown))
+    val app = Utils.getApp()
+    if (app is ResourceApplication) app.loadImage(musicBean.songCover) { bit ->
+      mRemoteViews1?.setImageViewBitmap(R.id.notification_cover, bit)
+      mRemoteViews2?.setImageViewBitmap(R.id.notification_cover, bit)
+    }
     mNotification?.let { n -> mNotificationManager?.notify(notificationID, n) }
   }
 
