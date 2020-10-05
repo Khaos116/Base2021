@@ -17,7 +17,6 @@ class NoticeReceiver : BroadcastReceiver() {
   override fun onReceive(context: Context, it: Intent?) {
     it?.action?.let { ac ->
       if (ac == PlayController.DETAIL.name) {
-        collapsingNotification(context)
         if (ActivityUtils.getActivityList().isNullOrEmpty()) {
           "点击通知栏打开APP".logI()
           AppUtils.launchApp(AppUtils.getAppPackageName())
@@ -37,22 +36,6 @@ class NoticeReceiver : BroadcastReceiver() {
           "新打开MainActivity".logI()
         }
       }
-    }
-  }
-
-  //折叠通知栏
-  @SuppressLint("WrongConstant")
-  private fun collapsingNotification(context: Context) {
-    try {
-      //Context.STATUS_BAR_SERVICE
-      val service = context.getSystemService("statusbar") ?: return
-      val clazz = Class.forName("android.app.StatusBarManager")
-      val sdkVersion = android.os.Build.VERSION.SDK_INT
-      val collapse = clazz.getMethod(if (sdkVersion <= 16) "collapse" else "collapsePanels")
-      collapse.isAccessible = true
-      collapse.invoke(service)
-    } catch (e: Exception) {
-      e.printStackTrace()
     }
   }
 }
