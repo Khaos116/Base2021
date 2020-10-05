@@ -2,8 +2,7 @@ package com.cc.music.service
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.content.pm.PackageManager
 import android.media.*
 import android.os.Build
@@ -20,8 +19,8 @@ import com.cc.ext.logI
 import com.cc.music.IMusicCall
 import com.cc.music.IMusicOperate
 import com.cc.music.bean.MusicBean
-import com.cc.music.enu.PlayMode
-import com.cc.music.enu.PlayState
+import com.cc.music.enu.*
+import com.cc.music.receiver.OperateReceiver
 import com.cc.music.ui.MusicNotification
 import java.io.File
 
@@ -53,6 +52,9 @@ class MusicPlayService : AbstractService() {
 
   //通知栏
   private var mNotificationMusic: MusicNotification? = null
+
+  //操作监听
+  private var mOperateReceiver: OperateReceiver? = null
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化">
@@ -84,6 +86,22 @@ class MusicPlayService : AbstractService() {
       mStartBufferDuration = 1 * 1000 //1秒
       //设置配置给播放器
       aliPlayer.config = this
+    }
+    mOperateReceiver = OperateReceiver() { action ->
+      when (action) {
+        PlayController.PLAY_PAUSE.name -> {
+          when (mPlayState) {
+            PlayState.START, PlayState.BUFFED, PlayState.SEEKED -> pauseMusic()
+            PlayState.PAUSE, PlayState.STOP, PlayState.COMPLETE, PlayState.ERROR -> startMusic()
+            else -> startMusic()
+          }
+        }
+        PlayController.NEXT.name -> nextMusic()
+        PlayController.PREVIOUS.name -> prepareMusic()
+        PlayController.CLOSE.name -> stopSelf()
+        else -> {
+        }
+      }
     }
   }
 
@@ -525,11 +543,23 @@ class MusicPlayService : AbstractService() {
   }
   //</editor-fold>
 
-  //<editor-fold defaultstate="collapsed" desc="生命周期">
+  override fun onCreate() {
+    super.onCreate()
+    mOperateReceiver?.let {
+      registerReceiver(it, IntentFilter(this::class.java.name).apply {
+        addAction(PlayController.PLAY_PAUSE.name)
+        addAction(PlayController.NEXT.name)
+        addAction(PlayController.PREVIOUS.name)
+        addAction(PlayController.CLOSE.name)
+      })
+    }
+  }
+
   override fun stopService(name: Intent?): Boolean {
     releaseMusic()
     releaseAudioFocusByMusic()
     mNotificationMusic?.hideNotification()
+    mOperateReceiver?.let { unregisterReceiver(it) }
     return super.stopService(name)
   }
   //</editor-fold>
