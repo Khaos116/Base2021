@@ -103,6 +103,7 @@ class MusicNotification {
       mRemoteViews1?.setImageViewBitmap(R.id.notification_cover, bit)
       mRemoteViews2?.setImageViewBitmap(R.id.notification_cover, bit)
     }
+    if (!hasShowNotification) return
     mNotification?.let { n -> mNotificationManager?.notify(notificationID, n) }
   }
 
@@ -110,6 +111,7 @@ class MusicNotification {
   fun callDuration(duration: Long) {
     mRemoteViews1?.setTextViewText(R.id.notification_controller_duration, MusicTimeUtils.instance.forMatterMusicTime(duration))
     mRemoteViews2?.setTextViewText(R.id.notification_controller_duration, MusicTimeUtils.instance.forMatterMusicTime(duration))
+    if (!hasShowNotification) return
     mNotification?.let { n -> mNotificationManager?.notify(notificationID, n) }
   }
 
@@ -121,6 +123,7 @@ class MusicNotification {
     mProgressSeconds = progress / 1000
     mRemoteViews1?.setTextViewText(R.id.notification_controller_time, MusicTimeUtils.instance.forMatterMusicTime(progress))
     mRemoteViews2?.setTextViewText(R.id.notification_controller_time, MusicTimeUtils.instance.forMatterMusicTime(progress))
+    if (!hasShowNotification) return
     mNotification?.let { n -> mNotificationManager?.notify(notificationID, n) }
   }
 
@@ -143,6 +146,7 @@ class MusicNotification {
       else -> {
       }
     }
+    if (!hasShowNotification) return
     mNotification?.let { n -> mNotificationManager?.notify(notificationID, n) }
   }
 
@@ -162,6 +166,7 @@ class MusicNotification {
           PlayMode.LOOP_ALL -> R.drawable.svg_media_loop_all
           PlayMode.LOOP_ONE -> R.drawable.svg_media_loop_one
         })
+    if (!hasShowNotification) return
     mNotification?.let { n -> mNotificationManager?.notify(notificationID, n) }
   }
   //</editor-fold>
