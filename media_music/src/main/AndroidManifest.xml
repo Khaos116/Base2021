@@ -22,6 +22,7 @@
     </provider>
     <!--android:multiprocess应该理解为：是否允许在调用者的进程里实例化-->
     <!--priority 的取值范围是-1000至1000 -->
+    <!--android:exported是否支持其它应用调用当前组件-->
     <service
         android:name=".service.MusicPlayService"
         android:enabled="true"
