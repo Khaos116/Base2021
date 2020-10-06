@@ -20,10 +20,14 @@
           android:name="com.cc.music.startup.MusicInit"
           android:value="androidx.startup"/>
     </provider>
+    <!--android:multiprocess应该理解为：是否允许在调用者的进程里实例化-->
+    <!--priority 的取值范围是-1000至1000 -->
     <service
         android:name=".service.MusicPlayService"
         android:enabled="true"
         android:exported="true"
+        android:multiprocess="true"
+        android:priority="1000"
         android:process=":musicService"
         tools:ignore="ExportedService"/>
   </application>
