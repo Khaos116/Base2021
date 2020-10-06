@@ -83,10 +83,25 @@ class MusicNotification {
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="外部调用">
+  private var hasShowNotification = false
+
+  //显示通知
+  fun showNotification(service: Service) {
+    mNotificationManager?.let { m ->
+      mNotification?.let { n ->
+        if (hasShowNotification) return
+        hasShowNotification = true
+        service.startForeground(notificationID, n)
+        m.notify(notificationID, n)
+        "显示通知栏".logE()
+      }
+    }
+  }
+
   //隐藏通知
-  fun hideNotification() {
+  fun hideNotification(service: Service) {
     if (!hasShowNotification) return
-    mService?.stopForeground(true)
+    service.stopForeground(true)
     hasShowNotification = false
     mNotificationManager?.cancel(notificationID)
     "关闭通知栏".logE()
@@ -115,6 +130,7 @@ class MusicNotification {
     mNotification?.let { n -> mNotificationManager?.notify(notificationID, n) }
   }
 
+  //保证时间变化才刷新
   private var mProgressSeconds: Long = 0
 
   //回调播放进度
@@ -133,7 +149,6 @@ class MusicNotification {
   fun callPlayState(state: PlayState) {
     if (mPlayState == state) return
     mPlayState = state
-    if (state == PlayState.START) showNotification()
     when (state) {
       PlayState.START, PlayState.BUFFED, PlayState.SEEKED -> {
         mRemoteViews1?.setImageViewResource(R.id.notification_controller_play_pause, R.drawable.svg_media_pause)
@@ -172,23 +187,6 @@ class MusicNotification {
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="内部方法">
-  private var hasShowNotification = false
-
-  //显示通知
-  private fun showNotification() {
-    mService?.let { s ->
-      mNotificationManager?.let { m ->
-        mNotification?.let { n ->
-          if (hasShowNotification) return
-          hasShowNotification = true
-          s.startForeground(notificationID, n)
-          m.notify(notificationID, n)
-          "显示通知栏".logE()
-        }
-      }
-    }
-  }
-
   // 获取自定义通知栏view
   private fun getContentView(showBigView: Boolean): RemoteViews {
     val pn = AppUtils.getAppPackageName()
@@ -209,11 +207,11 @@ class MusicNotification {
   //PendingIntent获取
   private fun getDefaultIntent(controller: PlayController): PendingIntent {
     return if (controller == PlayController.DETAIL) {
-      val nowPlayingIntent = Intent(mService, IntentActivity::class.java).apply { action = controller.name }
+      val nowPlayingIntent = Intent(Utils.getApp(), IntentActivity::class.java).apply { action = controller.name }
       nowPlayingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-      PendingIntent.getActivity(mService, 0, Intent(nowPlayingIntent), PendingIntent.FLAG_UPDATE_CURRENT)
+      PendingIntent.getActivity(Utils.getApp(), 0, Intent(nowPlayingIntent), PendingIntent.FLAG_UPDATE_CURRENT)
     } else {
-      PendingIntent.getBroadcast(mService, notificationID, Intent(controller.name), PendingIntent.FLAG_UPDATE_CURRENT)
+      PendingIntent.getBroadcast(Utils.getApp(), notificationID, Intent(controller.name), PendingIntent.FLAG_UPDATE_CURRENT)
     }
   }
   //</editor-fold>
