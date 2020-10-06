@@ -9,7 +9,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Builder
 import com.blankj.utilcode.util.*
 import com.cc.ResourceApplication
-import com.cc.ext.logE
+import com.cc.ext.logI
 import com.cc.music.R
 import com.cc.music.bean.MusicBean
 import com.cc.music.enu.*
@@ -93,7 +93,7 @@ class MusicNotification {
         hasShowNotification = true
         service.startForeground(notificationID, n)
         m.notify(notificationID, n)
-        "显示通知栏".logE()
+        "显示通知栏".logI()
       }
     }
   }
@@ -104,7 +104,7 @@ class MusicNotification {
     service.stopForeground(true)
     hasShowNotification = false
     mNotificationManager?.cancel(notificationID)
-    "关闭通知栏".logE()
+    "关闭通知栏".logI()
   }
 
   //刷新歌曲信息
