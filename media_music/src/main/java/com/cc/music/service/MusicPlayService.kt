@@ -8,8 +8,7 @@ import android.media.*
 import android.os.Build
 import android.os.IBinder
 import androidx.core.content.ContextCompat
-import com.aliyun.player.AliPlayerFactory
-import com.aliyun.player.IPlayer
+import com.aliyun.player.*
 import com.aliyun.player.bean.InfoCode
 import com.aliyun.player.nativeclass.CacheConfig
 import com.aliyun.player.source.UrlSource
@@ -33,7 +32,7 @@ import java.io.File
 class MusicPlayService : AbstractService() {
   //<editor-fold defaultstate="collapsed" desc="变量">
   //播放器
-  private var aliPlayer = AliPlayerFactory.createAliPlayer(Utils.getApp())
+  private lateinit var aliPlayer: AliPlayer
 
   //是否自动播放
   private var isAutoPlay: Boolean = false
@@ -54,11 +53,40 @@ class MusicPlayService : AbstractService() {
   private var mNotificationMusic: MusicNotification? = null
 
   //操作监听
-  private var mOperateReceiver: OperateReceiver? = null
+  private var mOperateReceiver: OperateReceiver = OperateReceiver() { action ->
+    when (action) {
+      PlayController.PLAY_PAUSE.name -> {
+        when (mPlayState) {
+          PlayState.START, PlayState.BUFFED, PlayState.SEEKED -> pauseMusic()
+          PlayState.PAUSE, PlayState.STOP, PlayState.COMPLETE, PlayState.ERROR -> startMusic()
+          else -> startMusic()
+        }
+      }
+      PlayController.NEXT.name -> nextMusic()
+      PlayController.PREVIOUS.name -> previousMusic()
+      PlayController.MODE_CHANGE.name -> {
+        val newMode = when (mPlayMode) {
+          PlayMode.LOOP_ALL -> PlayMode.LOOP_ONE
+          PlayMode.LOOP_ONE -> PlayMode.PLAY_IN_ORDER
+          PlayMode.PLAY_IN_ORDER -> PlayMode.PLAY_RANDOM
+          PlayMode.PLAY_RANDOM -> PlayMode.LOOP_ALL
+        }
+        setPlayModeMusic(newMode)
+      }
+      else -> {
+      }
+    }
+  }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化">
   init {
+    initPlayer()
+  }
+
+  //初始化播放器
+  private fun initPlayer() {
+    aliPlayer = AliPlayerFactory.createAliPlayer(Utils.getApp())
     //添加监听
     addListener()
     //配置缓存
@@ -87,31 +115,7 @@ class MusicPlayService : AbstractService() {
       //设置配置给播放器
       aliPlayer.config = this
     }
-    mOperateReceiver = OperateReceiver() { action ->
-      when (action) {
-        PlayController.PLAY_PAUSE.name -> {
-          when (mPlayState) {
-            PlayState.START, PlayState.BUFFED, PlayState.SEEKED -> pauseMusic()
-            PlayState.PAUSE, PlayState.STOP, PlayState.COMPLETE, PlayState.ERROR -> startMusic()
-            else -> startMusic()
-          }
-        }
-        PlayController.NEXT.name -> nextMusic()
-        PlayController.PREVIOUS.name -> prepareMusic()
-        PlayController.CLOSE.name -> stopSelf()
-        PlayController.MODE_CHANGE.name -> {
-          val newMode = when (mPlayMode) {
-            PlayMode.LOOP_ALL -> PlayMode.LOOP_ONE
-            PlayMode.LOOP_ONE -> PlayMode.PLAY_IN_ORDER
-            PlayMode.PLAY_IN_ORDER -> PlayMode.PLAY_RANDOM
-            PlayMode.PLAY_RANDOM -> PlayMode.LOOP_ALL
-          }
-          setPlayModeMusic(newMode)
-        }
-        else -> {
-        }
-      }
-    }
+    isRelease = false
   }
 
   //获取播放器缓存配置
@@ -326,6 +330,10 @@ class MusicPlayService : AbstractService() {
 
   //开始播放
   private fun startMusic() {
+    if (isRelease) {
+      initPlayer()
+      mCurrentMusic?.let { m -> setCurrentPlayMusic(m) }
+    }
     if (mCurrentMusic == null && mListMusics.isNotEmpty()) {
       setCurrentPlayMusic(0)
     } else if (mPlayState == PlayState.START) {
@@ -414,11 +422,15 @@ class MusicPlayService : AbstractService() {
     callPlayState(PlayState.SET_DATA)
   }
 
+  private var isRelease = false
+
   //释放,释放后播放器将不可再被使用
   private fun releaseMusic() {
+    if (isRelease) return
+    isRelease = true
     aliPlayer.release()
-    callPlayState(PlayState.BUFFED)
-    callPlayState(PlayState.SET_DATA)
+    mNotificationMusic?.hideNotification()
+    callPlayState(PlayState.STOP)
   }
 
   private fun getPlayStateMusic(): String = mPlayState.name
@@ -552,25 +564,46 @@ class MusicPlayService : AbstractService() {
   }
   //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="释放全部">
+  private fun releaseAll() {
+    releaseMusic()
+  }
+  //</editor-fold>
+
   //<editor-fold defaultstate="collapsed" desc="生命周期">
   override fun onCreate() {
     super.onCreate()
-    mOperateReceiver?.let {
-      registerReceiver(it, IntentFilter(this::class.java.name).apply {
-        addAction(PlayController.PLAY_PAUSE.name)
-        addAction(PlayController.NEXT.name)
-        addAction(PlayController.PREVIOUS.name)
-        addAction(PlayController.CLOSE.name)
-        addAction(PlayController.MODE_CHANGE.name)
-      })
-    }
+    registerReceiver(mOperateReceiver, IntentFilter(this::class.java.name).apply {
+      addAction(PlayController.PLAY_PAUSE.name)
+      addAction(PlayController.NEXT.name)
+      addAction(PlayController.PREVIOUS.name)
+      addAction(PlayController.MODE_CHANGE.name)
+    })
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    unregisterReceiver(mOperateReceiver)
+    releaseMusic()
+  }
+
+  override fun onTaskRemoved(rootIntent: Intent?) {
+    super.onTaskRemoved(rootIntent)
+    releaseAll()
+  }
+
+  override fun unbindService(conn: ServiceConnection) {
+    super.unbindService(conn)
+    releaseAll()
+  }
+
+  override fun onUnbind(intent: Intent?): Boolean {
+    releaseAll()
+    return super.onUnbind(intent)
   }
 
   override fun stopService(name: Intent?): Boolean {
-    releaseMusic()
-    releaseAudioFocusByMusic()
-    mNotificationMusic?.hideNotification()
-    mOperateReceiver?.let { unregisterReceiver(it) }
+    releaseAll()
     return super.stopService(name)
   }
   //</editor-fold>
