@@ -13,6 +13,7 @@ import com.aliyun.player.bean.InfoCode
 import com.aliyun.player.nativeclass.CacheConfig
 import com.aliyun.player.source.UrlSource
 import com.blankj.utilcode.util.*
+import com.cc.BuildConfig
 import com.cc.ext.logE
 import com.cc.ext.logI
 import com.cc.music.IMusicCall
@@ -21,6 +22,7 @@ import com.cc.music.bean.MusicBean
 import com.cc.music.enu.*
 import com.cc.music.receiver.OperateReceiver
 import com.cc.music.ui.MusicNotification
+import timber.log.Timber
 import java.io.File
 
 /**
@@ -64,6 +66,7 @@ class MusicPlayService : AbstractService() {
       }
       PlayController.NEXT.name -> nextMusic()
       PlayController.PREVIOUS.name -> previousMusic()
+      PlayController.CLOSE.name -> releaseMusic()
       PlayController.MODE_CHANGE.name -> {
         val newMode = when (mPlayMode) {
           PlayMode.LOOP_ALL -> PlayMode.LOOP_ONE
@@ -81,6 +84,10 @@ class MusicPlayService : AbstractService() {
 
   //<editor-fold defaultstate="collapsed" desc="初始化">
   init {
+    //=======由于是单独进程，所以用到的三方库需要单独初始化=======//
+    if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
+    //=========================================================//
+    //初始化播放器，释放后使用需要重新初始化
     initPlayer()
   }
 
@@ -202,6 +209,7 @@ class MusicPlayService : AbstractService() {
     if (state != PlayState.SET_DATA && mPlayState == state) return
     "当前播放状态:${state.name}".logI()
     if (state == PlayState.START) {
+      mNotificationMusic?.showNotification(this)
       if (!hasAudioFocus) requestAudioFocusByMusic()
     } else if (state == PlayState.PAUSE || state == PlayState.COMPLETE || state == PlayState.ERROR || state == PlayState.STOP) {
       if (hasAudioFocus) releaseAudioFocusByMusic()
@@ -429,7 +437,7 @@ class MusicPlayService : AbstractService() {
     if (isRelease) return
     isRelease = true
     aliPlayer.release()
-    mNotificationMusic?.hideNotification()
+    mNotificationMusic?.hideNotification(this)
     callPlayState(PlayState.STOP)
   }
 
@@ -578,32 +586,43 @@ class MusicPlayService : AbstractService() {
       addAction(PlayController.NEXT.name)
       addAction(PlayController.PREVIOUS.name)
       addAction(PlayController.MODE_CHANGE.name)
+      addAction(PlayController.CLOSE.name)
     })
   }
 
   override fun onDestroy() {
     super.onDestroy()
+    stopForeground(true) //停止前台服务(在MusicNotification.showNotification中开启的前台)
     unregisterReceiver(mOperateReceiver)
     releaseMusic()
+    "MusicService-onDestroy".logE()
   }
 
   override fun onTaskRemoved(rootIntent: Intent?) {
     super.onTaskRemoved(rootIntent)
     releaseAll()
+    "MusicService-onTaskRemoved".logE()
+  }
+
+  override fun bindService(service: Intent?, conn: ServiceConnection, flags: Int): Boolean {
+    return super.bindService(service, conn, flags)
   }
 
   override fun unbindService(conn: ServiceConnection) {
     super.unbindService(conn)
     releaseAll()
+    "MusicService-unbindService".logE()
   }
 
   override fun onUnbind(intent: Intent?): Boolean {
     releaseAll()
+    "MusicService-onUnbind".logE()
     return super.onUnbind(intent)
   }
 
   override fun stopService(name: Intent?): Boolean {
     releaseAll()
+    "MusicService-stopService".logE()
     return super.stopService(name)
   }
   //</editor-fold>

@@ -15,10 +15,7 @@ import timber.log.Timber
 abstract class AbstractService : Service() {
   protected var mBinder: IBinder? = null
   override fun onBind(intent: Intent?): IBinder? {
-    if (mBinder == null) {
-      mBinder = initBinder()
-      if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
-    }
+    if (mBinder == null) mBinder = initBinder()
     return mBinder //与客户端成功连接上的时候返回给客户端使用的对象
   }
 
