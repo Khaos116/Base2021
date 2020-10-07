@@ -84,7 +84,7 @@ class SplashActivity : CommActivity() {
                 if (quick) {
                   StringUtils.getString(R.string.permission_sdcard_never).toast()
                   // 如果是被永久拒绝就跳转到应用权限系统设置页面
-                  XXPermissions.startPermissionActivity(mActivity, denied);
+                  XXPermissions.startPermissionActivity(mActivity, denied)
                 } else {
                   StringUtils.getString(R.string.permission_sdcard_must).toast()
                 }
