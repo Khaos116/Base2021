@@ -30,7 +30,7 @@ class SplashActivity : CommActivity() {
   //<editor-fold defaultstate="collapsed" desc="变量">
   //一个小时变一张图
   private val randomImg = TimeUtils.millis2String(System.currentTimeMillis())
-    .split(" ")[1].split(":")[0].toInt()
+      .split(" ")[1].split(":")[0].toInt()
 
   //倒计时
   private var countTime = 3L
@@ -59,8 +59,8 @@ class SplashActivity : CommActivity() {
   //<editor-fold defaultstate="collapsed" desc="初始化View">
   override fun initView() {
     (getSystemService(Context.AUDIO_SERVICE) as AudioManager).adjustStreamVolume(
-      AudioManager.STREAM_MUSIC,
-      AudioManager.ADJUST_MUTE, 0
+        AudioManager.STREAM_MUSIC,
+        AudioManager.ADJUST_MUTE, 0
     ) //静音
     //UI显示出来再执行倒计时和权限判断
     mContentView.post {
@@ -68,30 +68,30 @@ class SplashActivity : CommActivity() {
       //请求SD卡权限
       if (!hasSDPermission) {
         XXPermissions.with(this)
-          .permission(Permission.MANAGE_EXTERNAL_STORAGE)
-          .request(object : OnPermission {
-            override fun hasPermission(granted: MutableList<String>, all: Boolean) {
-              if (PermissionUtils.instance.hasSDPermission()) {
-                hasSDPermission = true
-                goNextPage()
-              } else {
-                StringUtils.getString(R.string.permission_sdcard).toast()
+            .permission(Permission.MANAGE_EXTERNAL_STORAGE)
+            .request(object : OnPermission {
+              override fun hasPermission(granted: MutableList<String>, all: Boolean) {
+                if (PermissionUtils.instance.hasSDPermission()) {
+                  hasSDPermission = true
+                  goNextPage()
+                } else {
+                  StringUtils.getString(R.string.permission_sdcard).toast()
+                  finish()
+                }
+              }
+
+              override fun noPermission(denied: MutableList<String>, quick: Boolean) {
+                if (quick) {
+                  R.string.action_loading
+                  StringUtils.getString(R.string.permission_sdcard_never).toast()
+                  // 如果是被永久拒绝就跳转到应用权限系统设置页面
+                  XXPermissions.startPermissionActivity(mActivity, denied);
+                } else {
+                  StringUtils.getString(R.string.permission_sdcard_must).toast()
+                }
                 finish()
               }
-            }
-
-            override fun noPermission(denied: MutableList<String>, quick: Boolean) {
-              if (quick) {
-                R.string.action_loading
-                StringUtils.getString(R.string.permission_sdcard_never).toast()
-                // 如果是被永久拒绝就跳转到应用权限系统设置页面
-                XXPermissions.startPermissionActivity(mActivity, denied);
-              } else {
-                StringUtils.getString(R.string.permission_sdcard_must).toast()
-              }
-              finish()
-            }
-          })
+            })
       }
     }
     splashTv.click {
@@ -119,8 +119,8 @@ class SplashActivity : CommActivity() {
       override fun onStep(frame: Int, percentage: Double) {}
     }
     disposable = Observable.timer(2, TimeUnit.SECONDS)
-      .compose(RxUtils.instance.rx2SchedulerHelperO())
-      .subscribe { splashTv.visible() }
+        .compose(RxUtils.instance.rx2SchedulerHelperO())
+        .subscribe { splashTv.visible() }
   }
   //</editor-fold>
 
@@ -130,10 +130,10 @@ class SplashActivity : CommActivity() {
     if (!countDownFinish) return
     if (MMkvUtils.instance.getShowGuide()) {
       GuideActivity.startActivity(mContext)
-      finish()
     } else {
       MainActivity.startActivity(mActivity)
     }
+    finish()
   }
   //</editor-fold>
 
@@ -149,8 +149,8 @@ class SplashActivity : CommActivity() {
     splashSVGA?.clear()
     splashSVGA?.callback = null
     (getSystemService(Context.AUDIO_SERVICE) as AudioManager).adjustStreamVolume(
-      AudioManager.STREAM_MUSIC,
-      AudioManager.ADJUST_UNMUTE, 0
+        AudioManager.STREAM_MUSIC,
+        AudioManager.ADJUST_UNMUTE, 0
     ) //非静音
   }
   //</editor-fold>

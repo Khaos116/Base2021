@@ -27,7 +27,6 @@ class MainActivity : CommActivity() {
       context.startActivity(intent)
     }
   }
-
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="XML">
