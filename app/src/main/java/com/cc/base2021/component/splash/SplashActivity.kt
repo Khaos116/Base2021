@@ -82,7 +82,6 @@ class SplashActivity : CommActivity() {
 
               override fun noPermission(denied: MutableList<String>, quick: Boolean) {
                 if (quick) {
-                  R.string.action_loading
                   StringUtils.getString(R.string.permission_sdcard_never).toast()
                   // 如果是被永久拒绝就跳转到应用权限系统设置页面
                   XXPermissions.startPermissionActivity(mActivity, denied);
