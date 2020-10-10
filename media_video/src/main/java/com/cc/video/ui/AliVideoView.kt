@@ -314,7 +314,7 @@ class AliVideoView @JvmOverloads constructor(
     //视频播放地址MD5
     val md5Name = EncryptUtils.encryptMD5ToString(url)
     //缓存地址(因为放在一个文件夹会覆盖，所以每个视频单独一个目录)
-    val cacheDir = File(PathUtils.getExternalAppMusicPath(), md5Name)
+    val cacheDir = File(PathUtils.getExternalAppMoviesPath(), md5Name)
     if (!cacheDir.exists()) cacheDir.mkdirs()
     aliPlayer.setCacheConfig(getCacheConfig().apply { mDir = cacheDir.path })
     aliPlayer.setDataSource(UrlSource().apply {
