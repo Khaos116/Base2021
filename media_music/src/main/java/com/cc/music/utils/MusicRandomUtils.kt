@@ -1,4 +1,4 @@
-package com.cc.base2021.utils
+package com.cc.music.utils
 
 import com.cc.music.bean.MusicBean
 

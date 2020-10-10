@@ -3,7 +3,7 @@ package com.cc.base2021.component.simple
 import com.cc.base2021.R
 import com.cc.base2021.comm.CommFragment
 import com.cc.base2021.ext.loadImgSquare
-import com.cc.base2021.utils.MusicRandomUtils
+import com.cc.music.utils.MusicRandomUtils
 import kotlinx.android.synthetic.main.fragment_simple_music.musicView
 
 /**
