@@ -27,6 +27,7 @@ import java.io.File
 inline fun ImageView.loadImgSquare(url: String?) {
   if (url.isNullOrBlank()) {
     this.clear()
+    setTag(R.id.suc_img, null)
     this.setImageResource(R.drawable.error_square)
   } else {
     if (getTag(R.id.suc_img) == url) return
@@ -52,6 +53,7 @@ fun ImageView.loadImgHorizontal(url: String?,
   if (url.isNullOrBlank()) {
     this.clear()
     this.scaleType = loadingScaleType
+    setTag(R.id.suc_img, null)
     this.setImageResource(R.drawable.error_720p_horizontal)
   } else {
     if (getTag(R.id.suc_img) == url) return
@@ -81,6 +83,7 @@ fun ImageView.loadImgVerticalScreen(url: String?,
   if (url.isNullOrBlank()) {
     this.clear()
     this.scaleType = loadingScaleType
+    setTag(R.id.suc_img, null)
     this.setImageResource(R.drawable.error_720p_vertical)
   } else {
     if (getTag(R.id.suc_img) == url) return
@@ -107,6 +110,7 @@ fun ImageView.loadImgVerticalScreen(url: String?,
 fun ImageView.loadCacheFileFullScreen(url: String?) {
   if (url.isNullOrBlank()) {
     this.clear()
+    setTag(R.id.suc_img, null)
     this.setImageResource(R.drawable.error_720p_vertical)
   } else {
     url.toHttpUrlOrNull()?.let { u ->
