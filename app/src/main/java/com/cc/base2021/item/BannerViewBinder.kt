@@ -19,7 +19,8 @@ import kotlinx.android.synthetic.main.item_banner_img.view.itemBannerImg
  * Time:18:31
  */
 class BannerViewBinder(
-  private val onItemBannerClick: ((item: BannerBean, position: Int) -> Unit)? = null
+    private val inPager: Boolean = false,
+    private val onItemBannerClick: ((item: BannerBean, position: Int) -> Unit)? = null
 ) : ItemViewBinder<MutableList<BannerBean>, BannerViewBinder.ViewHolder>() {
   //<editor-fold defaultstate="collapsed" desc="XML">
   override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): ViewHolder {
@@ -33,22 +34,23 @@ class BannerViewBinder(
     if (holder.itemView.getTag(R.id.tag_banner) == item) return
     holder.itemView.setTag(R.id.tag_banner, item)
     holder.itemView.findViewById<DiscreteBanner<BannerBean>>(R.id.itemBanner)
-      .setLooper(true)
-      .setAutoPlay(true)
-      .setOrientation(DSVOrientation.VERTICAL)
-      .setOnItemClick { position, t -> onItemBannerClick?.invoke(t, position) }
-      .apply {
-        getIndicator()?.needSpecial = false
-        if (getOrientation() == DSVOrientation.HORIZONTAL.ordinal) {
-          setIndicatorGravity(Gravity.BOTTOM or Gravity.END)
-          setIndicatorOffsetY(-defaultOffset / 2f)
-          setIndicatorOffsetX(-defaultOffset)
+        .setLooper(true)
+        .setAutoPlay(true)
+        .setInViewPager(inPager)
+        .setOrientation(DSVOrientation.VERTICAL)
+        .setOnItemClick { position, t -> onItemBannerClick?.invoke(t, position) }
+        .apply {
+          getIndicator()?.needSpecial = false
+          if (getOrientation() == DSVOrientation.HORIZONTAL.ordinal) {
+            setIndicatorGravity(Gravity.BOTTOM or Gravity.END)
+            setIndicatorOffsetY(-defaultOffset / 2f)
+            setIndicatorOffsetX(-defaultOffset)
+          }
         }
-      }
-      .setPages(object : DiscreteHolderCreator {
-        override fun createHolder(itemView: View) = BannerHolderHolderView(itemView)
-        override fun getLayoutId() = R.layout.item_banner_img
-      }, item)
+        .setPages(object : DiscreteHolderCreator {
+          override fun createHolder(itemView: View) = BannerHolderHolderView(itemView)
+          override fun getLayoutId() = R.layout.item_banner_img
+        }, item)
   }
   //</editor-fold>
 

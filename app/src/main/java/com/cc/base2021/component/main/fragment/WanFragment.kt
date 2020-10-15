@@ -88,7 +88,7 @@ class WanFragment private constructor() : CommFragment() {
     //注册多类型
     stickyAdapter.register(LoadingItemViewBinder())
     stickyAdapter.register(EmptyErrorItemViewBinder() { mViewModel.refresh() })
-    stickyAdapter.register(BannerViewBinder(onItemBannerClick))
+    stickyAdapter.register(BannerViewBinder(true, onItemBannerClick))
     stickyAdapter.register(ArticleViewBinder(onItemArticleClick))
     //监听加载结果
     mViewModel.articleState.observe(this, Observer { list ->
@@ -155,10 +155,10 @@ class WanFragment private constructor() : CommFragment() {
     list.forEach { s -> tempList.add(LocalMedia().also { it.path = s }) }
     //开始预览
     PictureSelector.create(this)
-      .themeStyle(R.style.picture_default_style)
-      .isNotPreviewDownload(true)
-      .imageEngine(ImageEngine())
-      .openExternalPreview(p, tempList)
+        .themeStyle(R.style.picture_default_style)
+        .isNotPreviewDownload(true)
+        .imageEngine(ImageEngine())
+        .openExternalPreview(p, tempList)
   }
   //</editor-fold>
 
