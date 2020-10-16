@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.item_banner_img.view.itemBannerImg
  * Time:18:31
  */
 class BannerViewBinder(
-    private val inPager: Boolean = false,
     private val onItemBannerClick: ((item: BannerBean, position: Int) -> Unit)? = null
 ) : ItemViewBinder<MutableList<BannerBean>, BannerViewBinder.ViewHolder>() {
   //<editor-fold defaultstate="collapsed" desc="XML">
@@ -36,7 +35,6 @@ class BannerViewBinder(
     holder.itemView.findViewById<DiscreteBanner<BannerBean>>(R.id.itemBanner)
         .setLooper(true)
         .setAutoPlay(true)
-        .setInViewPager(inPager)
         .setOrientation(DSVOrientation.VERTICAL)
         .setOnItemClick { position, t -> onItemBannerClick?.invoke(t, position) }
         .apply {

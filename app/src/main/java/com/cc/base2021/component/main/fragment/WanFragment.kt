@@ -88,7 +88,7 @@ class WanFragment private constructor() : CommFragment() {
     //注册多类型
     stickyAdapter.register(LoadingItemViewBinder())
     stickyAdapter.register(EmptyErrorItemViewBinder() { mViewModel.refresh() })
-    stickyAdapter.register(BannerViewBinder(true, onItemBannerClick))
+    stickyAdapter.register(BannerViewBinder(onItemBannerClick))
     stickyAdapter.register(ArticleViewBinder(onItemArticleClick))
     //监听加载结果
     mViewModel.articleState.observe(this, Observer { list ->
