@@ -310,16 +310,24 @@ class AliVideoView @JvmOverloads constructor(
     videoUrl = url
     "播放地址:$url".logI()
     callVideoInfo(url, title, cover)
-    //视频播放地址MD5
-    val md5Name = EncryptUtils.encryptMD5ToString(url)
-    //缓存地址(因为放在一个文件夹会覆盖，所以每个视频单独一个目录)
-    val cacheDir = File(PathUtils.getExternalAppMoviesPath(), md5Name)
-    if (!cacheDir.exists()) cacheDir.mkdirs()
-    aliPlayer.setCacheConfig(getCacheConfig().apply { mDir = cacheDir.path })
-    aliPlayer.setDataSource(UrlSource().apply {
-      uri = url
-      cacheFilePath = File(cacheDir, "${md5Name}.mp4").path
-    })
+    if (url.endsWith(".m3u8")) { //因为不支持m3u8缓存，所以直接不配置
+      aliPlayer.setCacheConfig(getCacheConfig().apply { mEnable = false })
+      aliPlayer.setDataSource(UrlSource().apply { uri = url })
+    } else {
+      //视频播放地址MD5
+      val md5Name = EncryptUtils.encryptMD5ToString(url)
+      //缓存地址(因为放在一个文件夹会覆盖，所以每个视频单独一个目录)
+      val cacheDir = File(PathUtils.getExternalAppMoviesPath(), md5Name)
+      if (!cacheDir.exists()) cacheDir.mkdirs()
+      aliPlayer.setCacheConfig(getCacheConfig().apply {
+        mEnable = !url.endsWith(".m3u8")
+        mDir = cacheDir.path
+      })
+      aliPlayer.setDataSource(UrlSource().apply {
+        uri = url
+        cacheFilePath = File(cacheDir, "${md5Name}.mp4").path
+      })
+    }
     if (!checkMobileNet()) prepareVideo()
   }
 
