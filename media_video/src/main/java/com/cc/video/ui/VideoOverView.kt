@@ -391,7 +391,7 @@ open class VideoOverView @JvmOverloads constructor(
   }
 
   private fun setOverCover() {
-    getAllChildView(true).forEach { it.visibleGone(it is VideoCoverCallListener) }
+    getAllChildView(true).forEach { it.visibleGone(it is VideoCoverCallListener || it is VideoLoadingCallListener) }
   }
 
   private fun setOverMobile() {

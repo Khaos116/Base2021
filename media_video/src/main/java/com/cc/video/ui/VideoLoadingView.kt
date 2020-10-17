@@ -37,11 +37,24 @@ class VideoLoadingView @JvmOverloads constructor(
 
   //<editor-fold defaultstate="collapsed" desc="播放器状态回调">
   override fun callPlayState(state: PlayState) {
-    if (state == PlayState.BUFFING) {
-      loading_view.visible()
-    } else if (state == PlayState.BUFFED) {
-      loading_view.gone()
-      loading_kbs.text = "0%"
+    when (state) {
+      PlayState.PREPARING -> {
+        loading_kbs.gone()
+        loading_view.visible()
+      }
+      PlayState.PREPARED -> {
+        loading_view.gone()
+        loading_kbs.text = "0%"
+        loading_kbs.visible()
+      }
+      PlayState.BUFFING -> loading_view.visible()
+      PlayState.BUFFED -> {
+        loading_view.gone()
+        loading_kbs.text = "0%"
+      }
+      else -> {
+
+      }
     }
   }
 
