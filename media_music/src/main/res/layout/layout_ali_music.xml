@@ -103,7 +103,7 @@
         android:layout_width="@dimen/media_music_ali_height"
         android:layout_height="match_parent"
         android:contentDescription="@null"
-        android:padding="4dp"
+        android:padding="10dp"
         android:src="@drawable/svg_media_stop"
         />
 

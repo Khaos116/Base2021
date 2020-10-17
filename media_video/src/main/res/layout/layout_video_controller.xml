@@ -134,10 +134,10 @@
 
     <ImageView
         android:id="@+id/controller_bottom_stop"
-        android:layout_width="@dimen/media_video_title_height"
+        android:layout_width="26dp"
         android:layout_height="match_parent"
         android:contentDescription="@null"
-        android:padding="5dp"
+        android:paddingStart="10dp"
         android:src="@drawable/svg_media_stop"
         />
 
