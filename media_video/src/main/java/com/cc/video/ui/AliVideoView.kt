@@ -23,8 +23,7 @@ import com.aliyun.player.nativeclass.CacheConfig
 import com.aliyun.player.nativeclass.TrackInfo
 import com.aliyun.player.source.UrlSource
 import com.blankj.utilcode.util.*
-import com.cc.ext.logE
-import com.cc.ext.logI
+import com.cc.ext.*
 import com.cc.utils.AudioHelper
 import com.cc.video.enu.PlayState
 import com.cc.video.enu.PlayUiState
@@ -384,14 +383,29 @@ class AliVideoView @JvmOverloads constructor(
     callPlayState(PlayState.SET_DATA)
   }
 
-  //进入或者退出全屏
+  private var mParentView: FrameLayout? = null
+
+  //进入或者退出全屏(需要父控件为FrameLayout)
   fun enterOrExitFullScreen() {
+    if (mParentView == null && parent is FrameLayout) {
+      mParentView = parent as FrameLayout
+    } else {
+      "视频播放父控件必须为FrameLayout(为了全屏)".logE()
+    }
     if (isFullScreen) {
       callUiState(PlayUiState.EXIT_FULL)
       if (con is Activity) con.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+      mParentView?.let { p ->
+        this.removeParent()
+        p.addView(this)
+      }
     } else {
       callUiState(PlayUiState.ENTER_FULL)
       if (con is Activity) con.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+      mParentView?.let { _ ->
+        this.removeParent()
+        ((con as Activity).window.decorView as FrameLayout).addView(this)
+      }
     }
     isFullScreen = !isFullScreen
   }

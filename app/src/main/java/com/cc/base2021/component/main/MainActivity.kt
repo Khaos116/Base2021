@@ -131,9 +131,9 @@ class MainActivity : CommActivity() {
   override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
     val landScape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE
-    mainLineLayer.visibleGone(!landScape)
-    mainNavigation.visibleGone(!landScape)
-    mainRootView.setPadding(0, if (landScape) 0 else mStatusBarHeight, 0, 0)
+    //mainLineLayer.visibleGone(!landScape)
+    //mainNavigation.visibleGone(!landScape)
+    //mainRootView.setPadding(0, if (landScape) 0 else mStatusBarHeight, 0, 0)
     immersionBar {
       statusBarDarkFont(!landScape)
       fullScreen(landScape)
