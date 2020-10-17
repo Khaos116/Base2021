@@ -210,8 +210,13 @@ class AliVideoView @JvmOverloads constructor(
         1 -> callPlayState(PlayState.PREPARING)
         2 -> callPlayState(PlayState.PREPARED)
         3 -> {
-          callPlayState(PlayState.BUFFED) //防止loading不显示(没有网络的情况下，会一直在loading，但是连上后开始播放不消失)
-          callPlayState(PlayState.START)
+          if (isOnPause) {
+            needResumePlay = true
+            pauseVideo()
+          } else { //在缓冲的时候退出后台，则需要暂停
+            callPlayState(PlayState.BUFFED) //防止loading不显示(没有网络的情况下，会一直在loading，但是连上后开始播放不消失)
+            callPlayState(PlayState.START)
+          }
         }
         4 -> callPlayState(PlayState.PAUSE)
         6 -> callPlayState(PlayState.COMPLETE)
@@ -441,8 +446,11 @@ class AliVideoView @JvmOverloads constructor(
     }
   }
 
+  private var isOnPause = false
+
   @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
   private fun onResumeVideo() {
+    isOnPause = false
     if (needResumePlay) startVideo()
     mSurface?.let {
       aliPlayer.setSurface(it)
@@ -455,6 +463,7 @@ class AliVideoView @JvmOverloads constructor(
 
   @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
   private fun onPauseVideo() {
+    isOnPause = true
     if (mPlayState == PlayState.START ||
         mPlayState == PlayState.BUFFED ||
         mPlayState == PlayState.SEEKED) {
