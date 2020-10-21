@@ -55,7 +55,13 @@ class FlashingTextView @JvmOverloads constructor(
     //关键代码通过矩阵的平移实现
     mMatrix?.setTranslate(deltaX.toFloat(), 0f)
     mGradient?.setLocalMatrix(mMatrix)
-    postInvalidateDelayed(120)
+    //postInvalidateDelayed(120)
+    removeCallbacks(runable)
+    postDelayed(runable, 120)
+  }
+
+  private var runable = Runnable {
+    postInvalidate()
   }
 
   fun setFlashColor(flashColor: Int) {
