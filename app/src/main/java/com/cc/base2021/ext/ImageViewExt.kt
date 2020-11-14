@@ -11,7 +11,9 @@ import coil.util.CoilUtils
 import com.blankj.utilcode.util.*
 import com.cc.base2021.R
 import com.cc.base2021.config.AppConfig
+import com.cc.ext.launchError
 import com.cc.ext.logE
+import com.cc.utils.MediaMetadataRetrieverUtils
 import com.cc.utils.MediaUtils
 import kotlinx.coroutines.*
 import okhttp3.Cache
@@ -23,7 +25,7 @@ import java.io.File
  * Date:2020/8/12
  * Time:18:28
  */
-//正方形图片加载
+//正方形图片加载s
 inline fun ImageView.loadImgSquare(url: String?) {
   if (url.isNullOrBlank()) {
     this.clear()
@@ -148,29 +150,28 @@ fun ImageView.loadNetVideoCover(url: String?, type: Int = 0) {
       return
     }
     getTag(R.id.id_retriever)?.let { r -> (r as MediaMetadataRetriever).release() }
-    GlobalScope.launch(Dispatchers.Main) {
-      scaleType = ImageView.ScaleType.CENTER_CROP
+    GlobalScope.launchError(handler = { _, _ ->
+      when (type) {
+        1 -> setImageResource(R.drawable.error_720p_horizontal)
+        2 -> setImageResource(R.drawable.error_720p_vertical)
+        else -> setImageResource(R.drawable.error_square)
+      }
+    }) {
       when (type) {
         1 -> setImageResource(R.drawable.loading_720p_horizontal)
         2 -> setImageResource(R.drawable.loading_720p_vertical)
         else -> setImageResource(R.drawable.loading_square)
       }
       val retriever = MediaMetadataRetriever()
-      retriever.setDataSource(it, HashMap())
       setTag(R.id.id_retriever, retriever)
-      //获得第10帧图片 这里的第一个参数 以微秒为单位
-      val bit = retriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
-      retriever.release()
-      setTag(R.id.id_retriever, null)
-      if (bit != null) {
-        ImageUtils.save(bit, cacheFile, Bitmap.CompressFormat.PNG)
-        setImageBitmap(bit)
-        scaleType = ImageView.ScaleType.FIT_CENTER
-      } else {
-        when (type) {
-          1 -> setImageResource(R.drawable.error_720p_horizontal)
-          2 -> setImageResource(R.drawable.error_720p_vertical)
-          else -> setImageResource(R.drawable.error_square)
+      MediaMetadataRetrieverUtils.getNetVideoCover(retriever, cacheFile, it) { bit ->
+        setTag(R.id.id_retriever, null)
+        if (bit != null) setImageBitmap(bit) else {
+          when (type) {
+            1 -> setImageResource(R.drawable.error_720p_horizontal)
+            2 -> setImageResource(R.drawable.error_720p_vertical)
+            else -> setImageResource(R.drawable.error_square)
+          }
         }
       }
     }
