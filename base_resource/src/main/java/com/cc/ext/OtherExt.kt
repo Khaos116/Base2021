@@ -2,6 +2,8 @@ package com.cc.ext
 
 import android.graphics.Color
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Author:case
@@ -36,4 +38,14 @@ fun Color.randomAlpha(): Int {
   val g = (Math.random() * 256).toInt()
   val b = (Math.random() * 256).toInt()
   return Color.argb(a, r, g, b)
+}
+
+/**需要明确的一点是，通过 async 启动的协程出现未捕获的异常时会忽略
+ * CoroutineExceptionHandler，这与 launch 的设计思路是不同的。*/
+inline fun GlobalScope.launchError(
+    context: CoroutineContext = Dispatchers.Main,
+    crossinline handler: (CoroutineContext, Throwable) -> Unit = { _, e -> e.message.logE() },
+    start: CoroutineStart = CoroutineStart.DEFAULT,
+    noinline block: suspend CoroutineScope.() -> Unit) {
+  GlobalScope.launch(context + CoroutineExceptionHandler(handler), start, block)
 }
