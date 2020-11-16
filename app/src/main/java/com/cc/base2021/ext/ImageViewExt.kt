@@ -2,8 +2,11 @@ package com.cc.base2021.ext
 
 import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
+import android.os.Build
 import android.widget.ImageView
 import coil.*
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
 import coil.fetch.VideoFrameFileFetcher
 import coil.fetch.VideoFrameUriFetcher
 import coil.request.ImageRequest
@@ -28,8 +31,7 @@ import java.io.File
 //正方形图片加载s
 inline fun ImageView.loadImgSquare(url: String?) {
   if (url.isNullOrBlank()) {
-    this.clear()
-    setTag(R.id.suc_img, null)
+    this.clearLoad()
     this.setImageResource(R.drawable.error_square)
   } else {
     if (getTag(R.id.suc_img) == url) return
@@ -39,7 +41,13 @@ inline fun ImageView.loadImgSquare(url: String?) {
           add(VideoFrameFileFetcher(context))
           add(VideoFrameUriFetcher(context))
         }
-        .build() else context.imageLoader) {
+        .build() else ImageLoader.Builder(context).componentRegistry {
+      if (Build.VERSION.SDK_INT >= 28) {
+        add(ImageDecoderDecoder())
+      } else {
+        add(GifDecoder())
+      }
+    }.build()) {
       crossfade(true)
       placeholder(R.drawable.loading_square)
       error(R.drawable.error_square)
@@ -53,9 +61,8 @@ fun ImageView.loadImgHorizontal(url: String?,
     loadingScaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_CENTER,
     sucScaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_CENTER) {
   if (url.isNullOrBlank()) {
-    this.clear()
+    this.clearLoad()
     this.scaleType = loadingScaleType
-    setTag(R.id.suc_img, null)
     this.setImageResource(R.drawable.error_720p_horizontal)
   } else {
     if (getTag(R.id.suc_img) == url) return
@@ -66,7 +73,13 @@ fun ImageView.loadImgHorizontal(url: String?,
           add(VideoFrameFileFetcher(context))
           add(VideoFrameUriFetcher(context))
         }
-        .build() else context.imageLoader) {
+        .build() else ImageLoader.Builder(context).componentRegistry {
+      if (Build.VERSION.SDK_INT >= 28) {
+        add(ImageDecoderDecoder())
+      } else {
+        add(GifDecoder())
+      }
+    }.build()) {
       crossfade(true)
       placeholder(R.drawable.loading_720p_horizontal)
       error(R.drawable.error_720p_horizontal)
@@ -83,9 +96,8 @@ fun ImageView.loadImgVerticalScreen(url: String?,
     loadingScaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_CENTER,
     sucScaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_CENTER) {
   if (url.isNullOrBlank()) {
-    this.clear()
+    this.clearLoad()
     this.scaleType = loadingScaleType
-    setTag(R.id.suc_img, null)
     this.setImageResource(R.drawable.error_720p_vertical)
   } else {
     if (getTag(R.id.suc_img) == url) return
@@ -96,7 +108,13 @@ fun ImageView.loadImgVerticalScreen(url: String?,
           add(VideoFrameFileFetcher(context))
           add(VideoFrameUriFetcher(context))
         }
-        .build() else context.imageLoader) {
+        .build() else ImageLoader.Builder(context).componentRegistry {
+      if (Build.VERSION.SDK_INT >= 28) {
+        add(ImageDecoderDecoder())
+      } else {
+        add(GifDecoder())
+      }
+    }.build()) {
       crossfade(true)
       placeholder(R.drawable.loading_720p_vertical)
       error(R.drawable.error_720p_vertical)
@@ -108,11 +126,15 @@ fun ImageView.loadImgVerticalScreen(url: String?,
   }
 }
 
+fun ImageView.clearLoad() {
+  this.clear()
+  setTag(R.id.suc_img, null)
+}
+
 //加载缓存文件
 fun ImageView.loadCacheFileFullScreen(url: String?) {
   if (url.isNullOrBlank()) {
-    this.clear()
-    setTag(R.id.suc_img, null)
+    this.clearLoad()
     this.setImageResource(R.drawable.error_720p_vertical)
   } else {
     url.toHttpUrlOrNull()?.let { u ->

@@ -4,7 +4,7 @@ object Versions {
   internal const val kotlin = "1.4.10"
   internal const val okHttp = "4.8.1"
   internal const val rxHttp = "2.4.1"
-  internal const val coil = "1.0.0-rc3"
+  internal const val coil = "1.0.0"
 }
 
 object Deps {
@@ -84,6 +84,7 @@ object Deps {
 
   //图片加载 https://github.com/coil-kt/coil
   const val coil = "io.coil-kt:coil:${Versions.coil}"
+  const val coil_gif = "io.coil-kt:coil-gif:${Versions.coil}"
   const val coil_video_file = "io.coil-kt:coil-video:${Versions.coil}"
 
   //多类型适配器 https://github.com/drakeet/MultiType

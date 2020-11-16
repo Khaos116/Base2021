@@ -204,6 +204,7 @@ dependencies {
   implementation Deps.timber
   implementation Deps.permissions
   implementation Deps.coil
+  implementation Deps.coil_gif
   implementation Deps.coil_video_file
   implementation Deps.multitype
   implementation(Deps.rxhttp) { exclude module: 'kotlinx-coroutines-core' }
