@@ -136,28 +136,20 @@ fun ImageView.loadNetVideoCover(url: String?, type: Int = 0) {
       return
     }
     getTag(R.id.id_retriever)?.let { r -> (r as MediaMetadataRetriever).release() }
-    GlobalScope.launchError(handler = { _, _ ->
-      when (type) {
-        1 -> setImageResource(R.drawable.error_720p_horizontal)
-        2 -> setImageResource(R.drawable.error_720p_vertical)
-        else -> setImageResource(R.drawable.error_square)
-      }
-    }) {
-      when (type) {
-        1 -> setImageResource(R.drawable.loading_720p_horizontal)
-        2 -> setImageResource(R.drawable.loading_720p_vertical)
-        else -> setImageResource(R.drawable.loading_square)
-      }
-      val retriever = MediaMetadataRetriever()
-      setTag(R.id.id_retriever, retriever)
-      MediaMetadataRetrieverUtils.getNetVideoCover(retriever, cacheFile, it) { bit ->
-        setTag(R.id.id_retriever, null)
-        if (bit != null) setImageBitmap(bit) else {
-          when (type) {
-            1 -> setImageResource(R.drawable.error_720p_horizontal)
-            2 -> setImageResource(R.drawable.error_720p_vertical)
-            else -> setImageResource(R.drawable.error_square)
-          }
+    when (type) {
+      1 -> setImageResource(R.drawable.loading_720p_horizontal)
+      2 -> setImageResource(R.drawable.loading_720p_vertical)
+      else -> setImageResource(R.drawable.loading_square)
+    }
+    val retriever = MediaMetadataRetriever()
+    setTag(R.id.id_retriever, retriever)
+    MediaMetadataRetrieverUtils.getNetVideoCover(retriever, cacheFile, it) { bit ->
+      setTag(R.id.id_retriever, null)
+      if (bit != null) setImageBitmap(bit) else {
+        when (type) {
+          1 -> setImageResource(R.drawable.error_720p_horizontal)
+          2 -> setImageResource(R.drawable.error_720p_vertical)
+          else -> setImageResource(R.drawable.error_square)
         }
       }
     }
