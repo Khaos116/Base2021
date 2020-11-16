@@ -1,8 +1,13 @@
 package com.cc.base2021.app
 
 import android.graphics.Bitmap
+import android.os.Build
 import androidx.core.graphics.drawable.toBitmap
 import coil.*
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
+import coil.fetch.VideoFrameFileFetcher
+import coil.fetch.VideoFrameUriFetcher
 import coil.request.ImageRequest
 import coil.util.CoilUtils
 import com.cc.base.app.BaseApplication
@@ -24,6 +29,15 @@ class MyApplication : BaseApplication(), ImageLoaderFactory {
           RxHttpConfig.instance.getOkHttpClient()
               .cache(CoilUtils.createDefaultCache(this))
               .build()
+        }
+        .componentRegistry {
+          add(VideoFrameFileFetcher(this@MyApplication))
+          add(VideoFrameUriFetcher(this@MyApplication))
+          if (Build.VERSION.SDK_INT >= 28) {
+            add(ImageDecoderDecoder())
+          } else {
+            add(GifDecoder())
+          }
         }
         .build()
   }
