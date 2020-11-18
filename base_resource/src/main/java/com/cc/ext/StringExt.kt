@@ -1,8 +1,9 @@
 package com.cc.ext
 
-import com.blankj.utilcode.util.AppUtils
-import com.blankj.utilcode.util.ToastUtils
+import android.net.Uri
+import com.blankj.utilcode.util.*
 import timber.log.Timber
+import java.io.File
 import java.util.Locale
 import java.util.regex.Pattern
 
@@ -71,4 +72,15 @@ inline fun String?.isLiveUrl(): Boolean {
       startsWith("rtmp") || startsWith("rtsp")
     }
   }
+}
+
+//文件目录转file
+inline fun String?.toFile(): File? {
+  if (this != null) {
+    return if (this.startsWith("http", true)) null else {
+      val f = File(this)
+      if (f.exists()) f else UriUtils.uri2File(Uri.parse(this))
+    }
+  }
+  return null
 }

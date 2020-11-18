@@ -14,8 +14,7 @@ import coil.util.CoilUtils
 import com.blankj.utilcode.util.*
 import com.cc.base2021.R
 import com.cc.base2021.config.AppConfig
-import com.cc.ext.launchError
-import com.cc.ext.logE
+import com.cc.ext.*
 import com.cc.utils.MediaMetadataRetrieverUtils
 import com.cc.utils.MediaUtils
 import kotlinx.coroutines.*
@@ -36,7 +35,15 @@ inline fun ImageView.loadImgSquare(url: String?) {
   } else {
     if (getTag(R.id.suc_img) == url) return
     val iv = this
-    iv.load(url, context.imageLoader) {
+    val f = url.toFile()
+    if (f != null) {
+      iv.load(f, context.imageLoader) {
+        crossfade(true)
+        placeholder(R.drawable.loading_square)
+        error(R.drawable.error_square)
+        listener { _, _ -> iv.setTag(R.id.suc_img, url) }
+      }
+    } else iv.load(url, context.imageLoader) {
       crossfade(true)
       placeholder(R.drawable.loading_square)
       error(R.drawable.error_square)
@@ -57,7 +64,18 @@ fun ImageView.loadImgHorizontal(url: String?,
     if (getTag(R.id.suc_img) == url) return
     val iv = this
     iv.scaleType = loadingScaleType
-    iv.load(url, context.imageLoader) {
+    val f = url.toFile()
+    if (f != null) {
+      iv.load(f, context.imageLoader) {
+        crossfade(true)
+        placeholder(R.drawable.loading_720p_horizontal)
+        error(R.drawable.error_720p_horizontal)
+        listener { _, _ ->
+          iv.scaleType = sucScaleType
+          iv.setTag(R.id.suc_img, url)
+        }
+      }
+    } else iv.load(url, context.imageLoader) {
       crossfade(true)
       placeholder(R.drawable.loading_720p_horizontal)
       error(R.drawable.error_720p_horizontal)
@@ -81,7 +99,18 @@ fun ImageView.loadImgVerticalScreen(url: String?,
     if (getTag(R.id.suc_img) == url) return
     val iv = this
     iv.scaleType = loadingScaleType
-    iv.load(url, context.imageLoader) {
+    val f = url.toFile()
+    if (f != null) {
+      iv.load(f, context.imageLoader) {
+        crossfade(true)
+        placeholder(R.drawable.loading_720p_vertical)
+        error(R.drawable.error_720p_vertical)
+        listener(onError = { r, e -> "图片加载失败:${r.data},e=${e.message ?: "null"}".logE() }) { _, _ ->
+          iv.scaleType = sucScaleType
+          iv.setTag(R.id.suc_img, url)
+        }
+      }
+    } else iv.load(url, context.imageLoader) {
       crossfade(true)
       placeholder(R.drawable.loading_720p_vertical)
       error(R.drawable.error_720p_vertical)
