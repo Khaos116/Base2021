@@ -12,6 +12,7 @@ object Deps {
   const val plugin_android_gradle = "com.android.tools.build:gradle:4.0.1"
   const val plugin_kotlin_gradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
   const val plugin_r8_gradle = "com.android.tools:r8:2.1.66" //更新R8版本，解决正式版无法打包的问题 https://github.com/square/okhttp/issues/4604
+  const val plugin_pandora = "com.github.whataa:pandora-plugin:1.0.0"
 
   //使用kotlin
   const val kotlin_stdlib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
@@ -32,6 +33,10 @@ object Deps {
 
   //内存泄漏检测 https://square.github.io/leakcanary/getting_started/
   const val leakcanary = "com.squareup.leakcanary:leakcanary-android:2.4"
+
+  //潘多拉调试工具 https://github.com/whataa/pandora/blob/master/README_CN.md
+  const val pandora = "com.github.whataa:pandora:androidx_v2.1.0"
+  const val pandora_no = "com.github.whataa:pandora-no-op:v2.0.3"
 
   //工具类 https://github.com/Blankj/AndroidUtilCode/blob/master/lib/utilcode/README-CN.md
   const val utilcodex = "com.blankj:utilcodex:1.29.0"

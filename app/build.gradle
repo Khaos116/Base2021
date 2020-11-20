@@ -3,117 +3,119 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'McImage'
+apply plugin: 'pandora-plugin'//潘多拉调试插件
 
 //解决渠道下DebugImplementation和ReleaseImplementation编译通不过的问题  https://stackoverflow.com/questions/24860659/multi-flavor-app-based-on-multi-flavor-library-in-android-gradle
 configurations {
-  developerPFDebugImplementation
+    developerPFDebugImplementation
 }
 
 //动态读取app名称
 def appName = "Base2021"
 //android配置
 android {
-  compileSdkVersion Versions.sdkTarget
-  defaultConfig {
-    minSdkVersion Versions.sdkMin
-    targetSdkVersion Versions.sdkTarget
-    versionCode 1
-    versionName "1.0"
-    resValue "string", "build_time", new Date().format("yyyy-MM-dd HH:mm")
-    multiDexEnabled true
-    resConfigs "zh", "en" //保留中文和英文资源
-    ndk { abiFilters 'armeabi-v7a' } //, 'arm64-v8a'
-    //RxHttp需要 https://github.com/liujingxing/okhttp-RxHttp
-    javaCompileOptions {
-      annotationProcessorOptions {
-        arguments = [
-            //必须，告知RxHttp你依赖的okhttp版本，目前已适配 v3.12.0 - v4.8.1版本
-            rxhttp_okhttp: Versions.okHttp,
-            //使用asXxx方法时必须，告知RxHttp你依赖的rxjava版本，可传入rxjava2、rxjava3
-            rxhttp_rxjava: 'rxjava2'
-        ]
-      }
+    compileSdkVersion Versions.sdkTarget
+    defaultConfig {
+        minSdkVersion Versions.sdkMin
+        targetSdkVersion Versions.sdkTarget
+        versionCode 1
+        versionName "1.0"
+        resValue "string", "build_time", new Date().format("yyyy-MM-dd HH:mm")
+        multiDexEnabled true
+        resConfigs "zh", "en" //保留中文和英文资源
+        ndk { abiFilters 'armeabi-v7a' } //, 'arm64-v8a'
+        //RxHttp需要 https://github.com/liujingxing/okhttp-RxHttp
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [
+                        //必须，告知RxHttp你依赖的okhttp版本，目前已适配 v3.12.0 - v4.8.1版本
+                        rxhttp_okhttp: Versions.okHttp,
+                        //使用asXxx方法时必须，告知RxHttp你依赖的rxjava版本，可传入rxjava2、rxjava3
+                        rxhttp_rxjava: 'rxjava2'
+                ]
+            }
+        }
     }
-  }
 
-  //lambda表达式需要
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
+    //lambda表达式需要
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
-  //部分DSL需要
-  kotlinOptions { jvmTarget = "1.8" }
+    //部分DSL需要
+    kotlinOptions { jvmTarget = "1.8" }
 
-  //签名配置
-  signingConfigs {
-    debug {
-      storeFile file("${getProjectDir().getParentFile().getPath()}/base2021.jks")
-      storePassword "base2021"
-      keyAlias "base2021"
-      keyPassword "base2021"
+    //签名配置
+    signingConfigs {
+        debug {
+            storeFile file("${getProjectDir().getParentFile().getPath()}/base2021.jks")
+            storePassword "base2021"
+            keyAlias "base2021"
+            keyPassword "base2021"
+        }
+        release {
+            storeFile file("${getProjectDir().getParentFile().getPath()}/base2021.jks")
+            storePassword "base2021"
+            keyAlias "base2021"
+            keyPassword "base2021"
+        }
     }
-    release {
-      storeFile file("${getProjectDir().getParentFile().getPath()}/base2021.jks")
-      storePassword "base2021"
-      keyAlias "base2021"
-      keyPassword "base2021"
-    }
-  }
 
-  //正式和测试配置
-  buildTypes {
-    debug {
-      debuggable true
-      zipAlignEnabled false
-      shrinkResources false
-      minifyEnabled false
-      //指定debug使用release的签名(当每个渠道使用了自己的签名时使用)
-      //signingConfig release.signingConfig
-      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    //正式和测试配置
+    buildTypes {
+        debug {
+            debuggable true
+            zipAlignEnabled false
+            shrinkResources false
+            minifyEnabled false
+            //指定debug使用release的签名(当每个渠道使用了自己的签名时使用)
+            //signingConfig release.signingConfig
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        release {
+            debuggable false
+            zipAlignEnabled true
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
     }
-    release {
-      debuggable false
-      zipAlignEnabled true
-      shrinkResources true
-      minifyEnabled true
-      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-    }
-  }
 
-  //多维度 https://blog.csdn.net/chen_xi_hao/article/details/80526049
-  flavorDimensions "default"
-  //代码差分化打包
-  productFlavors {
-    developerPF {
-      dimension "default"
-      applicationId "com.cc.base2021D"
-      resValue "string", "app_name", "${appName}D" //设置APP名称
-      dependencies { developerPFDebugImplementation Deps.leakcanary }
+    //多维度 https://blog.csdn.net/chen_xi_hao/article/details/80526049
+    flavorDimensions "default"
+    //代码差分化打包
+    productFlavors {
+        developerPF {
+            dimension "default"
+            applicationId "com.cc.base2021D"
+            resValue "string", "app_name", "${appName}D" //设置APP名称
+            dependencies { developerPFDebugImplementation Deps.leakcanary }
+        }
+        releasePF {
+            dimension "default"
+            applicationId "com.cc.base2021"
+            resValue "string", "app_name", appName //设置APP名称
+        }
     }
-    releasePF {
-      dimension "default"
-      applicationId "com.cc.base2021"
-      resValue "string", "app_name", appName //设置APP名称
-    }
-  }
 }
 
 McImageConfig {
-  isCheckSize true //是否检测图片大小，默认为true
-  optimizeType "ConvertWebp" //优化类型，可选"ConvertWebp"，"Compress"，转换为webp或原图压缩，默认Compress，使用ConvertWep需要min sdk >= 18.但是压缩效果更好
-  maxSize 200 * 1024 //不允许超过200K的图编译通过
-  enableWhenDebug true //debug下是否可用，default true
-  isCheckPixels true // 是否检测大像素图片，default true
-  maxWidth 720 //default 1000 如果开启图片宽高检查，默认的最大宽度
-  maxHeight 1280 //default 1000 如果开启图片宽高检查，默认的最大高度
-  whiteList = [//默认为空，如果添加，对图片不进行任何处理
-      "ic_launcher.png"
-  ]
-  mctoolsDir "$rootDir" //mctoolsDir工具目录地址
-  isSupportAlphaWebp false //是否支持带有透明度的webp，default false,带有透明图的图片会进行压缩
-  multiThread true //是否开启多线程处理图片，default true
-  bigImageWhiteList = [] //默认为空，如果添加，大图检测将跳过这些图片
+    isCheckSize true //是否检测图片大小，默认为true
+    optimizeType "ConvertWebp"
+    //优化类型，可选"ConvertWebp"，"Compress"，转换为webp或原图压缩，默认Compress，使用ConvertWep需要min sdk >= 18.但是压缩效果更好
+    maxSize 200 * 1024 //不允许超过200K的图编译通过
+    enableWhenDebug true //debug下是否可用，default true
+    isCheckPixels true // 是否检测大像素图片，default true
+    maxWidth 720 //default 1000 如果开启图片宽高检查，默认的最大宽度
+    maxHeight 1280 //default 1000 如果开启图片宽高检查，默认的最大高度
+    whiteList = [//默认为空，如果添加，对图片不进行任何处理
+                 "ic_launcher.png"
+    ]
+    mctoolsDir "$rootDir" //mctoolsDir工具目录地址
+    isSupportAlphaWebp false //是否支持带有透明度的webp，default false,带有透明图的图片会进行压缩
+    multiThread true //是否开启多线程处理图片，default true
+    bigImageWhiteList = [] //默认为空，如果添加，大图检测将跳过这些图片
 }
 
 //https://coil-kt.github.io/coil/getting_started/
@@ -125,91 +127,94 @@ McImageConfig {
 
 //打包处理
 android.applicationVariants.all { variant ->
-  variant.outputs.all { output ->
-    //正式版还是测试版
-    String typeName = buildType.name
-    typeName = typeName.substring(0, 1).toUpperCase() + typeName.substring(1).toLowerCase()
-    //版本号
-    String versionName = getVersionName()
-    //渠道名称
-    String flavorsName = variant.productFlavors[0].name
-    //应用名称
-    String apkName = appName
-    //打包完成后的重命名和拷贝
-    assemble.doLast {
-      //编译完成的时间
-      String buildEndTime = "${new Date().format("yyyyMMddHHmm")}"
-      String fileName = "${apkName}${typeName}_${versionName}_${buildEndTime}.apk"
-      //把正式版拷贝到项目APK目录
-      if (typeName == "Release" || rootProject.ext.needCreateDebug == "true") {
-        //创建APK目录(APK+渠道名称)
-        File apkFile = new File("${getProjectDir().getParentFile().getPath()}/APK/${flavorsName}/${typeName}")
-        if (!apkFile.exists()) apkFile.mkdirs()
-        project.copy {
-          from("${output.outputFile}")
-          into("${apkFile.path}")
-          rename("${output.outputFile.name}", "${fileName}")
+    variant.outputs.all { output ->
+        //正式版还是测试版
+        String typeName = buildType.name
+        typeName = typeName.substring(0, 1).toUpperCase() + typeName.substring(1).toLowerCase()
+        //版本号
+        String versionName = getVersionName()
+        //渠道名称
+        String flavorsName = variant.productFlavors[0].name
+        //应用名称
+        String apkName = appName
+        //打包完成后的重命名和拷贝
+        assemble.doLast {
+            //编译完成的时间
+            String buildEndTime = "${new Date().format("yyyyMMddHHmm")}"
+            String fileName = "${apkName}${typeName}_${versionName}_${buildEndTime}.apk"
+            //把正式版拷贝到项目APK目录
+            if (typeName == "Release" || rootProject.ext.needCreateDebug == "true") {
+                //创建APK目录(APK+渠道名称)
+                File apkFile = new File("${getProjectDir().getParentFile().getPath()}/APK/${flavorsName}/${typeName}")
+                if (!apkFile.exists()) apkFile.mkdirs()
+                project.copy {
+                    from("${output.outputFile}")
+                    into("${apkFile.path}")
+                    rename("${output.outputFile.name}", "${fileName}")
+                }
+            } else {
+                //默认运行生成的apk
+                File apkFileDebug = new File("${getProjectDir().getParentFile().getPath()}/APK/Debug")
+                if (apkFileDebug.exists()) apkFileDebug.deleteDir()
+                apkFileDebug.mkdirs()
+                project.copy {
+                    from("${output.outputFile}")
+                    into("${apkFileDebug.path}")
+                    rename("${output.outputFile.name}", "${fileName}")
+                }
+            }
+            //开启线程，在打包完成后20秒杀掉JDK，防止下次运行出现被占用的情况
+            new Thread() {
+                @Override
+                void run() {
+                    sleep(20 * 1000)
+                    String cmd = "taskkill /f /t /im java.exe"
+                    cmd.execute().text.trim()
+                }
+            }.start()
         }
-      } else {
-        //默认运行生成的apk
-        File apkFileDebug = new File("${getProjectDir().getParentFile().getPath()}/APK/Debug")
-        if (apkFileDebug.exists()) apkFileDebug.deleteDir()
-        apkFileDebug.mkdirs()
-        project.copy {
-          from("${output.outputFile}")
-          into("${apkFileDebug.path}")
-          rename("${output.outputFile.name}", "${fileName}")
-        }
-      }
-      //开启线程，在打包完成后20秒杀掉JDK，防止下次运行出现被占用的情况
-      new Thread() {
-        @Override void run() {
-          sleep(20 * 1000)
-          String cmd = "taskkill /f /t /im java.exe"
-          cmd.execute().text.trim()
-        }
-      }.start()
     }
-  }
 }
 
 //三方依赖
 dependencies {
-  implementation project(path: ':media_music')
-  implementation project(path: ':media_video')
-  implementation project(path: ':base_resource')
-  implementation project(path: ':base')
-  implementation fileTree(dir: "libs", include: ["*.jar", '*.aar'])
-  implementation Deps.kotlin_stdlib
-  implementation Deps.core_ktx
-  implementation Deps.activity_ktx
-  implementation Deps.material
-  implementation Deps.fragment
-  implementation(Deps.appcompat) { exclude module: 'fragment' }
-  implementation Deps.constraint
-  implementation Deps.startup
-  implementation Deps.utilcodex
-  implementation Deps.proguardx
-  implementation Deps.svga
-  implementation Deps.immersionbar
-  implementation Deps.immersionbar_ktx
-  implementation(Deps.eventBus) { exclude group: 'androidx.lifecycle' }
-  implementation Deps.agentweb
-  implementation Deps.swipe
-  implementation Deps.swipex
-  implementation Deps.okhttp
-  implementation Deps.rxandroid
-  implementation Deps.gson
-  implementation Deps.mmkv
-  implementation Deps.timber
-  implementation Deps.permissions
-  implementation Deps.coil
-  implementation Deps.coil_gif
-  implementation Deps.coil_video_file
-  implementation Deps.multitype
-  implementation(Deps.rxhttp) { exclude module: 'kotlinx-coroutines-core' }
-  implementation Deps.coroutine
-  kapt Deps.rxhttp_kapt
-  implementation Deps.rxlife
-  implementation Deps.pic_select
+    implementation project(path: ':media_music')
+    implementation project(path: ':media_video')
+    implementation project(path: ':base_resource')
+    implementation project(path: ':base')
+    implementation fileTree(dir: "libs", include: ["*.jar", '*.aar'])
+    implementation Deps.kotlin_stdlib
+    implementation Deps.core_ktx
+    implementation Deps.activity_ktx
+    implementation Deps.material
+    implementation Deps.fragment
+    implementation(Deps.appcompat) { exclude module: 'fragment' }
+    implementation Deps.constraint
+    implementation Deps.startup
+    implementation Deps.utilcodex
+    implementation Deps.proguardx
+    implementation Deps.svga
+    implementation Deps.immersionbar
+    implementation Deps.immersionbar_ktx
+    implementation(Deps.eventBus) { exclude group: 'androidx.lifecycle' }
+    implementation Deps.agentweb
+    implementation Deps.swipe
+    implementation Deps.swipex
+    implementation Deps.okhttp
+    implementation Deps.rxandroid
+    implementation Deps.gson
+    implementation Deps.mmkv
+    implementation Deps.timber
+    implementation Deps.permissions
+    implementation Deps.coil
+    implementation Deps.coil_gif
+    implementation Deps.coil_video_file
+    implementation Deps.multitype
+    implementation(Deps.rxhttp) { exclude module: 'kotlinx-coroutines-core' }
+    implementation Deps.coroutine
+    kapt Deps.rxhttp_kapt
+    implementation Deps.rxlife
+    implementation Deps.pic_select
+    debugImplementation Deps.pandora
+    releaseImplementation Deps.pandora_no
 }
