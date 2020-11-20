@@ -11,7 +11,6 @@ import com.cc.base2021.item.NineGridViewBinder.ViewHolder
 import com.cc.decoration.GridDragItemDecoration
 import com.cc.drag.ItemTouchMoveListener
 import com.cc.drag.MyItemTouchHelperCallback
-import com.cc.ext.click
 import com.drakeet.multitype.ItemViewBinder
 import com.drakeet.multitype.MultiTypeAdapter
 import kotlinx.android.synthetic.main.item_nine_grid.view.itemNineGridRecycler
