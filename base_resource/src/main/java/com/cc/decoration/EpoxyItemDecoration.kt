@@ -11,16 +11,17 @@ import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import androidx.recyclerview.widget.RecyclerView.State
 
 /**
- * 没有四周间距的ItemDecorator
+ * 1.可以动态设置四周的间距(上、下、左右)
+ * 2.不能对Item进行拖拽排序，否则会导致上下间距变大
  * 源码：https://github.com/airbnb/epoxy/blob/master/epoxy-adapter/src/main/java/com/airbnb/epoxy/EpoxyItemSpacingDecorator.java
  * Modifies item spacing in a recycler view so that items are equally spaced no matter where they
  * are on the grid. Only designed to work with standard linear or grid layout managers.
  */
 class EpoxyItemDecoration @JvmOverloads constructor(
-  @Px private val pxBetweenItems: Int = 0,
-  private val mIncludeStartEnd: Boolean = false,/*距屏幕左右是否有间距*/
-  private val mIncludeTop: Boolean = false,/*开始的第一排顶部是否有间距*/
-  private val mIncludeBottom: Boolean = false/*结束的最后一排底部是否也有间距*/
+    @Px private val pxBetweenItems: Int = 0,
+    private val mIncludeStartEnd: Boolean = false,/*距屏幕左右是否有间距*/
+    private val mIncludeTop: Boolean = false,/*开始的第一排顶部是否有间距*/
+    private val mIncludeBottom: Boolean = false/*结束的最后一排底部是否也有间距*/
 ) : ItemDecoration() {
   private var verticallyScrolling = false
   private var horizontallyScrolling = false
@@ -65,10 +66,28 @@ class EpoxyItemDecoration @JvmOverloads constructor(
     outRect.top = if (top) padding else 0
     outRect.bottom = if (bottom) padding else 0
     //===================添加代码START===================//
-    if (mIncludeStartEnd && !right) outRect.right = pxBetweenItems
-    if (mIncludeStartEnd && !left) outRect.left = pxBetweenItems
-    if (mIncludeTop && !top) outRect.top = pxBetweenItems
-    if (mIncludeBottom && !bottom) outRect.bottom = pxBetweenItems
+    if (mIncludeStartEnd && !right) outRect.right = padding
+    if (mIncludeStartEnd && !left) outRect.left = padding
+    if (mIncludeTop && !top) outRect.top = padding
+    if (mIncludeBottom && !bottom) outRect.bottom = padding
+    //优化的代码
+    if (grid) {
+      val manager = layout as GridLayoutManager
+      val spanCount = manager.spanCount
+      if (spanCount > 2) {
+        val padding31 = (pxBetweenItems / 3f).toInt()
+        val padding32 = (pxBetweenItems / 3f * 2).toInt()
+        if (left && right) {
+          outRect.right = padding31
+          outRect.left = padding31
+        } else {
+          outRect.right = if (right) padding32 else 0
+          outRect.left = if (left) padding32 else 0
+          if (mIncludeStartEnd && !right) outRect.right = padding32
+          if (mIncludeStartEnd && !left) outRect.left = padding32
+        }
+      }
+    }
     //===================添加代码END===================//
   }
 
@@ -88,7 +107,7 @@ class EpoxyItemDecoration @JvmOverloads constructor(
       isFirstItemInRow = spanIndex == 0
       fillsLastSpan = spanIndex + spanSize == spanCount
       isInFirstRow = isInFirstRow(position, spanSizeLookup, spanCount)
-      isInLastRow = !isInFirstRow && isInLastRow(position, itemCount, spanSizeLookup, spanCount)
+      isInLastRow = isInLastRow(position, itemCount, spanSizeLookup, spanCount)
     }
   }
 
