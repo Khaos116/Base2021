@@ -82,7 +82,9 @@ class GankFragment private constructor() : CommFragment() {
     multiTypeAdapter.register(DividerItemViewBinder())
     multiTypeAdapter.register(EmptyErrorItemViewBinder() { mViewModel.refresh() })
     multiTypeAdapter.register(GankItemViewBinder(onItemClick))
-    multiTypeAdapter.register(NineGridViewBinder(onItemImgClick))
+    multiTypeAdapter.register(NineGridViewBinder(onItemImgClick, onItemClick = { url ->
+      if (url.isNotBlank()) WebActivity.startActivity(mActivity, url)
+    }))
     //监听加载结果
     mViewModel.androidState.observe(this, Observer { list ->
       //处理下拉和上拉
@@ -100,7 +102,8 @@ class GankFragment private constructor() : CommFragment() {
       val items = ArrayList<Any>()
       list.data?.forEachIndexed { index, androidBean ->
         items.add(androidBean) //文章
-        if (androidBean.imagesNoNull().isNotEmpty()) items.add(androidBean.imagesNoNull()) //图片
+        if (androidBean.imagesNoNull().isNotEmpty()) items.add(
+            GridImageBean(androidBean.url ?: "", androidBean.imagesNoNull())) //图片
         if (index < (list.data?.size ?: 0) - 1) items.add(DividerBean(heightPx = 1, bgColor = Color.GREEN)) //分割线
       }
       //如果没有，判断是否要显示异常布局
@@ -141,10 +144,10 @@ class GankFragment private constructor() : CommFragment() {
     list.forEach { s -> tempList.add(LocalMedia().also { it.path = s }) }
     //开始预览
     PictureSelector.create(this)
-      .themeStyle(R.style.picture_default_style)
-      .isNotPreviewDownload(true)
-      .imageEngine(ImageEngine())
-      .openExternalPreview(p, tempList)
+        .themeStyle(R.style.picture_default_style)
+        .isNotPreviewDownload(true)
+        .imageEngine(ImageEngine())
+        .openExternalPreview(p, tempList)
   }
   //</editor-fold>
 
