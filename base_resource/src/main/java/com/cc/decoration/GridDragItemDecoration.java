@@ -1,15 +1,11 @@
 package com.cc.decoration;
 
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.View;
-
 import androidx.annotation.Px;
 import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.*;
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.LayoutManager;
 import androidx.recyclerview.widget.RecyclerView.State;
 
@@ -90,7 +86,6 @@ public class GridDragItemDecoration extends RecyclerView.ItemDecoration {
     outRect.bottom =  padding;
 
     //优化的代码
-    grid = layout instanceof GridLayoutManager;
     if (grid) {
       GridLayoutManager grid = (GridLayoutManager) layout;
       int spanCount = grid.getSpanCount();
@@ -106,8 +101,6 @@ public class GridDragItemDecoration extends RecyclerView.ItemDecoration {
         }
       }
     }
-    Log.e("CASE", "\n==================================\n");
-    Log.e("CASE", "position=" + position + ",outRect=" + outRect.toString());
   }
 
   private void calculatePositionDetails(RecyclerView parent, int position, LayoutManager layout) {
