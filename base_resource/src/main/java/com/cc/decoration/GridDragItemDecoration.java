@@ -180,7 +180,6 @@ public class GridDragItemDecoration extends RecyclerView.ItemDecoration {
         return false;
       }
     }
-
     return true;
   }
 
@@ -193,7 +192,6 @@ public class GridDragItemDecoration extends RecyclerView.ItemDecoration {
         return false;
       }
     }
-
     return true;
   }
 }
