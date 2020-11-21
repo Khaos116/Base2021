@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >
-  <!--因为item的最上面和最下面各有3dp，所以上下为2dp(原本5dp)-->
+  <!--因为item的最上面和最下面各有3dp(分割线6dp)，所以上下为2dp(原本5dp)-->
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/itemNineGridRecycler"
       android:layout_width="match_parent"
@@ -12,6 +12,7 @@
       android:layout_marginStart="12dp"
       android:layout_marginTop="2dp"
       android:layout_marginEnd="12dp"
+      android:background="@color/cyan_40E0D0"
       android:layout_marginBottom="2dp"
       android:overScrollMode="never"
       />
