@@ -8,7 +8,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.cc.base2021.R
 import com.cc.base2021.bean.local.GridImageBean
 import com.cc.base2021.item.NineGridViewBinder.ViewHolder
-import com.cc.decoration.GridDragItemDecoration
+import com.cc.decoration.GridSpaceItemDecoration
 import com.cc.drag.ItemTouchMoveListener
 import com.cc.drag.MyItemTouchHelperCallback
 import com.drakeet.multitype.ItemViewBinder
@@ -50,7 +50,7 @@ class NineGridViewBinder(
     val count = if (list.size == 1) 1 else if (list.size == 2 || list.size == 4) 2 else 3
     recyclerView.layoutManager = GridLayoutManager(holder.itemView.context, count)
     if (recyclerView.itemDecorationCount > 0) recyclerView.removeItemDecorationAt(0)
-    recyclerView.addItemDecoration(GridDragItemDecoration(spaceItem))
+    recyclerView.addItemDecoration(GridSpaceItemDecoration(spaceItem).setDragGridEdge(false))
     val multiTypeAdapter = MultiTypeAdapter()
     multiTypeAdapter.register(NineImgViewBinder { url, position, iv ->
       onItemImgClick?.invoke(url, position, iv, list)
