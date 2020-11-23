@@ -33,6 +33,7 @@ dependencies {
   implementation Deps.appcompat
   implementation Deps.constraint
   implementation Deps.coroutine
+  implementation Deps.coroutine_android
   implementation Deps.startup
   implementation Deps.utilcodex
   implementation Deps.ali_player

@@ -29,6 +29,7 @@ dependencies {
   implementation Deps.appcompat
   implementation Deps.material
   implementation Deps.coroutine
+  implementation Deps.coroutine_android
   implementation Deps.startup
   implementation Deps.utilcodex
   implementation Deps.timber
