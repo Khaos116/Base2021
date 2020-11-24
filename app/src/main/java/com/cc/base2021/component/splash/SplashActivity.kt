@@ -1,6 +1,7 @@
 package com.cc.base2021.component.splash
 
 import android.content.Context
+import android.content.Intent
 import android.media.AudioManager
 import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.TimeUtils
@@ -32,8 +33,8 @@ class SplashActivity : CommActivity() {
   private val randomImg = TimeUtils.millis2String(System.currentTimeMillis())
       .split(" ")[1].split(":")[0].toInt()
 
-  //倒计时
-  private var countTime = 3L
+  //是否需要关闭页面
+  private var hasFinish = false
 
   //是否有SD卡权限，只有
   private var hasSDPermission = false
@@ -58,6 +59,8 @@ class SplashActivity : CommActivity() {
 
   //<editor-fold defaultstate="collapsed" desc="初始化View">
   override fun initView() {
+    hasFinish = checkReOpenHome()
+    if (hasFinish) return
     (getSystemService(Context.AUDIO_SERVICE) as AudioManager).adjustStreamVolume(
         AudioManager.STREAM_MUSIC,
         AudioManager.ADJUST_MUTE, 0
@@ -104,6 +107,7 @@ class SplashActivity : CommActivity() {
 
   //<editor-fold defaultstate="collapsed" desc="初始化数据">
   override fun initData() {
+    if (hasFinish) return
     //随机加载图片
     //splashIv.loadCacheFileFullScreen(ImageUrls.instance.getRandomImgUrl(randomImg))
     splashSVGA.callback = object : SVGACallback {
@@ -120,6 +124,21 @@ class SplashActivity : CommActivity() {
     disposable = Observable.timer(2, TimeUnit.SECONDS)
         .compose(RxUtils.instance.rx2SchedulerHelperO())
         .subscribe { splashTv.visible() }
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="防止重新打开">
+  //https://www.cnblogs.com/xqz0618/p/thistaskroot.html
+  private fun checkReOpenHome(): Boolean {
+    // 避免从桌面启动程序后，会重新实例化入口类的activity
+    if (!this.isTaskRoot && intent != null // 判断当前activity是不是所在任务栈的根
+        && intent.hasCategory(Intent.CATEGORY_LAUNCHER)
+        && Intent.ACTION_MAIN == intent.action
+    ) {
+      finish()
+      return true
+    }
+    return false
   }
   //</editor-fold>
 
