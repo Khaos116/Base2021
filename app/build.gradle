@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'McImage'
-apply plugin: 'pandora-plugin'//潘多拉调试插件
+//apply plugin: 'pandora-plugin'//潘多拉OKHttp请求日志抓取，因为目前在android 10 上会导致闪退，所以暂时不使用
 
 //解决渠道下DebugImplementation和ReleaseImplementation编译通不过的问题  https://stackoverflow.com/questions/24860659/multi-flavor-app-based-on-multi-flavor-library-in-android-gradle
 configurations {
