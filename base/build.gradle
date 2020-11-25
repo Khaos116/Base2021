@@ -39,4 +39,5 @@ dependencies {
   implementation Deps.autosize
   implementation Deps.timber
   implementation Deps.rxandroid
+  implementation Deps.multitype
 }
