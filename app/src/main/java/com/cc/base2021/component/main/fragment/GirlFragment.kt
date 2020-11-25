@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.billy.android.swipe.SmartSwipeRefresh
 import com.billy.android.swipe.SmartSwipeRefresh.SmartSwipeRefreshDataLoader
 import com.billy.android.swipe.consumer.SlidingConsumer
-import com.cc.ext.stopInertiaRolling
 import com.cc.base2021.R
 import com.cc.base2021.bean.gank.GankGirlBean
 import com.cc.base2021.bean.local.*
@@ -14,6 +13,7 @@ import com.cc.base2021.comm.CommFragment
 import com.cc.base2021.component.main.viewmodel.GirlViewModel
 import com.cc.base2021.item.*
 import com.cc.base2021.widget.picsel.ImageEngine
+import com.cc.ext.stopInertiaRolling
 import com.drakeet.multitype.MultiTypeAdapter
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.entity.LocalMedia
@@ -77,10 +77,23 @@ class GirlFragment private constructor() : CommFragment() {
     girlRecycler.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
     girlRecycler.adapter = multiTypeAdapter
     //注册多类型
-    multiTypeAdapter.register(LoadingItemViewBinder())
-    multiTypeAdapter.register(DividerItemViewBinder())
-    multiTypeAdapter.register(EmptyErrorItemViewBinder() { mViewModel.refresh() })
-    multiTypeAdapter.register(GirlItemViewBinder(itemClick))
+    multiTypeAdapter.register(LoadingItem())
+    multiTypeAdapter.register(DividerItem())
+    multiTypeAdapter.register(EmptyErrorItem() { mViewModel.refresh() })
+    multiTypeAdapter.register(GirlItem() { item, _ ->
+      //获取到图片列表(取对应类型且第一张图片地址不为空的数据)
+      multiTypeAdapter.items.filterIsInstance<GankGirlBean>().mapNotNull { it.images?.firstOrNull() }.let { list ->
+        val tempList = mutableListOf<LocalMedia>()
+        val position = if (item.images?.firstOrNull().isNullOrBlank()) 0 else list.indexOf(item.images?.firstOrNull() ?: "")
+        list.forEach { s -> tempList.add(LocalMedia().also { it.path = s }) }
+        //开始预览
+        PictureSelector.create(this)
+            .themeStyle(R.style.picture_default_style)
+            .isNotPreviewDownload(true)
+            .imageEngine(ImageEngine())
+            .openExternalPreview(position, tempList)
+      }
+    })
     //监听加载结果
     mViewModel.girlState.observe(this, Observer { list ->
       //处理下拉和上拉
@@ -113,23 +126,6 @@ class GirlFragment private constructor() : CommFragment() {
     })
     //请求数据
     mViewModel.refresh()
-  }
-  //</editor-fold>
-
-  //<editor-fold defaultstate="collapsed" desc="监听Item点击事件">
-  private var itemClick: ((bean: GankGirlBean, position: Int) -> Unit)? = { item, _ ->
-    //获取到图片列表(取对应类型且第一张图片地址不为空的数据)
-    multiTypeAdapter.items.filterIsInstance<GankGirlBean>().mapNotNull { it.images?.firstOrNull() }.let { list ->
-      val tempList = mutableListOf<LocalMedia>()
-      val position = if (item.images?.firstOrNull().isNullOrBlank()) 0 else list.indexOf(item.images?.firstOrNull() ?: "")
-      list.forEach { s -> tempList.add(LocalMedia().also { it.path = s }) }
-      //开始预览
-      PictureSelector.create(this)
-        .themeStyle(R.style.picture_default_style)
-        .isNotPreviewDownload(true)
-        .imageEngine(ImageEngine())
-        .openExternalPreview(position, tempList)
-    }
   }
   //</editor-fold>
 

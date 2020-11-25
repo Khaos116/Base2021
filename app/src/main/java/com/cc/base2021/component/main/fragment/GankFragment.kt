@@ -78,11 +78,22 @@ class GankFragment private constructor() : CommFragment() {
     gankRecycler.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
     gankRecycler.adapter = multiTypeAdapter
     //注册多类型
-    multiTypeAdapter.register(LoadingItemViewBinder())
-    multiTypeAdapter.register(DividerItemViewBinder())
-    multiTypeAdapter.register(EmptyErrorItemViewBinder() { mViewModel.refresh() })
-    multiTypeAdapter.register(GankItemViewBinder(onItemClick))
-    multiTypeAdapter.register(NineGridViewBinder(onItemImgClick, onItemClick = { url ->
+    multiTypeAdapter.register(LoadingItem())
+    multiTypeAdapter.register(DividerItem())
+    multiTypeAdapter.register(EmptyErrorItem() { mViewModel.refresh() })
+    multiTypeAdapter.register(GankItem() { bean ->
+      bean.url?.let { u -> WebActivity.startActivity(mActivity, u) }
+    })
+    multiTypeAdapter.register(NineGridItem(onItemImgClick = { _, p, _, list ->
+      val tempList = mutableListOf<LocalMedia>()
+      list.forEach { s -> tempList.add(LocalMedia().also { it.path = s }) }
+      //开始预览
+      PictureSelector.create(this)
+          .themeStyle(R.style.picture_default_style)
+          .isNotPreviewDownload(true)
+          .imageEngine(ImageEngine())
+          .openExternalPreview(p, tempList)
+    }, onItemClick = { url ->
       if (url.isNotBlank()) WebActivity.startActivity(mActivity, url)
     }))
     //监听加载结果
@@ -129,33 +140,6 @@ class GankFragment private constructor() : CommFragment() {
       if (firstPosition > 5) gankRecycler.scrollToPosition(5)
       gankRecycler.smoothScrollToPosition(0)
     }
-  }
-  //</editor-fold>
-
-  //<editor-fold defaultstate="collapsed" desc="点击事件">
-  //文章item点击事件
-  private var onItemClick: ((bean: GankAndroidBean, position: Int) -> Unit)? = { bean, _ ->
-    bean.url?.let { u -> WebActivity.startActivity(mActivity, u) }
-  }
-
-  //九宫图片点击事件
-  private var onItemImgClick: ((url: String, p: Int, iv: ImageView, list: MutableList<String>) -> Unit)? = { _, p, _, list ->
-    val tempList = mutableListOf<LocalMedia>()
-    list.forEach { s -> tempList.add(LocalMedia().also { it.path = s }) }
-    //开始预览
-    PictureSelector.create(this)
-        .themeStyle(R.style.picture_default_style)
-        .isNotPreviewDownload(true)
-        .imageEngine(ImageEngine())
-        .openExternalPreview(p, tempList)
-  }
-  //</editor-fold>
-
-  //<editor-fold defaultstate="collapsed" desc="生命周期">
-  override fun onDestroy() {
-    onItemClick = null
-    onItemImgClick = null
-    super.onDestroy()
   }
   //</editor-fold>
 }

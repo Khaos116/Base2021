@@ -1,26 +1,20 @@
 package com.cc.base2021.component.main.fragment
 
-import android.widget.ImageView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.billy.android.swipe.SmartSwipeRefresh
 import com.billy.android.swipe.SmartSwipeRefresh.SmartSwipeRefreshDataLoader
 import com.billy.android.swipe.consumer.SlidingConsumer
-import com.cc.ext.stopInertiaRolling
 import com.cc.base2021.R
 import com.cc.base2021.bean.local.EmptyErrorBean
 import com.cc.base2021.bean.local.LoadingBean
-import com.cc.base2021.bean.wan.ArticleBean
-import com.cc.base2021.bean.wan.BannerBean
 import com.cc.base2021.comm.CommFragment
 import com.cc.base2021.component.main.viewmodel.WanViewModel
 import com.cc.base2021.component.web.WebActivity
 import com.cc.base2021.item.*
-import com.cc.base2021.widget.picsel.ImageEngine
 import com.cc.base2021.widget.sticky.StickyAnyAdapter
+import com.cc.ext.stopInertiaRolling
 import com.cc.sticky.StickyHeaderLinearLayoutManager
-import com.luck.picture.lib.PictureSelector
-import com.luck.picture.lib.entity.LocalMedia
 import kotlinx.android.synthetic.main.fragment_wan.wanRecycler
 
 /**
@@ -86,10 +80,14 @@ class WanFragment private constructor() : CommFragment() {
     wanRecycler.layoutManager = StickyHeaderLinearLayoutManager<StickyAnyAdapter>(mContext, LinearLayoutManager.VERTICAL, false)
     wanRecycler.adapter = stickyAdapter
     //注册多类型
-    stickyAdapter.register(LoadingItemViewBinder())
-    stickyAdapter.register(EmptyErrorItemViewBinder() { mViewModel.refresh() })
-    stickyAdapter.register(BannerViewBinder(onItemBannerClick))
-    stickyAdapter.register(ArticleViewBinder(onItemArticleClick))
+    stickyAdapter.register(LoadingItem())
+    stickyAdapter.register(EmptyErrorItem() { mViewModel.refresh() })
+    stickyAdapter.register(BannerItem() { bean, _ ->
+      bean.url?.let { u -> WebActivity.startActivity(mActivity, u) }
+    })
+    stickyAdapter.register(ArticleItem() { bean ->
+      bean.link?.let { u -> WebActivity.startActivity(mActivity, u) }
+    })
     //监听加载结果
     mViewModel.articleState.observe(this, Observer { list ->
       //处理下拉和上拉
@@ -135,39 +133,6 @@ class WanFragment private constructor() : CommFragment() {
       if (firstPosition > 5) wanRecycler.scrollToPosition(5)
       wanRecycler.smoothScrollToPosition(0)
     }
-  }
-  //</editor-fold>
-
-  //<editor-fold defaultstate="collapsed" desc="点击事件">
-  //Banner item点击事件
-  private var onItemBannerClick: ((bean: BannerBean, position: Int) -> Unit)? = { bean, _ ->
-    bean.url?.let { u -> WebActivity.startActivity(mActivity, u) }
-  }
-
-  //文章item点击事件
-  private var onItemArticleClick: ((bean: ArticleBean, position: Int) -> Unit)? = { bean, _ ->
-    bean.link?.let { u -> WebActivity.startActivity(mActivity, u) }
-  }
-
-  //九宫图片点击事件
-  private var onItemImgClick: ((url: String, p: Int, iv: ImageView, list: MutableList<String>) -> Unit)? = { _, p, _, list ->
-    val tempList = mutableListOf<LocalMedia>()
-    list.forEach { s -> tempList.add(LocalMedia().also { it.path = s }) }
-    //开始预览
-    PictureSelector.create(this)
-        .themeStyle(R.style.picture_default_style)
-        .isNotPreviewDownload(true)
-        .imageEngine(ImageEngine())
-        .openExternalPreview(p, tempList)
-  }
-  //</editor-fold>
-
-  //<editor-fold defaultstate="collapsed" desc="生命周期">
-  override fun onDestroy() {
-    onItemBannerClick = null
-    onItemArticleClick = null
-    onItemImgClick = null
-    super.onDestroy()
   }
   //</editor-fold>
 }
