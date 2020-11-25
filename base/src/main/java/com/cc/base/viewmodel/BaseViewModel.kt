@@ -8,19 +8,19 @@ import androidx.lifecycle.*
  * Time:10:08
  */
 open class BaseViewModel : ViewModel() {
-  val uiSimpleState = MutableLiveData<SimpleUiState>()
 
-  open class SimpleUiState(
-    val isLoading: Boolean = false,
-    val suc: Boolean = false,
-    var exc: Throwable? = null
+  open class SimpleUiState<T>(
+      val isLoading: Boolean = false,
+      val suc: Boolean = false,
+      var exc: Throwable? = null,
+      val data: T? = null
   )
 
   open class ListUiState<T>(
-    val isLoading: Boolean = false,
-    val suc: Boolean = false,
-    var exc: Throwable? = null,
-    val hasMore: Boolean = true,
-    val data: T? = null
+      val isLoading: Boolean = false,
+      val suc: Boolean = false,
+      var exc: Throwable? = null,
+      val hasMore: Boolean = true,
+      val data: T? = null
   )
 }

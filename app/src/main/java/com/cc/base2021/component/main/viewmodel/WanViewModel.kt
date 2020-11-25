@@ -18,7 +18,7 @@ class WanViewModel : BaseViewModel() {
   //<editor-fold defaultstate="collapsed" desc="外部访问">
   val articleState: LiveData<ListUiState<MutableList<ArticleBean>>>
     get() = articleList
-  val bannerState: LiveData<MutableList<BannerBean>>
+  val bannerState: LiveData<SimpleUiState<MutableList<BannerBean>>>
     get() = bannerList
 
   //刷新
@@ -36,7 +36,7 @@ class WanViewModel : BaseViewModel() {
 
   //<editor-fold defaultstate="collapsed" desc="内部处理">
   private val articleList = MutableLiveData<ListUiState<MutableList<ArticleBean>>>()
-  private val bannerList = MutableLiveData<MutableList<BannerBean>>()
+  private val bannerList = MutableLiveData<SimpleUiState<MutableList<BannerBean>>>()
   private var isRequest = false
   private var currentPage = 0
   private var hasMore = true
@@ -46,11 +46,11 @@ class WanViewModel : BaseViewModel() {
       val resultArticle = async { WanRepository.instance.article(page) }
       var articleTemp = BasePageList<ArticleBean>()
       //协程代码块
-      if (page == 1) {
+      if (page == 0) {
         val resultBanner = async { WanRepository.instance.banner() }
         val bannerTemp = resultBanner.await()
         articleTemp = resultArticle.await()
-        bannerList.value = bannerTemp
+        bannerList.value = SimpleUiState(suc = true, data = bannerTemp)
       } else {
         articleTemp = resultArticle.await()
       }
@@ -59,22 +59,22 @@ class WanViewModel : BaseViewModel() {
       currentPage = page
       //可以直接更新UI
       articleList.value = ListUiState(
-        suc = true,
-        hasMore = hasMore,
-        data = if (page == 1) result else ((articleList.value?.data ?: mutableListOf()) + result).toMutableList()
+          suc = true,
+          hasMore = hasMore,
+          data = if (page == 0) result else ((articleList.value?.data ?: mutableListOf()) + result).toMutableList()
       )
     }, { e -> //异常回调，这里可以拿到Throwable对象
       articleList.value = ListUiState(
-        exc = e,
-        hasMore = hasMore,
-        data = articleList.value?.data ?: mutableListOf()
+          exc = e,
+          hasMore = hasMore,
+          data = articleList.value?.data ?: mutableListOf()
       )
     }, { //开始回调，可以开启等待弹窗
       isRequest = true
       articleList.value = ListUiState(
-        isLoading = true,
-        hasMore = hasMore,
-        data = articleList.value?.data ?: mutableListOf()
+          isLoading = true,
+          hasMore = hasMore,
+          data = articleList.value?.data ?: mutableListOf()
       )
     }, { //结束回调，可以销毁等待弹窗
       isRequest = false

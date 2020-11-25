@@ -1,21 +1,19 @@
 package com.cc.base2021.component.main.fragment
 
 import android.graphics.Color
-import android.widget.ImageView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.billy.android.swipe.SmartSwipeRefresh
 import com.billy.android.swipe.SmartSwipeRefresh.SmartSwipeRefreshDataLoader
 import com.billy.android.swipe.consumer.SlidingConsumer
-import com.cc.ext.stopInertiaRolling
 import com.cc.base2021.R
-import com.cc.base2021.bean.gank.GankAndroidBean
 import com.cc.base2021.bean.local.*
 import com.cc.base2021.comm.CommFragment
 import com.cc.base2021.component.main.viewmodel.GankViewModel
 import com.cc.base2021.component.web.WebActivity
 import com.cc.base2021.item.*
 import com.cc.base2021.widget.picsel.ImageEngine
+import com.cc.ext.stopInertiaRolling
 import com.drakeet.multitype.MultiTypeAdapter
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.entity.LocalMedia
@@ -66,13 +64,8 @@ class GankFragment private constructor() : CommFragment() {
     mSmartSwipeRefresh?.isNoMoreData = true
     //下拉刷新
     mSmartSwipeRefresh?.dataLoader = object : SmartSwipeRefreshDataLoader {
-      override fun onLoadMore(ssr: SmartSwipeRefresh?) {
-        mViewModel.loadMore()
-      }
-
-      override fun onRefresh(ssr: SmartSwipeRefresh?) {
-        mViewModel.refresh()
-      }
+      override fun onRefresh(ssr: SmartSwipeRefresh?) = mViewModel.refresh()
+      override fun onLoadMore(ssr: SmartSwipeRefresh?) = mViewModel.loadMore()
     }
     //设置适配器
     gankRecycler.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)

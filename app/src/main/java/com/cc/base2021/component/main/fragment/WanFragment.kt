@@ -8,11 +8,13 @@ import com.billy.android.swipe.consumer.SlidingConsumer
 import com.cc.base2021.R
 import com.cc.base2021.bean.local.EmptyErrorBean
 import com.cc.base2021.bean.local.LoadingBean
+import com.cc.base2021.bean.wan.BannerBean
 import com.cc.base2021.comm.CommFragment
 import com.cc.base2021.component.main.viewmodel.WanViewModel
 import com.cc.base2021.component.web.WebActivity
 import com.cc.base2021.item.*
 import com.cc.base2021.widget.sticky.StickyAnyAdapter
+import com.cc.ext.logE
 import com.cc.ext.stopInertiaRolling
 import com.cc.sticky.StickyHeaderLinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_wan.wanRecycler
@@ -68,13 +70,8 @@ class WanFragment private constructor() : CommFragment() {
     mSmartSwipeRefresh?.isNoMoreData = true
     //下拉刷新
     mSmartSwipeRefresh?.dataLoader = object : SmartSwipeRefreshDataLoader {
-      override fun onLoadMore(ssr: SmartSwipeRefresh?) {
-        mViewModel.loadMore()
-      }
-
-      override fun onRefresh(ssr: SmartSwipeRefresh?) {
-        mViewModel.refresh()
-      }
+      override fun onRefresh(ssr: SmartSwipeRefresh?) = mViewModel.refresh()
+      override fun onLoadMore(ssr: SmartSwipeRefresh?) = mViewModel.loadMore()
     }
     //设置适配器
     wanRecycler.layoutManager = StickyHeaderLinearLayoutManager<StickyAnyAdapter>(mContext, LinearLayoutManager.VERTICAL, false)
@@ -102,7 +99,7 @@ class WanFragment private constructor() : CommFragment() {
       //停止惯性滚动
       if (!stickyAdapter.items.isNullOrEmpty()) wanRecycler.stopInertiaRolling()
       val items = ArrayList<Any>()
-      mViewModel.bannerState.value?.let { if (!it.isNullOrEmpty()) items.add(it) }
+      mViewModel.bannerState.value?.let { if (!it.data.isNullOrEmpty()) items.add(it.data ?: mutableListOf<BannerBean>()) }
       list?.data?.forEach { articleBean -> items.add(articleBean) }
       //如果没有，判断是否要显示异常布局
       if (items.isEmpty()) {
@@ -115,7 +112,8 @@ class WanFragment private constructor() : CommFragment() {
       stickyAdapter.items = items
       stickyAdapter.notifyDataSetChanged()
     })
-    mViewModel.bannerState.observe(this, Observer { list ->
+    mViewModel.bannerState.observe(this, Observer { state ->
+      val list = state.data
       if (list.isNullOrEmpty()) return@Observer
       if (stickyAdapter.items.any { it is LoadingBean }) stickyAdapter.items = mutableListOf(list)
       else stickyAdapter.items = stickyAdapter.items.toMutableList().apply { add(0, list) }

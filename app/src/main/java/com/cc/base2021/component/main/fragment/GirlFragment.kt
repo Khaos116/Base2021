@@ -65,13 +65,8 @@ class GirlFragment private constructor() : CommFragment() {
     mSmartSwipeRefresh?.isNoMoreData = true
     //下拉刷新
     mSmartSwipeRefresh?.dataLoader = object : SmartSwipeRefreshDataLoader {
-      override fun onLoadMore(ssr: SmartSwipeRefresh?) {
-        mViewModel.loadMore()
-      }
-
-      override fun onRefresh(ssr: SmartSwipeRefresh?) {
-        mViewModel.refresh()
-      }
+      override fun onRefresh(ssr: SmartSwipeRefresh?) = mViewModel.refresh()
+      override fun onLoadMore(ssr: SmartSwipeRefresh?) = mViewModel.loadMore()
     }
     //设置适配器
     girlRecycler.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
