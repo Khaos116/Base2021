@@ -230,7 +230,8 @@
 -keep public class * extends android.view.View{*;}
 -keep public class * implements com.kk.taurus.playerbase.player.IPlayer{*;}
 #====================================================================⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑
-
+#潘多拉调试 https://github.com/whataa/pandora/blob/master/READMORE.md
+-keep class tech.linjiang.pandora.**{*;}
 #====================================================================⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓⇓
 #====================================================================⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑⇑
 
