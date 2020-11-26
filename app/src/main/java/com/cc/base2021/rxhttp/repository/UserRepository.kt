@@ -70,7 +70,7 @@ class UserRepository private constructor() {
         this.user = it
         /**
          * 采用自动管理Cookie的方式可以采用下面的方式保存Token
-         * @see cc.abase.demo.rxhttp.config.RxHttpConfig.getDefaultOkHttpClient
+         * @see com.cc.base2021.config.RxHttpConfig.getRxhttpOkHttpClient
          */
         //RxCookie.instance.getCookie()?.forEach { cookie ->
         //    if (cookie.toString().contains("SESSIONID")) setToken(cookie.toString())
