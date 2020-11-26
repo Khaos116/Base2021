@@ -6,6 +6,7 @@ import com.cc.base2021.rxhttp.interceptor.TokenInterceptor
 import com.cc.base2021.utils.CharlesUtils
 import okhttp3.OkHttpClient
 import okhttp3.OkHttpClient.Builder
+import okhttp3.logging.HttpLoggingInterceptor
 import rxhttp.RxHttpPlugins
 import rxhttp.wrapper.cahce.CacheMode
 import rxhttp.wrapper.param.Param
@@ -51,7 +52,7 @@ class RxHttpConfig private constructor() {
   //初始化RxHttp https://github.com/liujingxing/okhttp-RxHttp/wiki/%E5%88%9D%E5%A7%8B%E5%8C%96
   private fun initRxHttp() {
     //设置debug模式，默认为false，设置为true后，发请求，过滤"RxHttp"能看到请求日志
-    RxHttp.setDebug(BuildConfig.DEBUG)
+    RxHttp.setDebug(false)
     //非必须,只能初始化一次，第二次将抛出异常
     RxHttp.init(getRxhttpOkHttpClient())
     //添加公共参数 https://github.com/liujingxing/okhttp-RxHttp/blob/486c7bc9e4554b4604f29c726e3e58714e2de6ee/app/src/main/java/com/example/httpsender/RxHttpManager.java
@@ -82,6 +83,7 @@ class RxHttpConfig private constructor() {
     val util = CharlesUtils.getInstance()
     util.setOkHttpCharlesSSL(builder, util.getCharlesInputStream("charles.pem"))
     builder.addInterceptor(TokenInterceptor())
+    builder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
     return builder.build()
   }
 

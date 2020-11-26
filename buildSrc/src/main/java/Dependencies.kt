@@ -62,6 +62,7 @@ object Deps {
 
   //网络请求 https://github.com/square/okhttp
   const val okhttp = "com.squareup.okhttp3:okhttp:${Versions.okHttp}"
+  const val okhttp_log = "com.squareup.okhttp3:logging-interceptor:${Versions.okHttp}"
 
   //协程 https://github.com/Kotlin/kotlinx.coroutines
   const val coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1"

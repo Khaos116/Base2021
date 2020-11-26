@@ -202,6 +202,7 @@ dependencies {
   implementation Deps.swipe
   implementation Deps.swipex
   implementation Deps.okhttp
+  implementation Deps.okhttp_log
   implementation Deps.rxandroid
   implementation Deps.gson
   implementation Deps.mmkv
