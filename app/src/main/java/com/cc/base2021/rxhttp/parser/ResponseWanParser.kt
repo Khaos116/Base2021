@@ -7,6 +7,7 @@ import rxhttp.wrapper.annotation.Parser
 import rxhttp.wrapper.entity.ParameterizedTypeImpl
 import rxhttp.wrapper.exception.ParseException
 import rxhttp.wrapper.parse.AbstractParser
+import rxhttp.wrapper.utils.convert
 import java.io.IOException
 import java.lang.reflect.Type
 import java.nio.charset.StandardCharsets
@@ -42,22 +43,23 @@ open class ResponseWanParser<T> : AbstractParser<T> {
   override fun onParse(response: okhttp3.Response): T {
     //获取泛型类型
     val type: Type = ParameterizedTypeImpl[BaseResponse::class.java, mType]
+    val baseResponse = response.convert<BaseResponse<T>>(type)
     //读取返回结果
-    var result: String? = null
-    val body = response.body
-    if (body != null) {
-      val source = body.source()
-      source.request(Long.MAX_VALUE)
-      result = source.buffer.clone().readString(StandardCharsets.UTF_8)
-    }
-    //判断结果
-    if (result == null || result.isEmpty()) throw ParseException("500", "服务器没有数据", response)
-    //转换类型
-    val data: BaseResponse<T> = GsonUtils.fromJson(result, type)
+    //var result: String? = null
+    //val body = response.body
+    //if (body != null) {
+    //  val source = body.source()
+    //  source.request(Long.MAX_VALUE)
+    //  result = source.buffer.clone().readString(StandardCharsets.UTF_8)
+    //}
+    ////判断结果
+    //if (result == null || result.isEmpty()) throw ParseException("500", "服务器没有数据", response)
+    ////转换类型
+    //val data: BaseResponse<T> = GsonUtils.fromJson(result, type)
     //获取data字段
-    val list = data.data
+    val data = baseResponse.data
     //code不等于0，说明数据不正确，抛出异常
-    if (data.errorCode != 0 || list == null) throw ParseException(data.errorCode.toString(), data.errorMsg, response)
-    return list
+    if (baseResponse.errorCode != 0 || data == null) throw ParseException(baseResponse.errorCode.toString(), baseResponse.errorMsg, response)
+    return data
   }
 }
