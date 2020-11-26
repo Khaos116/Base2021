@@ -1,12 +1,11 @@
 package com.cc.base2021.config
 
+import com.ayvytr.okhttploginterceptor.LoggingInterceptor
 import com.blankj.utilcode.util.Utils
-import com.cc.base2021.BuildConfig
 import com.cc.base2021.rxhttp.interceptor.TokenInterceptor
 import com.cc.base2021.utils.CharlesUtils
 import okhttp3.OkHttpClient
 import okhttp3.OkHttpClient.Builder
-import okhttp3.logging.HttpLoggingInterceptor
 import rxhttp.RxHttpPlugins
 import rxhttp.wrapper.cahce.CacheMode
 import rxhttp.wrapper.param.Param
@@ -38,7 +37,7 @@ class RxHttpConfig private constructor() {
     initRxHttpCahce()
     /**
      * 去除无意义的参数key，这里把header的共同参数剔除
-     * @see cc.abase.demo.config.HeaderManger.getStaticHeaders
+     * @see com.cc.base2021.config.HeaderManger.getStaticHeaders
      */
     deleteCacheParam(
         "Connection",
@@ -72,18 +71,9 @@ class RxHttpConfig private constructor() {
 
   //OkHttpClient
   private fun getRxhttpOkHttpClient(): OkHttpClient {
-    val sslParams = HttpsUtils.getSslSocketFactory()
-    val builder = Builder()
-        //.cookieJar(CookieStore())//如果启用自动管理，则不需要在TokenInterceptor中进行保存和initRxHttp()进行读取
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
-        .writeTimeout(30, TimeUnit.SECONDS)
-        .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager) //添加信任证书
-        .hostnameVerifier { _, _ -> true } //忽略host验证
-    val util = CharlesUtils.getInstance()
-    util.setOkHttpCharlesSSL(builder, util.getCharlesInputStream("charles.pem"))
+    val builder = getOkHttpClient()
     builder.addInterceptor(TokenInterceptor())
-    builder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+    builder.addInterceptor(LoggingInterceptor(isShowAll = true))
     return builder.build()
   }
 
