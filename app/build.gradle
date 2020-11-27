@@ -201,6 +201,9 @@ dependencies {
   implementation Deps.agentweb
   implementation Deps.swipe
   implementation Deps.swipex
+  implementation Deps.smart_refresh
+  implementation Deps.smart_header
+  implementation Deps.smart_footer
   implementation Deps.okhttp
   implementation Deps.okhttp_log
   implementation Deps.rxandroid
