@@ -10,7 +10,7 @@ import kotlin.coroutines.CoroutineContext
  * Date:2020/8/11
  * Time:17:46
  */
-//停止惯性滚动
+//停止惯性滚动(SmartRefresh下拉会自动停止滚动，所以不需要调用；如果使用Swipe下拉刷新，请一定在请求接口前调用)
 fun RecyclerView.stopInertiaRolling() {
   try {
     //如果是Support的RecyclerView则需要使用"cancelTouch"
