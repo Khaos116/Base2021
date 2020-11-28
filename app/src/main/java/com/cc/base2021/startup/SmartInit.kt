@@ -35,7 +35,7 @@ class SmartInit : Initializer<Int> {
         //layout.refreshHeader?.view?.setBackgroundColor(color)
         //layout.refreshFooter?.view?.setBackgroundColor(color)
         //}
-        layout.setPrimaryColors(R.color.cyan.xmlToColor()) //header和footer的背景色(多传一个参数代表文字的颜色)
+        layout.setPrimaryColors(R.color.gray_eee.xmlToColor()) //header和footer的背景色(多传一个参数代表文字的颜色)
         layout.setEnableLoadMoreWhenContentNotFull(false) //是否在列表不满一页时候开启上拉加载功能
         layout.setEnableScrollContentWhenLoaded(true) //是否在加载完成时滚动列表显示新的内容(false相当于加载更多是一个item)
         layout.setEnableRefresh(false) //默认不可下拉
