@@ -3,9 +3,6 @@ package com.cc.base2021.component.main.fragment
 import android.graphics.Color
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.billy.android.swipe.SmartSwipeRefresh
-import com.billy.android.swipe.SmartSwipeRefresh.SmartSwipeRefreshDataLoader
-import com.billy.android.swipe.consumer.SlidingConsumer
 import com.cc.base2021.R
 import com.cc.base2021.bean.gank.GankGirlBean
 import com.cc.base2021.bean.local.*
@@ -13,11 +10,11 @@ import com.cc.base2021.comm.CommFragment
 import com.cc.base2021.component.main.viewmodel.GirlViewModel
 import com.cc.base2021.item.*
 import com.cc.base2021.widget.picsel.ImageEngine
-import com.cc.ext.stopInertiaRolling
 import com.drakeet.multitype.MultiTypeAdapter
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.entity.LocalMedia
 import kotlinx.android.synthetic.main.fragment_girl.girlRecycler
+import kotlinx.android.synthetic.main.fragment_girl.girlRefreshLayout
 
 /**
  * Author:case
@@ -45,29 +42,12 @@ class GirlFragment private constructor() : CommFragment() {
 
   //多类型适配器
   private val multiTypeAdapter = MultiTypeAdapter()
-
-  //下拉刷新
-  private var mSmartSwipeRefresh: SmartSwipeRefresh? = null
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化">
   override fun lazyInit() {
-    //下拉刷新(translateMode和下面SlidingConsumer对应)
-    mSmartSwipeRefresh = SmartSwipeRefresh.translateMode(girlRecycler, false)
-    mSmartSwipeRefresh?.swipeConsumer?.let {
-      if (it is SlidingConsumer) { //https://qibilly.com/SmartSwipe-tutorial/pages/SmartSwipeRefresh.html
-        it.setOverSwipeFactor(0f) //超过最大拖动距离的比例，0不允许超出
-        it.relativeMoveFactor = 1f //视差效果(0-1)，1没有视差
-      }
-    }
-    mSmartSwipeRefresh?.disableRefresh()
-    mSmartSwipeRefresh?.disableLoadMore()
-    mSmartSwipeRefresh?.isNoMoreData = true
-    //下拉刷新
-    mSmartSwipeRefresh?.dataLoader = object : SmartSwipeRefreshDataLoader {
-      override fun onRefresh(ssr: SmartSwipeRefresh?) = mViewModel.refresh()
-      override fun onLoadMore(ssr: SmartSwipeRefresh?) = mViewModel.loadMore()
-    }
+    girlRefreshLayout.setOnRefreshListener { mViewModel.refresh() }
+    girlRefreshLayout.setOnLoadMoreListener { mViewModel.loadMore() }
     //设置适配器
     girlRecycler.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
     girlRecycler.adapter = multiTypeAdapter
@@ -93,15 +73,16 @@ class GirlFragment private constructor() : CommFragment() {
     mViewModel.girlState.observe(this, Observer { list ->
       //处理下拉和上拉
       if (list.suc || list.exc != null) {
-        mSmartSwipeRefresh?.finished(list.suc)
-        mSmartSwipeRefresh?.swipeConsumer?.enableTop()
-        mSmartSwipeRefresh?.isNoMoreData = !list.hasMore
-        if (list.hasMore) mSmartSwipeRefresh?.swipeConsumer?.enableBottom()
+        girlRefreshLayout.finishRefresh() //结束刷新
+        girlRefreshLayout.finishLoadMore(list.suc)
+        girlRefreshLayout.setEnableRefresh(!(list.exc == null && list.data.isNullOrEmpty())) //只要不是"请求失败+没有数据"就能刷拉刷新
+        girlRefreshLayout.setEnableLoadMore(!list.data.isNullOrEmpty()) //只要有数据就能看到没有更多数据的显示
+        girlRefreshLayout.setNoMoreData(!list.hasMore) //是否显示没有更多数据
       } else if (!list.isLoading) {
         return@Observer
       }
       //停止惯性滚动
-      if (!multiTypeAdapter.items.isNullOrEmpty()) girlRecycler.stopInertiaRolling()
+      //if (!multiTypeAdapter.items.isNullOrEmpty()) girlRecycler.stopInertiaRolling()
       //正常数据处理
       val items = ArrayList<Any>()
       list.data?.forEachIndexed { index, gankGirlBean ->
