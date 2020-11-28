@@ -13,13 +13,14 @@
   <!--    android:contentDescription="@null"-->
   <!--    android:scaleType="centerCrop"-->
   <!--    />-->
-
+  <!--https://github.com/svga/SVGAPlayer-Android/blob/master/readme.zh.md-->
   <com.opensource.svgaplayer.SVGAImageView
       android:id="@+id/splashSVGA"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:background="@color/white"
       app:autoPlay="true"
+      app:clearsAfterStop="false"
       app:fillMode="Backward"
       app:loopCount="1"
       app:source="MerryChristmas.svga"

@@ -65,8 +65,45 @@ class SplashActivity : CommActivity() {
         AudioManager.STREAM_MUSIC,
         AudioManager.ADJUST_MUTE, 0
     ) //静音
-    //UI显示出来再执行倒计时和权限判断
-    mContentView.post {
+    splashTv.click {
+      splashSVGA?.callback = null
+      countDownFinish = true
+      splashTv.gone()
+      goNextPage()
+    }
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="初始化数据">
+  override fun initData() {
+    if (hasFinish) return
+    //随机加载图片
+    //splashIv.loadCacheFileFullScreen(ImageUrls.instance.getRandomImgUrl(randomImg))
+    splashSVGA.callback = object : SVGACallback {
+      override fun onFinished() {
+        countDownFinish = true
+        splashTv.gone()
+        goNextPage()
+      }
+
+      override fun onPause() {}
+      override fun onRepeat() {}
+      override fun onStep(frame: Int, percentage: Double) {
+        "onStep:frame=$frame,percentage=$percentage".logE()
+      }
+    }
+    disposable = Observable.timer(2, TimeUnit.SECONDS)
+        .compose(RxUtils.instance.rx2SchedulerHelperO())
+        .subscribe { splashTv.visible() }
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="第一次打开触发">
+  private var isFirstOnResume = true
+  override fun onResume() {
+    super.onResume()
+    if (isFirstOnResume) {
+      isFirstOnResume = false
       hasSDPermission = PermissionUtils.instance.hasSDPermission()
       //请求SD卡权限
       if (!hasSDPermission) {
@@ -96,34 +133,6 @@ class SplashActivity : CommActivity() {
             })
       }
     }
-    splashTv.click {
-      splashSVGA?.callback = null
-      countDownFinish = true
-      splashTv.gone()
-      goNextPage()
-    }
-  }
-  //</editor-fold>
-
-  //<editor-fold defaultstate="collapsed" desc="初始化数据">
-  override fun initData() {
-    if (hasFinish) return
-    //随机加载图片
-    //splashIv.loadCacheFileFullScreen(ImageUrls.instance.getRandomImgUrl(randomImg))
-    splashSVGA.callback = object : SVGACallback {
-      override fun onFinished() {
-        countDownFinish = true
-        splashTv.gone()
-        goNextPage()
-      }
-
-      override fun onPause() {}
-      override fun onRepeat() {}
-      override fun onStep(frame: Int, percentage: Double) {}
-    }
-    disposable = Observable.timer(2, TimeUnit.SECONDS)
-        .compose(RxUtils.instance.rx2SchedulerHelperO())
-        .subscribe { splashTv.visible() }
   }
   //</editor-fold>
 
