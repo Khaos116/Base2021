@@ -13,55 +13,35 @@ import com.cc.base2021.rxhttp.repository.GankRepository
  */
 class GirlViewModel : BaseViewModel() {
   //<editor-fold defaultstate="collapsed" desc="外部访问">
-  val girlState: LiveData<ListUiState<MutableList<GankGirlBean>>>
-    get() = girlList
+  val girlLiveData = MutableLiveData<DataState<MutableList<GankGirlBean>>>()
 
   //刷新
-  fun refresh() {
-    if (isRequest) return
-    requestGirlList(1)
-  }
+  fun refresh() = requestGirlList(1)
 
   //加载更多
-  fun loadMore() {
-    if (isRequest) return
-    requestGirlList(currentPage + 1)
-  }
+  fun loadMore() = requestGirlList(currentPage + 1)
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="内部处理">
-  private val girlList = MutableLiveData<ListUiState<MutableList<GankGirlBean>>>()
-  private var isRequest = false
   private var currentPage = 1
   private var pageSize = 10
-  private var hasMore = true
   private fun requestGirlList(page: Int) {
+    if (girlLiveData.value is DataState.Start) return
+    val old = girlLiveData.value?.data //加载前的旧数据
     rxLifeScope.launch({
       //协程代码块
       val result = GankRepository.instance.girlList(page = page, size = pageSize)
       currentPage = page
-      hasMore = result.size == pageSize
       //可以直接更新UI
-      girlList.value = ListUiState(
-        suc = true,
-        hasMore = hasMore,
-        data = if (page == 1) result else ((girlList.value?.data ?: mutableListOf()) + result).toMutableList()
-      )
+      girlLiveData.value = if (page == 1) DataState.SuccessRefresh(newData = result)
+      else DataState.SuccessMore(newData = result, totalData = if (old.isNullOrEmpty()) result else (old + result).toMutableList())
     }, { e -> //异常回调，这里可以拿到Throwable对象
-      girlList.value = ListUiState(
-        exc = e,
-        hasMore = hasMore,
-        data = girlList.value?.data ?: mutableListOf()
-      )
+      girlLiveData.value = if (page == 1) DataState.FailRefresh(oldData = old, exc = e) else DataState.FailMore(oldData = old, exc = e)
     }, { //开始回调，可以开启等待弹窗
-      isRequest = true
-      girlList.value = ListUiState(
-        isLoading = true,
-        hasMore = hasMore,
-        data = girlList.value?.data ?: mutableListOf()
-      )
+      girlLiveData.value = DataState.Start(oldData = old)
     }, { //结束回调，可以销毁等待弹窗
-      isRequest = false
+      val data = girlLiveData.value?.data
+      girlLiveData.value = DataState.Complete(totalData = data, hasMore = !data.isNullOrEmpty() && data.size % pageSize == 0)
     })
   }
   //</editor-fold>

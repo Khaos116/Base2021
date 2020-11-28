@@ -3,6 +3,7 @@ package com.cc.base2021.component.main.fragment
 import android.graphics.Color
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.cc.base.viewmodel.BaseViewModel.DataState
 import com.cc.base2021.R
 import com.cc.base2021.bean.gank.GankGirlBean
 import com.cc.base2021.bean.local.*
@@ -70,36 +71,52 @@ class GirlFragment private constructor() : CommFragment() {
       }
     })
     //监听加载结果
-    mViewModel.girlState.observe(this, Observer { list ->
-      //处理下拉和上拉
-      if (list.suc || list.exc != null) {
-        girlRefreshLayout.finishRefresh() //结束刷新
-        girlRefreshLayout.finishLoadMore(list.suc)
-        girlRefreshLayout.setEnableRefresh(!(list.exc == null && list.data.isNullOrEmpty())) //只要不是"请求失败+没有数据"就能刷拉刷新
-        girlRefreshLayout.setEnableLoadMore(!list.data.isNullOrEmpty()) //只要有数据就能看到没有更多数据的显示
-        girlRefreshLayout.setNoMoreData(!list.hasMore) //是否显示没有更多数据
-      } else if (!list.isLoading) {
-        return@Observer
-      }
-      //停止惯性滚动
-      //if (!multiTypeAdapter.items.isNullOrEmpty()) girlRecycler.stopInertiaRolling()
+    mViewModel.girlLiveData.observe(this) {
       //正常数据处理
-      val items = ArrayList<Any>()
-      list.data?.forEachIndexed { index, gankGirlBean ->
-        items.add(gankGirlBean)
-        if (index < (list.data?.size ?: 0) - 1) items.add(DividerBean(heightPx = 1, bgColor = Color.RED))
-      }
-      //如果没有，判断是否要显示异常布局
-      if (items.isEmpty()) {
-        when {
-          list.isLoading -> items.add(LoadingBean()) //加载中
-          list.suc -> items.add(EmptyErrorBean(isEmpty = true, isError = false)) //如果请求成功没有数据
-          list.exc != null -> items.add(EmptyErrorBean()) //如果是请求异常没有数据
+      var items = mutableListOf<Any>()
+      when (it) {
+        //开始请求
+        is DataState.Start -> {
+          if (it.data.isNullOrEmpty()) items.add(LoadingBean()) //加载中
+          else items = multiTypeAdapter.items.toMutableList()
+        }
+        //刷新成功
+        is DataState.SuccessRefresh -> {
+          girlRefreshLayout.setEnableRefresh(true)
+          girlRefreshLayout.setEnableLoadMore(!it.data.isNullOrEmpty())
+          if (it.data.isNullOrEmpty()) items.add(EmptyErrorBean(isEmpty = true, isError = false)) //如果请求成功没有数据
+          else it.data?.forEachIndexed { index, gankGirlBean ->
+            items.add(gankGirlBean)
+            if (index < (it.data?.size ?: 0) - 1) items.add(DividerBean(heightPx = 1, bgColor = Color.RED))
+          }
+        }
+        //加载更多成功
+        is DataState.SuccessMore -> {
+          girlRefreshLayout.finishLoadMore()
+          items = multiTypeAdapter.items.toMutableList()
+          it.newData?.forEach { gankGirlBean ->
+            items.add(DividerBean(heightPx = 1, bgColor = Color.RED))
+            items.add(gankGirlBean)
+          }
+        }
+        //刷新失败
+        is DataState.FailRefresh -> {
+          if (it.data.isNullOrEmpty()) items.add(EmptyErrorBean()) //如果是请求异常没有数据
+          else items = multiTypeAdapter.items.toMutableList()
+        }
+        //加载更多失败
+        is DataState.FailMore -> girlRefreshLayout.finishLoadMore(false)
+        //请求结束
+        is DataState.Complete -> {
+          girlRefreshLayout.finishRefresh() //结束刷新(不论成功还是失败)
+          girlRefreshLayout.setNoMoreData(!it.hasMore)
         }
       }
-      multiTypeAdapter.items = items
-      multiTypeAdapter.notifyDataSetChanged()
-    })
+      if (it.dataMaybeChange()) {
+        multiTypeAdapter.items = items
+        multiTypeAdapter.notifyDataSetChanged()
+      }
+    }
     //请求数据
     mViewModel.refresh()
   }
