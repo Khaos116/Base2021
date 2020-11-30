@@ -3,6 +3,7 @@ package com.cc.base2021.item
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
+import android.widget.ImageView.ScaleType
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.cc.base.ui.BaseItemView
 import com.cc.base2021.R
@@ -60,7 +61,7 @@ class BannerItem(
     }
 
     override fun updateUI(data: BannerBean, position: Int, count: Int) {
-      this.imageView?.loadImgHorizontal(data.imagePath)
+      this.imageView?.loadImgHorizontal(data.imagePath, ScaleType.CENTER_CROP, ScaleType.CENTER_CROP)
     }
   }
   //</editor-fold>
