@@ -1,23 +1,18 @@
 package com.cc.base2021.component.main.fragment
 
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.billy.android.swipe.SmartSwipeRefresh
-import com.billy.android.swipe.SmartSwipeRefresh.SmartSwipeRefreshDataLoader
-import com.billy.android.swipe.consumer.SlidingConsumer
+import com.cc.base.viewmodel.DataState
 import com.cc.base2021.R
 import com.cc.base2021.bean.local.EmptyErrorBean
 import com.cc.base2021.bean.local.LoadingBean
-import com.cc.base2021.bean.wan.BannerBean
 import com.cc.base2021.comm.CommFragment
 import com.cc.base2021.component.main.viewmodel.WanViewModel
 import com.cc.base2021.component.web.WebActivity
 import com.cc.base2021.item.*
 import com.cc.base2021.widget.sticky.StickyAnyAdapter
-import com.cc.ext.logE
-import com.cc.ext.stopInertiaRolling
 import com.cc.sticky.StickyHeaderLinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_wan.wanRecycler
+import kotlinx.android.synthetic.main.fragment_wan.wanRefreshLayout
 
 /**
  * Author:case
@@ -49,30 +44,13 @@ class WanFragment private constructor() : CommFragment() {
       return position == 1
     }
   }
-
-  //下拉刷新
-  private var mSmartSwipeRefresh: SmartSwipeRefresh? = null
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="初始化">
   override
   fun lazyInit() {
-    //下拉刷新(translateMode和下面SlidingConsumer对应)
-    mSmartSwipeRefresh = SmartSwipeRefresh.translateMode(wanRecycler, false)
-    mSmartSwipeRefresh?.swipeConsumer?.let {
-      if (it is SlidingConsumer) { //https://qibilly.com/SmartSwipe-tutorial/pages/SmartSwipeRefresh.html
-        it.setOverSwipeFactor(0f) //超过最大拖动距离的比例，0不允许超出
-        it.relativeMoveFactor = 1f //视差效果(0-1)，1没有视差
-      }
-    }
-    mSmartSwipeRefresh?.disableRefresh()
-    mSmartSwipeRefresh?.disableLoadMore()
-    mSmartSwipeRefresh?.isNoMoreData = true
-    //下拉刷新
-    mSmartSwipeRefresh?.dataLoader = object : SmartSwipeRefreshDataLoader {
-      override fun onRefresh(ssr: SmartSwipeRefresh?) = mViewModel.refresh()
-      override fun onLoadMore(ssr: SmartSwipeRefresh?) = mViewModel.loadMore()
-    }
+    wanRefreshLayout.setOnRefreshListener { mViewModel.refresh() }
+    wanRefreshLayout.setOnLoadMoreListener { mViewModel.loadMore() }
     //设置适配器
     wanRecycler.layoutManager = StickyHeaderLinearLayoutManager<StickyAnyAdapter>(mContext, LinearLayoutManager.VERTICAL, false)
     wanRecycler.adapter = stickyAdapter
@@ -85,40 +63,65 @@ class WanFragment private constructor() : CommFragment() {
     stickyAdapter.register(ArticleItem() { bean ->
       bean.link?.let { u -> WebActivity.startActivity(mActivity, u) }
     })
-    //监听加载结果
-    mViewModel.articleState.observe(this, Observer { list ->
-      //处理下拉和上拉
-      if (list.suc || list.exc != null) {
-        mSmartSwipeRefresh?.finished(list.suc)
-        mSmartSwipeRefresh?.swipeConsumer?.enableTop()
-        mSmartSwipeRefresh?.isNoMoreData = !list.hasMore
-        if (list.hasMore) mSmartSwipeRefresh?.swipeConsumer?.enableBottom()
-      } else if (!list.isLoading) {
-        return@Observer
-      }
-      //停止惯性滚动
-      if (!stickyAdapter.items.isNullOrEmpty()) wanRecycler.stopInertiaRolling()
-      val items = ArrayList<Any>()
-      mViewModel.bannerState.value?.let { if (!it.data.isNullOrEmpty()) items.add(it.data ?: mutableListOf<BannerBean>()) }
-      list?.data?.forEach { articleBean -> items.add(articleBean) }
-      //如果没有，判断是否要显示异常布局
-      if (items.isEmpty()) {
-        when {
-          list.isLoading -> items.add(LoadingBean()) //加载中
-          list.suc -> items.add(EmptyErrorBean(isEmpty = true, isError = false)) //如果请求成功没有数据
-          list.exc != null -> items.add(EmptyErrorBean()) //如果是请求异常没有数据
+    //文章列表监听
+    mViewModel.articleLiveData.observe(this) {
+      //正常数据处理
+      var items = mutableListOf<Any>()
+      when (it) {
+        //开始请求
+        is DataState.Start -> {
+          if (it.data.isNullOrEmpty()) items.add(LoadingBean()) //加载中
+          else items = stickyAdapter.items.toMutableList()
+        }
+        //刷新成功
+        is DataState.SuccessRefresh -> {
+          wanRefreshLayout.setEnableRefresh(true)
+          wanRefreshLayout.setEnableLoadMore(!it.data.isNullOrEmpty())
+          if (it.data.isNullOrEmpty()) items.add(EmptyErrorBean(isEmpty = true, isError = false)) //如果请求成功没有数据
+          else it.data?.forEach { articleBean -> items.add(articleBean) }
+        }
+        //加载更多成功
+        is DataState.SuccessMore -> {
+          wanRefreshLayout.finishLoadMore()
+          items = stickyAdapter.items.toMutableList()
+          it.newData?.forEach { articleBean -> items.add(articleBean) }
+        }
+        //刷新失败
+        is DataState.FailRefresh -> {
+          if (it.data.isNullOrEmpty()) items.add(EmptyErrorBean()) //如果是请求异常没有数据
+          else items = stickyAdapter.items.toMutableList()
+        }
+        //加载更多失败
+        is DataState.FailMore -> wanRefreshLayout.finishLoadMore(false)
+        //请求结束
+        is DataState.Complete -> {
+          wanRefreshLayout.finishRefresh() //结束刷新(不论成功还是失败)
+          wanRefreshLayout.setNoMoreData(!it.hasMore)
         }
       }
-      stickyAdapter.items = items
-      stickyAdapter.notifyDataSetChanged()
-    })
-    mViewModel.bannerState.observe(this, Observer { state ->
-      val list = state.data
-      if (list.isNullOrEmpty()) return@Observer
-      if (stickyAdapter.items.any { it is LoadingBean }) stickyAdapter.items = mutableListOf(list)
-      else stickyAdapter.items = stickyAdapter.items.toMutableList().apply { add(0, list) }
-      stickyAdapter.notifyDataSetChanged()
-    })
+      if (it.dataMaybeChange()) {
+        //Banner
+        if (!items.any { d -> d is MutableList<*> }) {
+          mViewModel.bannerLiveData.value?.data?.let { banner ->
+            if (banner.isNotEmpty()) {
+              items.add(0, banner)
+              items = items.filterNot { d -> d is LoadingBean || d is EmptyErrorBean }.toMutableList()
+            }
+          }
+        }
+        stickyAdapter.items = items
+        stickyAdapter.notifyDataSetChanged()
+      }
+    }
+    //banner监听
+    mViewModel.bannerLiveData.observe(this) {
+      if (it is DataState.Complete) { //如果banner刷新靠后，则请求完成后重新刷一下文章列表
+        val articleData = mViewModel.articleLiveData.value
+        if (articleData is DataState.Complete) {
+          mViewModel.articleLiveData.value = DataState.Complete(totalData = articleData.data, hasMore = articleData.hasMore)
+        }
+      }
+    }
     //请求数据
     mViewModel.refresh()
   }

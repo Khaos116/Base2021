@@ -1,7 +1,15 @@
 package com.cc.base2021.component.main.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.rxLifeScope
 import com.cc.base.viewmodel.BaseViewModel
+import com.cc.base.viewmodel.DataState
+import com.cc.base.viewmodel.DataState.Complete
+import com.cc.base.viewmodel.DataState.FailMore
+import com.cc.base.viewmodel.DataState.FailRefresh
+import com.cc.base.viewmodel.DataState.Start
+import com.cc.base.viewmodel.DataState.SuccessMore
+import com.cc.base.viewmodel.DataState.SuccessRefresh
 import com.cc.base2021.bean.gank.GankAndroidBean
 import com.cc.base2021.rxhttp.repository.GankRepository
 
@@ -12,57 +20,35 @@ import com.cc.base2021.rxhttp.repository.GankRepository
  */
 class GankViewModel : BaseViewModel() {
   //<editor-fold defaultstate="collapsed" desc="外部访问">
-  val androidState: LiveData<ListUiState<MutableList<GankAndroidBean>>>
-    get() = androidList
+  val androidLiveData = MutableLiveData<DataState<MutableList<GankAndroidBean>>>()
 
   //刷新
-  fun refresh() {
-    if (isRequest) return
-    requestAndroidList(1)
-  }
+  fun refresh() = requestAndroidList(1)
 
   //加载更多
-  fun loadMore() {
-    if (isRequest) return
-    requestAndroidList(currentPage + 1)
-  }
-
+  fun loadMore() = requestAndroidList(currentPage + 1)
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="内部处理">
-  private val androidList = MutableLiveData<ListUiState<MutableList<GankAndroidBean>>>()
-  private var isRequest = false
   private var currentPage = 1
   private var pageSize = 10
-  private var hasMore = true
   private fun requestAndroidList(page: Int) {
+    if (androidLiveData.value is Start) return
+    val old = androidLiveData.value?.data //加载前的旧数据
     rxLifeScope.launch({
       //协程代码块
       val result = GankRepository.instance.androidList(page = page, size = pageSize)
       currentPage = page
-      hasMore = result.size == pageSize
-      //加载成功先关闭弹窗,再设置数据，方便填充空View的情况
       //可以直接更新UI
-      androidList.value = ListUiState(
-        suc = true,
-        hasMore = hasMore,
-        data = if (page == 1) result else ((androidList.value?.data ?: mutableListOf()) + result).toMutableList()
-      )
+      androidLiveData.value = if (page == 1) SuccessRefresh(newData = result)
+      else SuccessMore(newData = result, totalData = if (old.isNullOrEmpty()) result else (old + result).toMutableList())
     }, { e -> //异常回调，这里可以拿到Throwable对象
-      androidList.value = ListUiState(
-        exc = e,
-        hasMore = hasMore,
-        data = androidList.value?.data ?: mutableListOf()
-      )
+      androidLiveData.value = if (page == 1) FailRefresh(oldData = old, exc = e) else FailMore(oldData = old, exc = e)
     }, { //开始回调，可以开启等待弹窗
-      isRequest = true
-      androidList.value = ListUiState(
-        isLoading = true,
-        hasMore = hasMore,
-        data = androidList.value?.data ?: mutableListOf()
-      )
+      androidLiveData.value = Start(oldData = old)
     }, { //结束回调，可以销毁等待弹窗
-      isRequest = false
+      val data = androidLiveData.value?.data
+      androidLiveData.value = Complete(totalData = data, hasMore = !data.isNullOrEmpty() && data.size % pageSize == 0)
     })
   }
   //</editor-fold>

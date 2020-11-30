@@ -1,13 +1,20 @@
 package com.cc.base2021.component.main.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.rxLifeScope
 import com.cc.base.viewmodel.BaseViewModel
-import com.cc.base2021.bean.base.BasePageList
+import com.cc.base.viewmodel.DataState
+import com.cc.base.viewmodel.DataState.Complete
+import com.cc.base.viewmodel.DataState.FailMore
+import com.cc.base.viewmodel.DataState.FailRefresh
+import com.cc.base.viewmodel.DataState.Start
+import com.cc.base.viewmodel.DataState.SuccessMore
+import com.cc.base.viewmodel.DataState.SuccessRefresh
 import com.cc.base2021.bean.wan.ArticleBean
 import com.cc.base2021.bean.wan.BannerBean
 import com.cc.base2021.rxhttp.repository.WanRepository
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Author:case
@@ -16,68 +23,60 @@ import kotlinx.coroutines.delay
  */
 class WanViewModel : BaseViewModel() {
   //<editor-fold defaultstate="collapsed" desc="外部访问">
-  val articleState: LiveData<ListUiState<MutableList<ArticleBean>>>
-    get() = articleList
-  val bannerState: LiveData<SimpleUiState<MutableList<BannerBean>>>
-    get() = bannerList
+  //banner
+  val bannerLiveData = MutableLiveData<DataState<MutableList<BannerBean>>>()
+
+  //文章列表
+  val articleLiveData = MutableLiveData<DataState<MutableList<ArticleBean>>>()
 
   //刷新
   fun refresh() {
-    if (isRequest) return
+    requestBanner()
     requestWanList(0)
   }
 
   //加载更多
-  fun loadMore() {
-    if (isRequest) return
-    requestWanList(currentPage + 1)
-  }
+  fun loadMore() = requestWanList(currentPage + 1)
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="内部处理">
-  private val articleList = MutableLiveData<ListUiState<MutableList<ArticleBean>>>()
-  private val bannerList = MutableLiveData<SimpleUiState<MutableList<BannerBean>>>()
-  private var isRequest = false
   private var currentPage = 0
-  private var hasMore = true
+  private var hasMore = false
 
-  private fun requestWanList(page: Int) {
+  //请求banner(有数据就不再请求了)
+  private fun requestBanner() {
+    val old = bannerLiveData.value?.data
+    if (bannerLiveData.value is Start || !old.isNullOrEmpty()) return
     rxLifeScope.launch({
-      val resultArticle = async { WanRepository.instance.article(page) }
-      var articleTemp = BasePageList<ArticleBean>()
+      withContext(Dispatchers.IO) { WanRepository.instance.banner() }.let { bannerLiveData.value = SuccessRefresh(newData = it) }
+    }, { e ->
+      bannerLiveData.value = FailRefresh(oldData = old, exc = e)
+    }, {
+      bannerLiveData.value = Start(oldData = old)
+    }, {
+      bannerLiveData.value = Complete(totalData = bannerLiveData.value?.data, hasMore = false)
+    })
+  }
+
+  //请求文章列表
+  private fun requestWanList(page: Int) {
+    if (articleLiveData.value is Start) return
+    val old = articleLiveData.value?.data
+    rxLifeScope.launch({
       //协程代码块
-      if (page == 0) {
-        val resultBanner = async { WanRepository.instance.banner() }
-        val bannerTemp = resultBanner.await()
-        articleTemp = resultArticle.await()
-        bannerList.value = SimpleUiState(suc = true, data = bannerTemp)
-      } else {
-        articleTemp = resultArticle.await()
-      }
-      val result = articleTemp.datas?.toMutableList() ?: mutableListOf()
-      hasMore = articleTemp.curPage < articleTemp.total
+      val response = WanRepository.instance.article(page)
+      val result = response.datas?.toMutableList() ?: mutableListOf()
+      hasMore = response.curPage < response.total
       currentPage = page
       //可以直接更新UI
-      articleList.value = ListUiState(
-          suc = true,
-          hasMore = hasMore,
-          data = if (page == 0) result else ((articleList.value?.data ?: mutableListOf()) + result).toMutableList()
-      )
+      articleLiveData.value = if (page == 0) SuccessRefresh(newData = result)
+      else SuccessMore(newData = result, totalData = if (old.isNullOrEmpty()) result else (old + result).toMutableList())
     }, { e -> //异常回调，这里可以拿到Throwable对象
-      articleList.value = ListUiState(
-          exc = e,
-          hasMore = hasMore,
-          data = articleList.value?.data ?: mutableListOf()
-      )
+      articleLiveData.value = if (page == 0) FailRefresh(oldData = old, exc = e) else FailMore(oldData = old, exc = e)
     }, { //开始回调，可以开启等待弹窗
-      isRequest = true
-      articleList.value = ListUiState(
-          isLoading = true,
-          hasMore = hasMore,
-          data = articleList.value?.data ?: mutableListOf()
-      )
+      articleLiveData.value = Start(oldData = old)
     }, { //结束回调，可以销毁等待弹窗
-      isRequest = false
+      articleLiveData.value = Complete(totalData = articleLiveData.value?.data, hasMore = hasMore)
     })
   }
   //</editor-fold>

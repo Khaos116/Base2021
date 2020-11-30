@@ -1,9 +1,8 @@
 package com.cc.base2021.component.main.fragment
 
 import android.graphics.Color
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.cc.base.viewmodel.BaseViewModel.DataState
+import com.cc.base.viewmodel.DataState
 import com.cc.base2021.R
 import com.cc.base2021.bean.gank.GankGirlBean
 import com.cc.base2021.bean.local.*
