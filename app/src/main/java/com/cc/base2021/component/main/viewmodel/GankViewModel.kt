@@ -2,7 +2,6 @@ package com.cc.base2021.component.main.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.rxLifeScope
-import com.cc.base.viewmodel.BaseViewModel
 import com.cc.base.viewmodel.DataState
 import com.cc.base.viewmodel.DataState.Complete
 import com.cc.base.viewmodel.DataState.FailMore
@@ -11,6 +10,7 @@ import com.cc.base.viewmodel.DataState.Start
 import com.cc.base.viewmodel.DataState.SuccessMore
 import com.cc.base.viewmodel.DataState.SuccessRefresh
 import com.cc.base2021.bean.gank.GankAndroidBean
+import com.cc.base2021.comm.CommViewModel
 import com.cc.base2021.rxhttp.repository.GankRepository
 
 /**
@@ -18,9 +18,9 @@ import com.cc.base2021.rxhttp.repository.GankRepository
  * Date:2020/8/21
  * Time:9:52
  */
-class GankViewModel : BaseViewModel() {
+class GankViewModel : CommViewModel() {
   //<editor-fold defaultstate="collapsed" desc="外部访问">
-  val androidLiveData = MutableLiveData<DataState<MutableList<GankAndroidBean>>>()
+  val androidLiveData = MutableLiveData<DataState<MutableList<GankAndroidBean>>?>()
 
   //刷新
   fun refresh() = requestAndroidList(1)

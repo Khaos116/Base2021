@@ -1,7 +1,6 @@
 package com.cc.base2021.component.main.fragment
 
 import android.graphics.Color
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cc.base.viewmodel.DataState
 import com.cc.base2021.R
@@ -69,7 +68,8 @@ class GankFragment private constructor() : CommFragment() {
           .openExternalPreview(p, tempList)
     }, onItemClick = { url -> if (url.isNotBlank()) WebActivity.startActivity(mActivity, url) }))
     //监听加载结果
-    mViewModel.androidLiveData.observe(this, Observer {
+    mViewModel.androidLiveData.observe(this) {
+      mViewModel.handleRefresh(gankRefreshLayout, it)
       //正常数据处理
       var items = mutableListOf<Any>()
       when (it) {
@@ -80,8 +80,6 @@ class GankFragment private constructor() : CommFragment() {
         }
         //刷新成功
         is DataState.SuccessRefresh -> {
-          gankRefreshLayout.setEnableRefresh(true)
-          gankRefreshLayout.setEnableLoadMore(!it.data.isNullOrEmpty())
           if (it.data.isNullOrEmpty()) items.add(EmptyErrorBean(isEmpty = true, isError = false)) //如果请求成功没有数据
           else it.data?.forEachIndexed { index, androidBean ->
             items.add(androidBean) //文章
@@ -91,7 +89,6 @@ class GankFragment private constructor() : CommFragment() {
         }
         //加载更多成功
         is DataState.SuccessMore -> {
-          gankRefreshLayout.finishLoadMore()
           items = multiTypeAdapter.items.toMutableList()
           it.newData?.forEach { androidBean ->
             items.add(DividerBean(heightPx = 1, bgColor = Color.GREEN)) //分割线
@@ -104,19 +101,14 @@ class GankFragment private constructor() : CommFragment() {
           if (it.data.isNullOrEmpty()) items.add(EmptyErrorBean()) //如果是请求异常没有数据
           else items = multiTypeAdapter.items.toMutableList()
         }
-        //加载更多失败
-        is DataState.FailMore -> gankRefreshLayout.finishLoadMore(false)
-        //请求结束
-        is DataState.Complete -> {
-          gankRefreshLayout.finishRefresh() //结束刷新(不论成功还是失败)
-          gankRefreshLayout.setNoMoreData(!it.hasMore)
+        else -> {
         }
       }
-      if (it.dataMaybeChange()) {
+      if (it?.dataMaybeChange() == true) {
         multiTypeAdapter.items = items
         multiTypeAdapter.notifyDataSetChanged()
       }
-    })
+    }
     //请求数据
     mViewModel.refresh()
   }

@@ -65,6 +65,7 @@ class WanFragment private constructor() : CommFragment() {
     })
     //文章列表监听
     mViewModel.articleLiveData.observe(this) {
+      mViewModel.handleRefresh(wanRefreshLayout, it)
       //正常数据处理
       var items = mutableListOf<Any>()
       when (it) {
@@ -75,14 +76,11 @@ class WanFragment private constructor() : CommFragment() {
         }
         //刷新成功
         is DataState.SuccessRefresh -> {
-          wanRefreshLayout.setEnableRefresh(true)
-          wanRefreshLayout.setEnableLoadMore(!it.data.isNullOrEmpty())
           if (it.data.isNullOrEmpty()) items.add(EmptyErrorBean(isEmpty = true, isError = false)) //如果请求成功没有数据
           else it.data?.forEach { articleBean -> items.add(articleBean) }
         }
         //加载更多成功
         is DataState.SuccessMore -> {
-          wanRefreshLayout.finishLoadMore()
           items = stickyAdapter.items.toMutableList()
           it.newData?.forEach { articleBean -> items.add(articleBean) }
         }
@@ -91,15 +89,10 @@ class WanFragment private constructor() : CommFragment() {
           if (it.data.isNullOrEmpty()) items.add(EmptyErrorBean()) //如果是请求异常没有数据
           else items = stickyAdapter.items.toMutableList()
         }
-        //加载更多失败
-        is DataState.FailMore -> wanRefreshLayout.finishLoadMore(false)
-        //请求结束
-        is DataState.Complete -> {
-          wanRefreshLayout.finishRefresh() //结束刷新(不论成功还是失败)
-          wanRefreshLayout.setNoMoreData(!it.hasMore)
+        else -> {
         }
       }
-      if (it.dataMaybeChange()) {
+      if (it?.dataMaybeChange() == true) {
         //Banner
         if (!items.any { d -> d is MutableList<*> }) {
           mViewModel.bannerLiveData.value?.data?.let { banner ->

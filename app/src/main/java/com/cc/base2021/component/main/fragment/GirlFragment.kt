@@ -71,6 +71,7 @@ class GirlFragment private constructor() : CommFragment() {
     })
     //监听加载结果
     mViewModel.girlLiveData.observe(this) {
+      mViewModel.handleRefresh(girlRefreshLayout, it)
       //正常数据处理
       var items = mutableListOf<Any>()
       when (it) {
@@ -81,8 +82,6 @@ class GirlFragment private constructor() : CommFragment() {
         }
         //刷新成功
         is DataState.SuccessRefresh -> {
-          girlRefreshLayout.setEnableRefresh(true)
-          girlRefreshLayout.setEnableLoadMore(!it.data.isNullOrEmpty())
           if (it.data.isNullOrEmpty()) items.add(EmptyErrorBean(isEmpty = true, isError = false)) //如果请求成功没有数据
           else it.data?.forEachIndexed { index, gankGirlBean ->
             items.add(gankGirlBean)
@@ -91,7 +90,6 @@ class GirlFragment private constructor() : CommFragment() {
         }
         //加载更多成功
         is DataState.SuccessMore -> {
-          girlRefreshLayout.finishLoadMore()
           items = multiTypeAdapter.items.toMutableList()
           it.newData?.forEach { gankGirlBean ->
             items.add(DividerBean(heightPx = 1, bgColor = Color.RED))
@@ -103,15 +101,10 @@ class GirlFragment private constructor() : CommFragment() {
           if (it.data.isNullOrEmpty()) items.add(EmptyErrorBean()) //如果是请求异常没有数据
           else items = multiTypeAdapter.items.toMutableList()
         }
-        //加载更多失败
-        is DataState.FailMore -> girlRefreshLayout.finishLoadMore(false)
-        //请求结束
-        is DataState.Complete -> {
-          girlRefreshLayout.finishRefresh() //结束刷新(不论成功还是失败)
-          girlRefreshLayout.setNoMoreData(!it.hasMore)
+        else -> {
         }
       }
-      if (it.dataMaybeChange()) {
+      if (it?.dataMaybeChange() == true) {
         multiTypeAdapter.items = items
         multiTypeAdapter.notifyDataSetChanged()
       }

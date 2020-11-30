@@ -7,6 +7,5 @@ import androidx.lifecycle.ViewModel
  * Date:2020/8/13
  * Time:10:08
  */
-open class BaseViewModel : ViewModel() {
-
+abstract class BaseViewModel : ViewModel() {
 }

@@ -1,7 +1,7 @@
 package com.cc.base2021.component.main.viewmodel
 
-import androidx.lifecycle.*
-import com.cc.base.viewmodel.BaseViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.rxLifeScope
 import com.cc.base.viewmodel.DataState
 import com.cc.base.viewmodel.DataState.Complete
 import com.cc.base.viewmodel.DataState.FailMore
@@ -10,6 +10,7 @@ import com.cc.base.viewmodel.DataState.Start
 import com.cc.base.viewmodel.DataState.SuccessMore
 import com.cc.base.viewmodel.DataState.SuccessRefresh
 import com.cc.base2021.bean.gank.GankGirlBean
+import com.cc.base2021.comm.CommViewModel
 import com.cc.base2021.rxhttp.repository.GankRepository
 
 /**
@@ -18,9 +19,9 @@ import com.cc.base2021.rxhttp.repository.GankRepository
  * Date:2020/8/13
  * Time:9:48
  */
-class GirlViewModel : BaseViewModel() {
+class GirlViewModel : CommViewModel() {
   //<editor-fold defaultstate="collapsed" desc="外部访问">
-  val girlLiveData = MutableLiveData<DataState<MutableList<GankGirlBean>>>()
+  val girlLiveData = MutableLiveData<DataState<MutableList<GankGirlBean>>?>()
 
   //刷新
   fun refresh() = requestGirlList(1)

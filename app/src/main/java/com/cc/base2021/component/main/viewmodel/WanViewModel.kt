@@ -2,7 +2,6 @@ package com.cc.base2021.component.main.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.rxLifeScope
-import com.cc.base.viewmodel.BaseViewModel
 import com.cc.base.viewmodel.DataState
 import com.cc.base.viewmodel.DataState.Complete
 import com.cc.base.viewmodel.DataState.FailMore
@@ -12,6 +11,7 @@ import com.cc.base.viewmodel.DataState.SuccessMore
 import com.cc.base.viewmodel.DataState.SuccessRefresh
 import com.cc.base2021.bean.wan.ArticleBean
 import com.cc.base2021.bean.wan.BannerBean
+import com.cc.base2021.comm.CommViewModel
 import com.cc.base2021.rxhttp.repository.WanRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -21,13 +21,13 @@ import kotlinx.coroutines.withContext
  * Date:2020/8/29
  * Time:17:18
  */
-class WanViewModel : BaseViewModel() {
+class WanViewModel : CommViewModel() {
   //<editor-fold defaultstate="collapsed" desc="外部访问">
   //banner
-  val bannerLiveData = MutableLiveData<DataState<MutableList<BannerBean>>>()
+  val bannerLiveData = MutableLiveData<DataState<MutableList<BannerBean>>?>()
 
   //文章列表
-  val articleLiveData = MutableLiveData<DataState<MutableList<ArticleBean>>>()
+  val articleLiveData = MutableLiveData<DataState<MutableList<ArticleBean>>?>()
 
   //刷新
   fun refresh() {
