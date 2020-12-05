@@ -497,7 +497,33 @@ class AliVideoView @JvmOverloads constructor(
       if (hasAudioFocus) releaseAudioFocusByVideo()
     }
     mPlayState = state
+    changeScreenOn(state)
     callOutInfo?.callPlayState(state)
+  }
+
+  //根据状态判断是否需要常亮
+  private fun changeScreenOn(state: PlayState) {
+    val temp = context
+    if (temp is Activity) {
+      when (state) {
+        PlayState.PREPARING,
+        PlayState.PREPARED,
+        PlayState.BUFFING,
+        PlayState.BUFFED,
+        PlayState.SEEKING,
+        PlayState.SEEKED,
+        PlayState.START,
+        PlayState.PAUSE -> true
+        PlayState.SHOW_MOBILE,
+        PlayState.STOP,
+        PlayState.COMPLETE,
+        PlayState.ERROR -> false
+        else -> null
+      }?.let { open ->
+        if (open) temp.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        else temp.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+      }
+    }
   }
 
   private fun callDuration(duration: Long) {
