@@ -20,10 +20,11 @@ object MediaMetadataRetrieverUtils {
       GlobalScope.launch(Dispatchers.Main) { call.invoke(null) }
     }) {
       retriever.setDataSource(url, HashMap())
-      //获得第10帧图片 这里的第一个参数 以微秒为单位
+      //以微秒为单位
       val bit = retriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
       retriever.release()
       GlobalScope.launch(Dispatchers.Main) { call.invoke(bit) }
+      //缓存封面
       bit?.let { b -> ImageUtils.save(b, cacheFile, Bitmap.CompressFormat.PNG) }
     }
   }
