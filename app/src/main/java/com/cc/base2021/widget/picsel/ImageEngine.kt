@@ -6,8 +6,7 @@ import android.graphics.PointF
 import android.view.View
 import android.widget.ImageView
 import androidx.core.graphics.drawable.toBitmap
-import coil.Coil
-import coil.clear
+import coil.*
 import coil.request.ImageRequest
 import com.blankj.utilcode.util.Utils
 import com.cc.ext.gone
@@ -32,30 +31,28 @@ class ImageEngine : com.luck.picture.lib.engine.ImageEngine {
 
   //加载网络图片适配长图方案(此方法只有加载网络图片才会回调)
   override fun loadImage(
-    context: Context,
-    url: String,
-    imageView: ImageView,
-    longImageView: SubsamplingScaleImageView?,
-    callback: OnImageCompleteCallback?
+      context: Context,
+      url: String,
+      imageView: ImageView,
+      longImageView: SubsamplingScaleImageView?,
+      callback: OnImageCompleteCallback?
   ) {
-    Coil.imageLoader(Utils.getApp()).enqueue(
-      ImageRequest.Builder(Utils.getApp()).data(url).target(
-        onStart = {
-          longImageView?.gone()
-          imageView.visible()
-          imageView.clear()
-          imageView.setImageResource(R.drawable.loading_720p_vertical)
-        },
-        onSuccess = { resource ->
-          loadNetImage(resource.toBitmap(), imageView, longImageView)
-        },
-        onError = {
-          longImageView?.gone()
-          imageView.visible()
-          imageView.clear()
-          imageView.setImageResource(R.drawable.error_720p_vertical)
-        }
-      ).build()
+    Utils.getApp().imageLoader.enqueue(
+        ImageRequest.Builder(Utils.getApp()).data(url).target(
+            onStart = {
+              longImageView?.gone()
+              imageView.visible()
+              imageView.clear()
+              imageView.setImageResource(R.drawable.loading_720_v)
+            },
+            onSuccess = { resource -> loadNetImage(resource.toBitmap(), imageView, longImageView) },
+            onError = {
+              longImageView?.gone()
+              imageView.visible()
+              imageView.clear()
+              imageView.setImageResource(R.drawable.error_720_v)
+            }
+        ).build()
     )
   }
 
@@ -93,6 +90,7 @@ class ImageEngine : com.luck.picture.lib.engine.ImageEngine {
 
   //加载gif
   override fun loadAsGifImage(context: Context, url: String, imageView: ImageView) {
+    imageView.loadImgSquare(url)
   }
 
   //加载图片列表图片
