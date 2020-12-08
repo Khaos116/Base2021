@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -9,7 +11,10 @@
   <com.cc.base2021.widget.discretescrollview.banner.DiscreteBanner
       android:id="@+id/itemBanner"
       android:layout_width="match_parent"
-      android:layout_height="200dp"
+      android:layout_height="0dp"
+      app:layout_constraintDimensionRatio="720:400"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:background="@color/cyan_40E0D0"
       />
 
   <View
@@ -17,5 +22,6 @@
       android:layout_width="match_parent"
       android:layout_height="1px"
       android:background="@color/blue"
+      app:layout_constraintTop_toBottomOf="@id/itemBanner"
       />
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
