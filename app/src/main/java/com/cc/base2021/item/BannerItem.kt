@@ -45,24 +45,14 @@ class BannerItem(
           }
         }
         .setPages(object : DiscreteHolderCreator {
-          override fun createHolder(itemView: View) = BannerHolderHolderView(itemView)
+          override fun createHolder(itemView: View) = object : DiscreteHolder<BannerBean>(itemView) {
+            override fun updateUI(data: BannerBean?, position: Int, count: Int) {
+              itemView.itemBannerImg.loadImgHorizontal(data?.imagePath)
+            }
+          }
+
           override fun getLayoutId() = R.layout.item_banner_img
         }, item)
-  }
-
-  //</editor-fold>
-
-  //<editor-fold defaultstate="collapsed" desc="Banner图片的ViewHolder">
-  class BannerHolderHolderView(view: View) : DiscreteHolder<BannerBean>(view) {
-    private var imageView: ImageView? = null
-
-    override fun initView(itemView: View) {
-      imageView = itemView.itemBannerImg
-    }
-
-    override fun updateUI(data: BannerBean, position: Int, count: Int) {
-      this.imageView?.loadImgHorizontal(data.imagePath, ScaleType.CENTER_CROP, ScaleType.CENTER_CROP)
-    }
   }
   //</editor-fold>
 }

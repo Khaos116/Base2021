@@ -19,33 +19,24 @@ import kotlinx.android.synthetic.main.layout_guide.view.guideIV
  * @date: 2019/10/14 14:30
  */
 class GuideHolderCreator : DiscreteHolderCreator {
-  override fun createHolder(itemView: View): DiscreteHolder<String> = GuideHolder(itemView)
-
+  //<editor-fold defaultstate="collapsed" desc="XML">
   override fun getLayoutId() = R.layout.layout_guide
-}
+  //</editor-fold>
 
-class GuideHolder(view: View) : DiscreteHolder<String>(view) {
-  private var imageView: ImageView? = null
-  private var textView: TextView? = null
-  override fun initView(itemView: View) {
-    imageView = itemView.guideIV
-    textView = itemView.guideGo
-  }
-
-  override fun updateUI(
-    data: String?,
-    position: Int,
-    count: Int
-  ) {
-    this.imageView?.loadImgVerticalScreen(data)
-    this.textView?.visibleGone(position == count - 1)
-    this.textView?.let { view ->
-      view.visibleGone(position == count - 1)
-      view.pressEffectAlpha()
-      view.click {
-        MMkvUtils.instance.setShowGuide(false)
-        MainActivity.startActivity(it.context)
+  //<editor-fold defaultstate="collapsed" desc="数据加载">
+  override fun createHolder(itemView: View): DiscreteHolder<String> = object : DiscreteHolder<String>(itemView) {
+    override fun updateUI(data: String?, position: Int, count: Int) {
+      itemView.guideIV?.loadImgVerticalScreen(data)
+      itemView.guideGo?.visibleGone(position == count - 1)
+      itemView.guideGo?.let { view ->
+        view.visibleGone(position == count - 1)
+        view.pressEffectAlpha()
+        view.click {
+          MMkvUtils.instance.setShowGuide(false)
+          MainActivity.startActivity(it.context)
+        }
       }
     }
   }
+  //</editor-fold>
 }
