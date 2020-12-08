@@ -11,7 +11,7 @@
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:contentDescription="@null"
-      android:scaleType="centerCrop"
+      android:scaleType="fitCenter"
       app:layout_constraintDimensionRatio="852:1280"
       app:layout_constraintTop_toTopOf="parent"
       />
