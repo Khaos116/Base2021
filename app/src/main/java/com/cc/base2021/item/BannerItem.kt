@@ -3,6 +3,7 @@ package com.cc.base2021.item
 import android.view.Gravity
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.blankj.utilcode.util.ScreenUtils
 import com.cc.base.ui.BaseItemView
 import com.cc.base2021.R
 import com.cc.base2021.bean.wan.BannerBean
@@ -29,8 +30,9 @@ class BannerItem(
   override fun fillData(holder: ViewHolder, itemView: View, item: MutableList<BannerBean>) {
     if (holder.itemView.getTag(R.id.tag_banner) == item) return
     holder.itemView.setTag(R.id.tag_banner, item)
-    holder.itemView.findViewById<DiscreteBanner<BannerBean>>(R.id.itemBanner)
-        .setLooper(true)
+    val banner = holder.itemView.findViewById<DiscreteBanner<BannerBean>>(R.id.itemBanner)
+    banner.layoutParams.height = (ScreenUtils.getScreenWidth() * 500f / 900).toInt()
+    banner.setLooper(true)
         .setAutoPlay(true)
         .setOrientation(DSVOrientation.VERTICAL)
         .setOnItemClick { position, t -> onItemBannerClick?.invoke(t, position) }
@@ -45,7 +47,7 @@ class BannerItem(
         .setPages(object : DiscreteHolderCreator {
           override fun createHolder(itemView: View) = object : DiscreteHolder<BannerBean>(itemView) {
             override fun updateUI(data: BannerBean?, position: Int, count: Int) {
-              itemView.itemBannerImg.loadImgHorizontal(data?.imagePath)
+              itemView.itemBannerImg.loadImgHorizontal(data?.imagePath, 900f / 500)
             }
           }
 
