@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,10 +11,10 @@
   <com.cc.base2021.widget.discretescrollview.banner.DiscreteBanner
       android:id="@+id/itemBanner"
       android:layout_width="match_parent"
-      android:layout_height="0dp"
-      app:layout_constraintDimensionRatio="720:400"
+      android:layout_height="wrap_content"
       app:layout_constraintTop_toTopOf="parent"
       tools:background="@color/cyan_40E0D0"
+      tools:layout_height="200dp"
       />
 
   <View
@@ -24,4 +24,4 @@
       android:background="@color/blue"
       app:layout_constraintTop_toBottomOf="@id/itemBanner"
       />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
