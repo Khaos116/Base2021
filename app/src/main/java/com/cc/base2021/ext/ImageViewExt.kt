@@ -1,23 +1,17 @@
 package com.cc.base2021.ext
 
-import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
-import android.os.Build
 import android.widget.ImageView
 import coil.*
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
-import coil.fetch.VideoFrameFileFetcher
-import coil.fetch.VideoFrameUriFetcher
 import coil.request.ImageRequest
 import coil.util.CoilUtils
-import com.blankj.utilcode.util.*
+import com.blankj.utilcode.util.EncryptUtils
+import com.blankj.utilcode.util.Utils
 import com.cc.base2021.R
 import com.cc.base2021.config.AppConfig
-import com.cc.ext.*
+import com.cc.ext.logE
+import com.cc.ext.toFile
 import com.cc.utils.MediaMetadataRetrieverUtils
-import com.cc.utils.MediaUtils
-import kotlinx.coroutines.*
 import okhttp3.Cache
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.io.File
@@ -28,27 +22,22 @@ import java.io.File
  * Time:18:28
  */
 //正方形图片加载s
-inline fun ImageView.loadImgSquare(url: String?) {
+fun ImageView.loadImgSquare(url: String?) {
+  this.scaleType = ImageView.ScaleType.CENTER_CROP
   if (url.isNullOrBlank()) {
     this.clearLoad()
-    this.setImageResource(R.drawable.error_square)
+    this.load(R.drawable.error_720_s)
   } else {
     if (getTag(R.id.suc_img) == url) return
     val iv = this
-    val f = url.toFile()
-    if (f != null) {
-      iv.load(f, context.imageLoader) {
-        crossfade(true)
-        placeholder(R.drawable.loading_square)
-        error(R.drawable.error_square)
-        listener { _, _ -> iv.setTag(R.id.suc_img, url) }
-      }
-    } else iv.load(url, context.imageLoader) {
+    val build = fun ImageRequest.Builder.() {
       crossfade(true)
-      placeholder(R.drawable.loading_square)
-      error(R.drawable.error_square)
-      listener { _, _ -> iv.setTag(R.id.suc_img, url) }
+      placeholder(R.drawable.loading_720_s)
+      error(R.drawable.error_720_s)
+      listener(onError = { r, e -> "方形图片加载失败:${r.data},e=${e.message ?: "null"}".logE() }) { _, _ -> iv.setTag(R.id.suc_img, url) }
     }
+    val f = url.toFile()
+    if (f != null) iv.load(f, builder = build) else iv.load(url, builder = build)
   }
 }
 
@@ -58,32 +47,26 @@ fun ImageView.loadImgHorizontal(url: String?,
     sucScaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_CENTER) {
   if (url.isNullOrBlank()) {
     this.clearLoad()
-    this.scaleType = loadingScaleType
-    this.setImageResource(R.drawable.error_720p_horizontal)
+    this.scaleType = sucScaleType
+    this.load(R.drawable.error_720_h)
   } else {
-    if (getTag(R.id.suc_img) == url) return
+    if (getTag(R.id.suc_img) == url) {
+      this.scaleType = sucScaleType
+      return
+    }
     val iv = this
     iv.scaleType = loadingScaleType
-    val f = url.toFile()
-    if (f != null) {
-      iv.load(f, context.imageLoader) {
-        crossfade(true)
-        placeholder(R.drawable.loading_720p_horizontal)
-        error(R.drawable.error_720p_horizontal)
-        listener { _, _ ->
-          iv.scaleType = sucScaleType
-          iv.setTag(R.id.suc_img, url)
-        }
-      }
-    } else iv.load(url, context.imageLoader) {
+    val build = fun ImageRequest.Builder.() {
       crossfade(true)
-      placeholder(R.drawable.loading_720p_horizontal)
-      error(R.drawable.error_720p_horizontal)
-      listener { _, _ ->
+      placeholder(R.drawable.loading_720_h)
+      error(R.drawable.error_720_h)
+      listener(onError = { r, e -> "横向图片加载失败:${r.data},e=${e.message ?: "null"}".logE() }) { _, _ ->
         iv.scaleType = sucScaleType
         iv.setTag(R.id.suc_img, url)
       }
     }
+    val f = url.toFile()
+    if (f != null) iv.load(f, builder = build) else iv.load(url, builder = build)
   }
 }
 
@@ -93,35 +76,30 @@ fun ImageView.loadImgVerticalScreen(url: String?,
     sucScaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_CENTER) {
   if (url.isNullOrBlank()) {
     this.clearLoad()
-    this.scaleType = loadingScaleType
-    this.setImageResource(R.drawable.error_720p_vertical)
+    this.scaleType = sucScaleType
+    this.load(R.drawable.error_720_v)
   } else {
-    if (getTag(R.id.suc_img) == url) return
+    if (getTag(R.id.suc_img) == url) {
+      this.scaleType = sucScaleType
+      return
+    }
     val iv = this
     iv.scaleType = loadingScaleType
-    val f = url.toFile()
-    if (f != null) {
-      iv.load(f, context.imageLoader) {
-        crossfade(true)
-        placeholder(R.drawable.loading_720p_vertical)
-        error(R.drawable.error_720p_vertical)
-        listener(onError = { r, e -> "图片加载失败:${r.data},e=${e.message ?: "null"}".logE() }) { _, _ ->
-          iv.scaleType = sucScaleType
-          iv.setTag(R.id.suc_img, url)
-        }
-      }
-    } else iv.load(url, context.imageLoader) {
+    val build = fun ImageRequest.Builder.() {
       crossfade(true)
-      placeholder(R.drawable.loading_720p_vertical)
-      error(R.drawable.error_720p_vertical)
-      listener(onError = { r, e -> "图片加载失败:${r.data},e=${e.message ?: "null"}".logE() }) { _, _ ->
+      placeholder(R.drawable.loading_720_v)
+      error(R.drawable.error_720_v)
+      listener(onError = { r, e -> "竖向图片加载失败:${r.data},e=${e.message ?: "null"}".logE() }) { _, _ ->
         iv.scaleType = sucScaleType
         iv.setTag(R.id.suc_img, url)
       }
     }
+    val f = url.toFile()
+    if (f != null) iv.load(f, builder = build) else iv.load(url, builder = build)
   }
 }
 
+//清除上次的加载状态，保证重新加载
 fun ImageView.clearLoad() {
   this.clear()
   setTag(R.id.suc_img, null)
@@ -130,15 +108,14 @@ fun ImageView.clearLoad() {
 //加载缓存文件
 fun ImageView.loadCacheFileFullScreen(url: String?) {
   if (url.isNullOrBlank()) {
-    this.clearLoad()
-    this.setImageResource(R.drawable.error_720p_vertical)
+    this.load(R.drawable.error_720_v)
   } else {
     url.toHttpUrlOrNull()?.let { u ->
-      val f = CoilUtils.createDefaultCache(Utils.getApp()).directory.listFiles().orEmpty().find { it.name.contains(Cache.key(u)) }
+      val f = CoilUtils.createDefaultCache(Utils.getApp()).directory.listFiles()?.firstOrNull { f -> f.name.contains(Cache.key(u)) }
       if (f?.exists() == true) { //文件存在直接加载
         this.load(f, context.imageLoader)
       } else { //文件不存在，进行下载
-        Coil.imageLoader(Utils.getApp()).enqueue(
+        Utils.getApp().imageLoader.enqueue(
             ImageRequest.Builder(Utils.getApp()).data(u).target(
                 onStart = {
                   "缓存图片开始下载".logE()
@@ -158,27 +135,33 @@ fun ImageView.loadCacheFileFullScreen(url: String?) {
 
 //加载视频网络封面(type:0-方形，1-横向，2-竖向)
 fun ImageView.loadNetVideoCover(url: String?, type: Int = 0) {
-  url?.let {
-    val cacheFile = File(AppConfig.VIDEO_OVER_CACHE_DIR, EncryptUtils.encryptMD5ToString(it))
-    if (cacheFile.exists()) {
-      load(cacheFile)
-      return
-    }
-    getTag(R.id.id_retriever)?.let { r -> (r as MediaMetadataRetriever).release() }
-    when (type) {
-      1 -> setImageResource(R.drawable.loading_720p_horizontal)
-      2 -> setImageResource(R.drawable.loading_720p_vertical)
-      else -> setImageResource(R.drawable.loading_square)
-    }
-    val retriever = MediaMetadataRetriever()
-    setTag(R.id.id_retriever, retriever)
-    MediaMetadataRetrieverUtils.getNetVideoCover(retriever, cacheFile, it) { bit ->
-      setTag(R.id.id_retriever, null)
-      if (bit != null) setImageBitmap(bit) else {
-        when (type) {
-          1 -> setImageResource(R.drawable.error_720p_horizontal)
-          2 -> setImageResource(R.drawable.error_720p_vertical)
-          else -> setImageResource(R.drawable.error_square)
+  (getTag(R.id.id_retriever) as? MediaMetadataRetriever)?.release() //防止之前的图还没完成
+  if (url.isNullOrBlank()) { //有封面复用为无封面
+    this.load(when (type) {
+      1 -> R.drawable.error_720_h
+      2 -> R.drawable.error_720_v
+      else -> R.drawable.error_720_s
+    })
+  } else {
+    val cacheFile = File(AppConfig.VIDEO_OVER_CACHE_DIR, EncryptUtils.encryptMD5ToString(url))
+    if (cacheFile.exists()) load(cacheFile) else {
+      this.load(when (type) {
+        1 -> R.drawable.loading_720_h
+        2 -> R.drawable.loading_720_v
+        else -> R.drawable.loading_720_s
+      })
+      val retriever = MediaMetadataRetriever()
+      setTag(R.id.id_retriever, retriever)
+      MediaMetadataRetrieverUtils.getNetVideoCover(retriever, cacheFile, url) { bit ->
+        setTag(R.id.id_retriever, null)
+        if (bit != null) this.load(bit) else {
+          this.load(
+              when (type) {
+                1 -> R.drawable.error_720_h
+                2 -> R.drawable.error_720_v
+                else -> R.drawable.error_720_s
+              }
+          )
         }
       }
     }
