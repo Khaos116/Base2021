@@ -6,14 +6,15 @@ import android.graphics.PointF
 import android.view.View
 import android.widget.ImageView
 import androidx.core.graphics.drawable.toBitmap
-import coil.*
+import coil.clear
+import coil.imageLoader
 import coil.request.ImageRequest
 import com.blankj.utilcode.util.Utils
+import com.cc.base2021.ext.loadImgSquare
+import com.cc.base2021.ext.loadImgVerticalScreen
+import com.cc.base2021.utils.PlaceHolderUtils
 import com.cc.ext.gone
 import com.cc.ext.visible
-import com.cc.base2021.R
-import com.cc.base2021.ext.loadImgVerticalScreen
-import com.cc.base2021.ext.loadImgSquare
 import com.luck.picture.lib.listener.OnImageCompleteCallback
 import com.luck.picture.lib.tools.MediaUtils
 import com.luck.picture.lib.widget.longimage.*
@@ -43,14 +44,14 @@ class ImageEngine : com.luck.picture.lib.engine.ImageEngine {
               longImageView?.gone()
               imageView.visible()
               imageView.clear()
-              imageView.setImageResource(R.drawable.loading_720_v)
+              imageView.setImageDrawable(PlaceHolderUtils.getLoadingHolder(720f / 1280))
             },
             onSuccess = { resource -> loadNetImage(resource.toBitmap(), imageView, longImageView) },
             onError = {
               longImageView?.gone()
               imageView.visible()
               imageView.clear()
-              imageView.setImageResource(R.drawable.error_720_v)
+              imageView.setImageDrawable(PlaceHolderUtils.getErrorHolder(720f / 1280))
             }
         ).build()
     )
