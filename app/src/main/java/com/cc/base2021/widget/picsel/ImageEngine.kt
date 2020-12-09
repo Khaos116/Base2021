@@ -19,6 +19,7 @@ import com.luck.picture.lib.PictureSelectorActivity
 import com.luck.picture.lib.listener.OnImageCompleteCallback
 import com.luck.picture.lib.tools.MediaUtils
 import com.luck.picture.lib.widget.longimage.*
+import java.lang.ref.WeakReference
 
 /**
  * Author:case
@@ -39,20 +40,25 @@ class ImageEngine : com.luck.picture.lib.engine.ImageEngine {
       longImageView: SubsamplingScaleImageView?,
       callback: OnImageCompleteCallback?
   ) {
+    val weakReference = WeakReference(imageView)
     Utils.getApp().imageLoader.enqueue(
         ImageRequest.Builder(Utils.getApp()).data(url).target(
             onStart = {
               longImageView?.gone()
-              imageView.visible()
-              imageView.clear()
-              imageView.setImageDrawable(PlaceHolderUtils.getLoadingHolder(720f / 1280))
+              weakReference.get()?.let { iv ->
+                iv.visible()
+                iv.clear()
+                iv.setImageDrawable(PlaceHolderUtils.getLoadingHolder(720f / 1280))
+              }
             },
-            onSuccess = { resource -> loadNetImage(resource, imageView, longImageView) },
+            onSuccess = { resource -> weakReference.get()?.let { iv -> loadNetImage(resource, iv, longImageView) } },
             onError = {
               longImageView?.gone()
-              imageView.visible()
-              imageView.clear()
-              imageView.setImageDrawable(PlaceHolderUtils.getErrorHolder(720f / 1280))
+              weakReference.get()?.let { iv ->
+                iv.visible()
+                iv.clear()
+                iv.setImageDrawable(PlaceHolderUtils.getErrorHolder(720f / 1280))
+              }
             }
         ).build()
     )
