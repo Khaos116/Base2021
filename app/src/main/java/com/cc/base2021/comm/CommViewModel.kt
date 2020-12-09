@@ -2,8 +2,8 @@ package com.cc.base2021.comm
 
 import com.cc.base.viewmodel.BaseViewModel
 import com.cc.base.viewmodel.DataState
-import com.cc.base2021.bean.gank.GankAndroidBean
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
+import com.scwang.smart.refresh.layout.constant.RefreshState
 
 /**
  * Author:CASE
@@ -23,6 +23,7 @@ abstract class CommViewModel : BaseViewModel() {
       is DataState.Complete -> { //请求完成
         refreshLayout?.finishRefresh() //结束刷新(不论成功还是失败)
         refreshLayout?.setNoMoreData(!dataState.hasMore) //判断是否还有更多
+        if (refreshLayout?.state == RefreshState.Loading) refreshLayout.finishLoadMore() //加载更多太快可能出现加载更多不消失，所以纠正
       }
       else -> {
       }
