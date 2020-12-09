@@ -28,6 +28,9 @@ object PlaceHolderUtils {
    */
   fun getLoadingHolder(ratio: Float = 1f, width: Int = ScreenUtils.getScreenWidth(), @ColorInt bgColor: Int = Color.WHITE): LayerDrawable {
     loadingMaps.toList().firstOrNull { it.first.first == ratio && it.first.second == width && it.first.third == bgColor }?.let {
+      it.second.getDrawable(0).alpha = 255
+      it.second.getDrawable(1).alpha = 255
+      it.second.alpha = 255
       return it.second
     }
     //计算背景图高度
@@ -59,6 +62,9 @@ object PlaceHolderUtils {
    */
   fun getErrorHolder(ratio: Float = 1f, width: Int = ScreenUtils.getScreenWidth(), @ColorInt bgColor: Int = Color.WHITE): LayerDrawable {
     errorMaps.toList().firstOrNull { it.first.first == ratio && it.first.second == width && it.first.third == bgColor }?.let {
+      it.second.getDrawable(0).alpha = 255
+      it.second.getDrawable(1).alpha = 255
+      it.second.alpha = 255
       return it.second
     }
     //计算背景图高度
