@@ -23,6 +23,6 @@ class AppLastInit : Initializer<Int> {
   }
 
   override fun dependencies(): MutableList<Class<out Initializer<*>>> {
-    return mutableListOf(MMkvInit::class.java, SwipeInit::class.java, SmartInit::class.java)
+    return mutableListOf(CoilInit::class.java, SwipeInit::class.java, SmartInit::class.java)
   }
 }
