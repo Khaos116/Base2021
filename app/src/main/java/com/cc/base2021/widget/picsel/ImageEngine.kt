@@ -9,11 +9,13 @@ import androidx.core.graphics.drawable.toBitmap
 import coil.*
 import coil.request.ImageRequest
 import com.blankj.utilcode.util.Utils
+import com.cc.base2021.comm.CommActivity
 import com.cc.base2021.ext.loadImgSquare
-import com.cc.base2021.ext.loadImgVerticalScreen
+import com.cc.base2021.ext.loadImgVertical
 import com.cc.base2021.utils.PlaceHolderUtils
 import com.cc.ext.gone
 import com.cc.ext.visible
+import com.luck.picture.lib.PictureSelectorActivity
 import com.luck.picture.lib.listener.OnImageCompleteCallback
 import com.luck.picture.lib.tools.MediaUtils
 import com.luck.picture.lib.widget.longimage.*
@@ -26,7 +28,7 @@ import com.luck.picture.lib.widget.longimage.*
 class ImageEngine : com.luck.picture.lib.engine.ImageEngine {
   //加载图片
   override fun loadImage(context: Context, url: String, imageView: ImageView) {
-    imageView.loadImgVerticalScreen(url)
+    imageView.loadImgVertical(url)
   }
 
   //加载网络图片适配长图方案(此方法只有加载网络图片才会回调)
@@ -91,7 +93,11 @@ class ImageEngine : com.luck.picture.lib.engine.ImageEngine {
 
   //加载gif
   override fun loadAsGifImage(context: Context, url: String, imageView: ImageView) {
-    imageView.loadImgSquare(url)
+    if (context is CommActivity || context is PictureSelectorActivity) {
+      imageView.loadImgSquare(url)
+    } else {
+      imageView.loadImgVertical(url)
+    }
   }
 
   //加载图片列表图片

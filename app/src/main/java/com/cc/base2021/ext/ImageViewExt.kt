@@ -70,7 +70,7 @@ fun ImageView.loadImgHorizontal(url: String?, holderRatio: Float = 720f / 400) {
 }
 
 //竖向图片加载
-fun ImageView.loadImgVerticalScreen(url: String?, holderRatio: Float = 720f / 1280) {
+fun ImageView.loadImgVertical(url: String?, holderRatio: Float = 720f / 1280) {
   if (url.isNullOrBlank()) {
     this.clearLoad()
     this.load(PlaceHolderUtils.getErrorHolder(holderRatio))

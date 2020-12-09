@@ -4,7 +4,7 @@ import android.view.View
 import com.blankj.utilcode.util.ScreenUtils
 import com.cc.base2021.R
 import com.cc.base2021.component.main.MainActivity
-import com.cc.base2021.ext.loadImgVerticalScreen
+import com.cc.base2021.ext.loadImgVertical
 import com.cc.base2021.utils.MMkvUtils
 import com.cc.base2021.widget.discretescrollview.banner.holder.DiscreteHolder
 import com.cc.base2021.widget.discretescrollview.banner.holder.DiscreteHolderCreator
@@ -26,7 +26,7 @@ class GuideHolderCreator : DiscreteHolderCreator {
   override fun createHolder(itemView: View): DiscreteHolder<String> = object : DiscreteHolder<String>(itemView) {
     override fun updateUI(data: String?, position: Int, count: Int) {
       val ratio = ScreenUtils.getScreenWidth() * 1f / ScreenUtils.getScreenHeight()
-      itemView.guideIV?.loadImgVerticalScreen(data, holderRatio = ratio)
+      itemView.guideIV?.loadImgVertical(data, holderRatio = ratio)
       itemView.guideGo?.visibleGone(position == count - 1)
       itemView.guideGo?.let { view ->
         view.visibleGone(position == count - 1)
