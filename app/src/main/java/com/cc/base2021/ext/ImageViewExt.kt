@@ -22,6 +22,8 @@ import java.io.File
  * Date:2020/8/12
  * Time:18:28
  */
+private const val duration = 300
+
 //清除上次的加载状态，保证重新加载
 fun ImageView.clearLoad() {
   this.clear()
@@ -38,7 +40,7 @@ fun ImageView.loadImgSquare(url: String?) {
     if (getTag(R.id.suc_img) == url) return
     val iv = this
     val build = fun ImageRequest.Builder.() {
-      crossfade(true)
+      crossfade(duration)
       placeholder(PlaceHolderUtils.getLoadingHolder())
       error(PlaceHolderUtils.getErrorHolder())
       listener(onError = { r, e -> "方形图片加载失败:${r.data},e=${e.message ?: "null"}".logE() }) { _, _ -> iv.setTag(R.id.suc_img, url) }
@@ -59,7 +61,7 @@ fun ImageView.loadImgHorizontal(url: String?, holderRatio: Float = 720f / 400) {
     }
     val iv = this
     val build = fun ImageRequest.Builder.() {
-      crossfade(true)
+      crossfade(duration)
       placeholder(PlaceHolderUtils.getLoadingHolder(holderRatio))
       error(PlaceHolderUtils.getErrorHolder(holderRatio))
       listener(onError = { r, e -> "横向图片加载失败:${r.data},e=${e.message ?: "null"}".logE() }) { _, _ -> iv.setTag(R.id.suc_img, url) }
@@ -80,7 +82,7 @@ fun ImageView.loadImgVertical(url: String?, holderRatio: Float = 720f / 1280) {
     }
     val iv = this
     val build = fun ImageRequest.Builder.() {
-      crossfade(true)
+      crossfade(duration)
       placeholder(PlaceHolderUtils.getLoadingHolder(holderRatio))
       error(PlaceHolderUtils.getErrorHolder(holderRatio))
       listener(onError = { r, e -> "竖向图片加载失败:${r.data},e=${e.message ?: "null"}".logE() }) { _, _ -> iv.setTag(R.id.suc_img, url) }

@@ -22,7 +22,7 @@ import com.cc.ext.logI
 class CoilInit : Initializer<Int> {
   override fun create(context: Context): Int {
     val imageLoader = ImageLoader.Builder(context)
-        .crossfade(true)
+        .crossfade(300)
         .okHttpClient {
           RxHttpConfig.instance.getOkHttpClient()
               .cache(CoilUtils.createDefaultCache(context))
