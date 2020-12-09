@@ -30,7 +30,7 @@ class GirlItem(
       itemView.pressEffectAlpha(0.9f)
       itemView.click { onItemClick.invoke(item, holder.layoutPosition) }
     }
-    itemView.itemGirlIv.loadImgVerticalScreen(item.images?.firstOrNull())
+    itemView.itemGirlIv.loadImgVerticalScreen(item.images?.firstOrNull(), 853f / 1280)
   }
   //</editor-fold>
 }

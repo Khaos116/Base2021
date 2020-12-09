@@ -12,7 +12,7 @@
       android:layout_height="0dp"
       android:contentDescription="@null"
       android:scaleType="fitCenter"
-      app:layout_constraintDimensionRatio="852:1280"
+      app:layout_constraintDimensionRatio="853:1280"
       app:layout_constraintTop_toTopOf="parent"
       />
 </androidx.constraintlayout.widget.ConstraintLayout>
