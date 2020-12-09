@@ -1,13 +1,12 @@
 package com.cc.base2021.widget.picsel
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.PointF
+import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
 import androidx.core.graphics.drawable.toBitmap
-import coil.clear
-import coil.imageLoader
+import coil.*
 import coil.request.ImageRequest
 import com.blankj.utilcode.util.Utils
 import com.cc.base2021.ext.loadImgSquare
@@ -46,7 +45,7 @@ class ImageEngine : com.luck.picture.lib.engine.ImageEngine {
               imageView.clear()
               imageView.setImageDrawable(PlaceHolderUtils.getLoadingHolder(720f / 1280))
             },
-            onSuccess = { resource -> loadNetImage(resource.toBitmap(), imageView, longImageView) },
+            onSuccess = { resource -> loadNetImage(resource, imageView, longImageView) },
             onError = {
               longImageView?.gone()
               imageView.visible()
@@ -58,7 +57,8 @@ class ImageEngine : com.luck.picture.lib.engine.ImageEngine {
   }
 
   //加载网络图片
-  private fun loadNetImage(bitmap: Bitmap, imageView: ImageView, longImageView: SubsamplingScaleImageView?) {
+  private fun loadNetImage(drawable: Drawable, imageView: ImageView, longImageView: SubsamplingScaleImageView?) {
+    val bitmap = drawable.toBitmap()
     val eqLongImage: Boolean = MediaUtils.isLongImg(bitmap.width, bitmap.height)
     longImageView?.visibility = if (eqLongImage) View.VISIBLE else View.GONE
     imageView.visibility = if (eqLongImage) View.GONE else View.VISIBLE
@@ -75,7 +75,7 @@ class ImageEngine : com.luck.picture.lib.engine.ImageEngine {
       }
     } else {
       // 普通图片
-      imageView.setImageBitmap(bitmap)
+      imageView.load(drawable)
     }
   }
 
