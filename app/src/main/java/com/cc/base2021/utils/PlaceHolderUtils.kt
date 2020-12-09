@@ -26,7 +26,7 @@ object PlaceHolderUtils {
    * @param width 控件宽度(默认为屏幕宽度)
    * @param bgColor 占位图背景色
    */
-  fun getLoadingHolder(ratio: Float = 1f, width: Int = ScreenUtils.getScreenWidth(), @ColorInt bgColor: Int = Color.MAGENTA): LayerDrawable {
+  fun getLoadingHolder(ratio: Float = 1f, width: Int = ScreenUtils.getScreenWidth(), @ColorInt bgColor: Int = Color.WHITE): LayerDrawable {
     loadingMaps.toList().firstOrNull { it.first.first == ratio && it.first.second == width && it.first.third == bgColor }?.let {
       return it.second
     }

@@ -1,8 +1,7 @@
 package com.cc.base2021.component.guide.adapter
 
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
+import com.blankj.utilcode.util.ScreenUtils
 import com.cc.base2021.R
 import com.cc.base2021.component.main.MainActivity
 import com.cc.base2021.ext.loadImgVerticalScreen
@@ -26,7 +25,8 @@ class GuideHolderCreator : DiscreteHolderCreator {
   //<editor-fold defaultstate="collapsed" desc="数据加载">
   override fun createHolder(itemView: View): DiscreteHolder<String> = object : DiscreteHolder<String>(itemView) {
     override fun updateUI(data: String?, position: Int, count: Int) {
-      itemView.guideIV?.loadImgVerticalScreen(data)
+      val ratio = ScreenUtils.getScreenWidth() * 1f / ScreenUtils.getScreenHeight()
+      itemView.guideIV?.loadImgVerticalScreen(data, holderRatio = ratio)
       itemView.guideGo?.visibleGone(position == count - 1)
       itemView.guideGo?.let { view ->
         view.visibleGone(position == count - 1)
