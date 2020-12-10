@@ -27,12 +27,12 @@ object PlaceHolderUtils {
    * @param bgColor 占位图背景色
    */
   fun getLoadingHolder(ratio: Float = 1f, width: Int = ScreenUtils.getScreenWidth(), @ColorInt bgColor: Int = Color.WHITE): LayerDrawable {
-    loadingMaps.toList().firstOrNull { it.first.first == ratio && it.first.second == width && it.first.third == bgColor }?.let {
-      it.second.getDrawable(0).alpha = 255
-      it.second.getDrawable(1).alpha = 255
-      it.second.alpha = 255
-      return it.second
-    }
+    //loadingMaps.toList().firstOrNull { it.first.first == ratio && it.first.second == width && it.first.third == bgColor }?.let {
+    //  it.second.getDrawable(0).alpha = 255
+    //  it.second.getDrawable(1).alpha = 255
+    //  it.second.alpha = 255
+    //  return it.second
+    //}
     //计算背景图高度
     val height = (width * 1f / ratio).toInt()
     //计算中间图标的尺寸
@@ -50,7 +50,7 @@ object PlaceHolderUtils {
       it.setLayerSize(1, size, size)
       it.setLayerGravity(0, Gravity.CENTER)
       it.setLayerGravity(1, Gravity.CENTER)
-      loadingMaps[Triple(ratio, width, bgColor)] = it
+      //loadingMaps[Triple(ratio, width, bgColor)] = it
     }
   }
 
@@ -61,12 +61,12 @@ object PlaceHolderUtils {
    * @param bgColor 占位图背景色
    */
   fun getErrorHolder(ratio: Float = 1f, width: Int = ScreenUtils.getScreenWidth(), @ColorInt bgColor: Int = Color.WHITE): LayerDrawable {
-    errorMaps.toList().firstOrNull { it.first.first == ratio && it.first.second == width && it.first.third == bgColor }?.let {
-      it.second.getDrawable(0).alpha = 255
-      it.second.getDrawable(1).alpha = 255
-      it.second.alpha = 255
-      return it.second
-    }
+    //errorMaps.toList().firstOrNull { it.first.first == ratio && it.first.second == width && it.first.third == bgColor }?.let {
+    //  it.second.getDrawable(0).alpha = 255
+    //  it.second.getDrawable(1).alpha = 255
+    //  it.second.alpha = 255
+    //  return it.second
+    //}
     //计算背景图高度
     val height = (width * 1f / ratio).toInt()
     //计算中间图标的尺寸
@@ -84,7 +84,7 @@ object PlaceHolderUtils {
       it.setLayerSize(1, size, size)
       it.setLayerGravity(0, Gravity.CENTER)
       it.setLayerGravity(1, Gravity.CENTER)
-      errorMaps[Triple(ratio, width, bgColor)] = it
+      //errorMaps[Triple(ratio, width, bgColor)] = it
     }
   }
 }
