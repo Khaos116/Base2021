@@ -14,46 +14,30 @@ import rxhttp.wrapper.param.toResponseGank
  * @author: caiyoufei
  * @date: 2020/3/5 18:09
  */
-class GankRepository private constructor() {
-  //<editor-fold defaultstate="collapsed" desc="单利">
-  private object SingletonHolder {
-    val holder = GankRepository()
-  }
-
-  companion object {
-    val instance = SingletonHolder.holder
-  }
-  //</editor-fold>
-
+object GankRepository {
   //<editor-fold defaultstate="collapsed" desc="安卓列表">
   //安卓列表
   suspend fun androidList(
-    @IntRange(from = 1) page: Int,
-    size: Int = 20,
-    readCache: Boolean = true
+      @IntRange(from = 1) page: Int,
+      size: Int = 20,
+      readCache: Boolean = true
   ): MutableList<GankAndroidBean> {
     return RxHttp.get(String.format(GankUrls.ANDROID, page, size))
-      .setDomainToGankIfAbsent()
-      .setCacheValidTime(TimeConstants.DAY.toLong()) //设置缓存时长
-      .setCacheMode(if (readCache) CacheMode.READ_CACHE_FAILED_REQUEST_NETWORK else CacheMode.ONLY_NETWORK) //读取缓失败存请求数据
-      .toResponseGank<MutableList<GankAndroidBean>>()
-      .await()
+        .setDomainToGankIfAbsent()
+        .setCacheMode(if (readCache) CacheMode.READ_CACHE_FAILED_REQUEST_NETWORK else CacheMode.ONLY_NETWORK) //读取缓失败存请求数据
+        .toResponseGank<MutableList<GankAndroidBean>>()
+        .await()
   }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="Girl列表">
   //Girl列表
-  suspend fun girlList(
-    @IntRange(from = 1) page: Int,
-    size: Int = 20,
-    readCache: Boolean = true
-  ): MutableList<GankGirlBean> {
+  suspend fun girlList(@IntRange(from = 1) page: Int, size: Int = 20, readCache: Boolean = true): MutableList<GankGirlBean> {
     return RxHttp.get(String.format(GankUrls.GIRL, page, size))
-      .setDomainToGankIfAbsent()
-      .setCacheValidTime(TimeConstants.DAY.toLong()) //设置缓存时长
-      .setCacheMode(if (readCache) CacheMode.READ_CACHE_FAILED_REQUEST_NETWORK else CacheMode.ONLY_NETWORK) //读取缓失败存请求数据
-      .toResponseGank<MutableList<GankGirlBean>>()
-      .await()
+        .setDomainToGankIfAbsent()
+        .setCacheMode(if (readCache) CacheMode.READ_CACHE_FAILED_REQUEST_NETWORK else CacheMode.ONLY_NETWORK) //读取缓失败存请求数据
+        .toResponseGank<MutableList<GankGirlBean>>()
+        .await()
   }
   //</editor-fold>
 }

@@ -15,20 +15,11 @@ import rxhttp.wrapper.param.toResponseWan
  * @author: caiyoufei
  * @date: 2020/3/5 18:10
  */
-class WanRepository private constructor() {
-  private object SingletonHolder {
-    val holder = WanRepository()
-  }
-
-  companion object {
-    val instance = SingletonHolder.holder
-  }
-
+object WanRepository {
   //获取Banner
   suspend fun banner(readCache: Boolean = true): MutableList<BannerBean> {
     return RxHttp.get(WanUrls.Home.BANNER)
       .setDomainToWanIfAbsent()
-      .setCacheValidTime(TimeConstants.DAY.toLong()) //设置缓存时长
       .setCacheMode(if (readCache) CacheMode.READ_CACHE_FAILED_REQUEST_NETWORK else CacheMode.ONLY_NETWORK) //读取缓失败存请求数据
       .toResponseWan<MutableList<BannerBean>>()
       .await()
@@ -41,7 +32,6 @@ class WanRepository private constructor() {
   ): BasePageList<ArticleBean> {
     return RxHttp.get(String.format(WanUrls.Home.ARTICLE, page))
       .setDomainToWanIfAbsent()
-      .setCacheValidTime(TimeConstants.DAY.toLong()) //设置缓存时长
       .setCacheMode(if (readCache) CacheMode.READ_CACHE_FAILED_REQUEST_NETWORK else CacheMode.ONLY_NETWORK) //读取缓失败存请求数据
       .toResponseWan<BasePageList<ArticleBean>>()
       .await()

@@ -20,83 +20,76 @@ import rxhttp.wrapper.param.RxHttp
  * @author: caiyoufei
  * @date: 2020/3/4 16:03
  */
-class UserRepository private constructor() {
-  private object SingletonHolder {
-    val holder = UserRepository()
-  }
-
-  companion object {
-    val instance = SingletonHolder.holder
-  }
-
+object UserRepository {
   //注册
   fun register(
-    username: String,
-    password: String,
-    repassword: String
+      username: String,
+      password: String,
+      repassword: String
   ): Observable<UserBean> {
     return RxHttp.postForm(WanUrls.User.REGISTER)
-      .setDomainToWanIfAbsent()
-      .add("username", username)
-      .add("password", EncryptUtils.encryptMD5ToString(password))
-      .add("repassword", EncryptUtils.encryptMD5ToString(repassword))
-      .setCacheMode(CacheMode.ONLY_NETWORK) //不使用缓存
-      .asResponseWan(UserBean::class.java)
-      .map {
-        setUid(it.id)
-        this.user = it
-        it
-      }
-      .compose(RxUtils.instance.rx2SchedulerHelperODelay())
+        .setDomainToWanIfAbsent()
+        .add("username", username)
+        .add("password", EncryptUtils.encryptMD5ToString(password))
+        .add("repassword", EncryptUtils.encryptMD5ToString(repassword))
+        .setCacheMode(CacheMode.ONLY_NETWORK) //不使用缓存
+        .asResponseWan(UserBean::class.java)
+        .map {
+          setUid(it.id)
+          this.user = it
+          it
+        }
+        .compose(RxUtils.instance.rx2SchedulerHelperODelay())
   }
 
   //登录
   fun login(
-    username: String,
-    password: String
+      username: String,
+      password: String
   ): Observable<UserBean> {
     return RxHttp.postForm(WanUrls.User.LOGIN)
-      .setDomainToWanIfAbsent()
-      .add("username", username)
-      .add("password", EncryptUtils.encryptMD5ToString(password))
-      .setAssemblyEnabled(true) //添加公共参数/头部
-      .setCacheMode(CacheMode.ONLY_NETWORK) //不使用缓存
-      .asResponseWan(UserBean::class.java)
-      .observeOn(AndroidSchedulers.mainThread()) //指定在主线程回调,默认在IO线程请求
-      .map {
-        setUid(it.id)
-        MMkvUtils.instance.setAccount(username)
-        MMkvUtils.instance.setPassword(password)
-        this.user = it
-        /**
-         * 采用自动管理Cookie的方式可以采用下面的方式保存Token
-         * @see com.cc.base2021.config.RxHttpConfig.getRxhttpOkHttpClient
-         */
-        //RxCookie.instance.getCookie()?.forEach { cookie ->
-        //    if (cookie.toString().contains("SESSIONID")) setToken(cookie.toString())
-        //}
-        it
-      }
-      .compose(RxUtils.instance.rx2SchedulerHelperODelay())
+        .setDomainToWanIfAbsent()
+        .add("username", username)
+        .add("password", EncryptUtils.encryptMD5ToString(password))
+        .setAssemblyEnabled(true) //添加公共参数/头部
+        .setCacheMode(CacheMode.ONLY_NETWORK) //不使用缓存
+        .asResponseWan(UserBean::class.java)
+        .observeOn(AndroidSchedulers.mainThread()) //指定在主线程回调,默认在IO线程请求
+        .map {
+          setUid(it.id)
+          MMkvUtils.instance.setAccount(username)
+          MMkvUtils.instance.setPassword(password)
+          this.user = it
+          /**
+           * 采用自动管理Cookie的方式可以采用下面的方式保存Token
+           * @see com.cc.base2021.config.RxHttpConfig.getRxhttpOkHttpClient
+           */
+          //RxCookie.instance.getCookie()?.forEach { cookie ->
+          //    if (cookie.toString().contains("SESSIONID")) setToken(cookie.toString())
+          //}
+          it
+        }
+        .compose(RxUtils.instance.rx2SchedulerHelperODelay())
   }
 
   //登出
   @SuppressLint("CheckResult")
   fun logOut() {
     RxHttp.get(WanUrls.User.LOGOUT)
-      .setCacheMode(CacheMode.ONLY_NETWORK) //不使用缓存
-      .setDomainToWanIfAbsent()
-      .asString()
-      .map { "退出成功:$it".logE() }
-      .subscribe({}, { "退出失败:$it".logE() })
+        .setCacheMode(CacheMode.ONLY_NETWORK) //不使用缓存
+        .setDomainToWanIfAbsent()
+        .asString()
+        .map { "退出成功:$it".logE() }
+        .subscribe({}, { "退出失败:$it".logE() })
   }
 
   //我的积分
   fun myIntegral(): Observable<IntegralBean> {
     return RxHttp.get(WanUrls.User.INTEGRAL)
-      .setDomainToWanIfAbsent()
-      .asResponseWan(IntegralBean::class.java)
-      .compose(RxUtils.instance.rx2SchedulerHelperODelay())
+        .setDomainToWanIfAbsent()
+        .setCacheMode(CacheMode.ONLY_NETWORK) //不使用缓存
+        .asResponseWan(IntegralBean::class.java)
+        .compose(RxUtils.instance.rx2SchedulerHelperODelay())
   }
 
   //======================用户登录相关信息======================//
@@ -136,8 +129,8 @@ class UserRepository private constructor() {
   }
 
   fun setToken(
-    token: String,
-    url: String = BaseUrl.gankUrl
+      token: String,
+      url: String = BaseUrl.gankUrl
   ) {
     if (token.isNotBlank() && token != this.token) {
       "更新Token为:${token}".logE()
