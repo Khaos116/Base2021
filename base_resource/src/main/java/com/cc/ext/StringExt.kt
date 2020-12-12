@@ -13,37 +13,37 @@ import java.util.regex.Pattern
  * Date:2020/8/11
  * Time:17:19
  */
-inline fun String?.logE() {
+fun String?.logE() {
   if (!this.isNullOrBlank()) {
     Timber.e("CASE-$this")
   }
 }
 
-inline fun String?.logW() {
+fun String?.logW() {
   if (!this.isNullOrBlank()) {
     Timber.w("CASE-$this")
   }
 }
 
-inline fun String?.logI() {
+fun String?.logI() {
   if (!this.isNullOrBlank()) {
     Timber.i("CASE-$this")
   }
 }
 
-inline fun String?.logD() {
+fun String?.logD() {
   if (!this.isNullOrBlank()) {
     Timber.d("CASE-$this")
   }
 }
 
-inline fun String?.toast() {
+fun String?.toast() {
   if (!this.isNullOrBlank() && AppUtils.isAppForeground()) {
     ToastUtils.showShort(this)
   }
 }
 
-inline fun String?.isNetImageUrl(): Boolean {
+fun String?.isNetImageUrl(): Boolean {
   return if (this.isNullOrEmpty()) {
     false
   } else if (!this.startsWith("http", true)) {
@@ -53,7 +53,7 @@ inline fun String?.isNetImageUrl(): Boolean {
   }
 }
 
-inline fun String?.isVideoUrl(): Boolean {
+fun String?.isVideoUrl(): Boolean {
   return if (this.isNullOrEmpty()) {
     false
   } else if (!this.toLowerCase(Locale.getDefault()).startsWith("http", true)) {
@@ -64,7 +64,7 @@ inline fun String?.isVideoUrl(): Boolean {
   }
 }
 
-inline fun String?.isLiveUrl(): Boolean {
+fun String?.isLiveUrl(): Boolean {
   return if (this.isNullOrEmpty()) {
     false
   } else {
@@ -75,7 +75,7 @@ inline fun String?.isLiveUrl(): Boolean {
 }
 
 //文件目录转file
-inline fun String?.toFile(): File? {
+fun String?.toFile(): File? {
   if (this != null) {
     return if (this.startsWith("http", true)) null else {
       val f = File(this)
