@@ -1,6 +1,8 @@
 package com.cc.base2021.config
 
 import com.ayvytr.okhttploginterceptor.LoggingInterceptor
+import com.blankj.utilcode.constant.MemoryConstants
+import com.blankj.utilcode.constant.TimeConstants
 import com.blankj.utilcode.util.Utils
 import com.cc.base2021.rxhttp.interceptor.TokenInterceptor
 import com.cc.base2021.utils.CharlesUtils
@@ -34,7 +36,7 @@ class RxHttpConfig private constructor() {
     if (hasInit) return
     hasInit = true
     initRxHttp()
-    initRxHttpCahce()
+    initRxHttpCache()
     /**
      * 去除无意义的参数key，这里把header的共同参数剔除
      * @see com.cc.base2021.config.HeaderManger.getStaticHeaders
@@ -93,14 +95,11 @@ class RxHttpConfig private constructor() {
   }
 
   //缓存配置
-  private fun initRxHttpCahce() {
+  private fun initRxHttpCache() {
     //设置缓存目录为：Android/data/{app包名目录}/cache/RxHttpCache
     val cacheDir = File(Utils.getApp().externalCacheDir, "RxHttpCache")
-    //设置最大缓存为10M，缓存有效时长为1小时
-    RxHttpPlugins.setCache(
-        cacheDir, 10 * 1024 * 1024L, CacheMode.REQUEST_NETWORK_FAILED_READ_CACHE,
-        1 * 60 * 60 * 1000L
-    )
+    //设置最大缓存为10M，缓存有效时长为1天
+    RxHttpPlugins.setCache(cacheDir, 10L * MemoryConstants.MB, CacheMode.REQUEST_NETWORK_FAILED_READ_CACHE, 1L * TimeConstants.DAY)
   }
 
   /*
