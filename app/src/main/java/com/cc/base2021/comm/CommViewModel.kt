@@ -2,6 +2,7 @@ package com.cc.base2021.comm
 
 import com.cc.base.viewmodel.BaseViewModel
 import com.cc.base.viewmodel.DataState
+import com.cc.ext.logE
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.constant.RefreshState
 
@@ -19,12 +20,16 @@ abstract class CommViewModel : BaseViewModel() {
         refreshLayout?.setEnableLoadMore(!dataState.data.isNullOrEmpty()) //列表数据不为空才能上拉
       }
       is DataState.SuccessMore -> refreshLayout?.finishLoadMore() //加载更多成功
-      is DataState.FailMore -> refreshLayout?.finishLoadMore(false) //加载更多失败
+      is DataState.FailMore -> {
+        refreshLayout?.finishLoadMore(false) //加载更多失败
+        dataState.exc.logE()
+      }
       is DataState.Complete -> { //请求完成
         refreshLayout?.finishRefresh() //结束刷新(不论成功还是失败)
         refreshLayout?.setNoMoreData(!dataState.hasMore) //判断是否还有更多
         if (refreshLayout?.state == RefreshState.Loading) refreshLayout.finishLoadMore() //加载更多太快可能出现加载更多不消失，所以纠正
       }
+      is DataState.FailRefresh -> dataState.exc.logE()
       else -> {
       }
     }
