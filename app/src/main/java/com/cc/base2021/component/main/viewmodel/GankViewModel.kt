@@ -37,7 +37,7 @@ class GankViewModel : CommViewModel() {
     val old = androidLiveData.value?.data //加载前的旧数据
     rxLifeScope.launch({
       //协程代码块
-      val result = GankRepository.instance.androidList(page = page, size = pageSize)
+      val result = GankRepository.androidList(page = page, size = pageSize)
       currentPage = page
       //可以直接更新UI
       androidLiveData.value = if (page == 1) SuccessRefresh(newData = result)

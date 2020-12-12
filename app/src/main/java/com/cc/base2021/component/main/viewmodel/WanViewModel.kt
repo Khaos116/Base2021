@@ -48,7 +48,7 @@ class WanViewModel : CommViewModel() {
     val old = bannerLiveData.value?.data
     if (bannerLiveData.value is Start || !old.isNullOrEmpty()) return
     rxLifeScope.launch({
-      withContext(Dispatchers.IO) { WanRepository.instance.banner() }.let { bannerLiveData.value = SuccessRefresh(newData = it) }
+      withContext(Dispatchers.IO) { WanRepository.banner() }.let { bannerLiveData.value = SuccessRefresh(newData = it) }
     }, { e ->
       bannerLiveData.value = FailRefresh(oldData = old, exc = e)
     }, {
@@ -64,7 +64,7 @@ class WanViewModel : CommViewModel() {
     val old = articleLiveData.value?.data
     rxLifeScope.launch({
       //协程代码块
-      val response = WanRepository.instance.article(page)
+      val response = WanRepository.article(page)
       val result = response.datas?.toMutableList() ?: mutableListOf()
       hasMore = response.curPage < response.total
       currentPage = page

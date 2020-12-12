@@ -38,7 +38,7 @@ class GirlViewModel : CommViewModel() {
     val old = girlLiveData.value?.data //加载前的旧数据
     rxLifeScope.launch({
       //协程代码块
-      val result = GankRepository.instance.girlList(page = page, size = pageSize)
+      val result = GankRepository.girlList(page = page, size = pageSize)
       currentPage = page
       //可以直接更新UI
       girlLiveData.value = if (page == 1) SuccessRefresh(newData = result)
