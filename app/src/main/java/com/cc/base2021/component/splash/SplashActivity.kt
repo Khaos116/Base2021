@@ -88,9 +88,7 @@ class SplashActivity : CommActivity() {
 
       override fun onPause() {}
       override fun onRepeat() {}
-      override fun onStep(frame: Int, percentage: Double) {
-        "onStep:frame=$frame,percentage=$percentage".logE()
-      }
+      override fun onStep(frame: Int, percentage: Double) {}
     }
     disposable = Observable.timer(2, TimeUnit.SECONDS)
         .compose(RxUtils.instance.rx2SchedulerHelperO())
