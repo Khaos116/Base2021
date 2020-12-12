@@ -3,6 +3,7 @@ package com.cc.ext
 import android.graphics.Color
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.*
+import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -48,4 +49,9 @@ inline fun GlobalScope.launchError(
     start: CoroutineStart = CoroutineStart.DEFAULT,
     noinline block: suspend CoroutineScope.() -> Unit) {
   GlobalScope.launch(context + CoroutineExceptionHandler(handler), start, block)
+}
+
+//打印异常
+fun Throwable?.logE() {
+  this?.message?.logE()
 }
