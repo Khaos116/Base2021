@@ -41,19 +41,20 @@ class ImageEngine : com.luck.picture.lib.engine.ImageEngine {
       callback: OnImageCompleteCallback?
   ) {
     val weakReference = WeakReference(imageView)
+    val weakReferenceLong = WeakReference(longImageView)
     Utils.getApp().imageLoader.enqueue(
         ImageRequest.Builder(Utils.getApp()).data(url).target(
             onStart = {
-              longImageView?.gone()
+              weakReferenceLong.get()?.gone()
               weakReference.get()?.let { iv ->
                 iv.visible()
                 iv.clear()
                 iv.setImageDrawable(PlaceHolderUtils.getLoadingHolder(720f / 1280))
               }
             },
-            onSuccess = { resource -> weakReference.get()?.let { iv -> loadNetImage(resource, iv, longImageView) } },
+            onSuccess = { resource -> weakReference.get()?.let { iv -> loadNetImage(resource, iv, weakReferenceLong.get()) } },
             onError = {
-              longImageView?.gone()
+              weakReferenceLong.get()?.gone()
               weakReference.get()?.let { iv ->
                 iv.visible()
                 iv.clear()
