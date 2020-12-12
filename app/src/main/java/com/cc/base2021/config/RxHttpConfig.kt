@@ -7,11 +7,9 @@ import com.blankj.utilcode.util.Utils
 import com.cc.base2021.rxhttp.interceptor.TokenInterceptor
 import com.cc.base2021.utils.CharlesUtils
 import okhttp3.OkHttpClient
-import okhttp3.OkHttpClient.Builder
 import rxhttp.RxHttpPlugins
 import rxhttp.wrapper.cahce.CacheMode
-import rxhttp.wrapper.param.Param
-import rxhttp.wrapper.param.RxHttp
+import rxhttp.wrapper.param.*
 import rxhttp.wrapper.ssl.HttpsUtils
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -58,7 +56,7 @@ class RxHttpConfig private constructor() {
     RxHttp.init(getRxhttpOkHttpClient())
     //添加公共参数 https://github.com/liujingxing/okhttp-RxHttp/blob/486c7bc9e4554b4604f29c726e3e58714e2de6ee/app/src/main/java/com/example/httpsender/RxHttpManager.java
     RxHttp.setOnParamAssembly { p: Param<*> ->
-      p.add("platform", "RxHttp")
+      if (p.method == Method.GET) p.add("platform", "Android-RxHttp")
       p.addAllHeader(HeaderManger.instance.getStaticHeaders()) //添加公共参数
       //添加Token
       if (HeaderManger.instance.noTokenUrls.filter { u ->
@@ -80,9 +78,9 @@ class RxHttpConfig private constructor() {
   }
 
   //其他配置获取Okhttp对象
-  fun getOkHttpClient(): Builder {
+  fun getOkHttpClient(): OkHttpClient.Builder {
     val sslParams = HttpsUtils.getSslSocketFactory()
-    val builder = Builder()
+    val builder = OkHttpClient.Builder()
         //.cookieJar(CookieStore())//如果启用自动管理，则不需要在TokenInterceptor中进行保存和initRxHttp()进行读取
         .connectTimeout(30, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)
