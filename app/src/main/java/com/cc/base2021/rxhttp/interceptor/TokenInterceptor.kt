@@ -53,7 +53,7 @@ class TokenInterceptor : Interceptor {
       cookies.forEach { map ->
         for (value in map.value) {
           if (value.contains("JSESSIONID", true)) {
-            UserRepository.instance.setToken(value, request.url.toString())
+            UserRepository.setToken(value, request.url.toString())
           }
         }
       }
@@ -85,11 +85,11 @@ class TokenInterceptor : Interceptor {
       //拿到最新的token,重新发起请求 4、根据自己的业务修改
       if (post) {
         rxHttp1.removeAllHeader("Cookie")
-        rxHttp1.addHeader("Cookie", UserRepository.instance.getToken())
+        rxHttp1.addHeader("Cookie", UserRepository.getToken())
         rxHttp1.buildRequest()
       } else {
         rxHttp2.removeAllHeader("Cookie")
-        rxHttp2.addHeader("Cookie", UserRepository.instance.getToken())
+        rxHttp2.addHeader("Cookie", UserRepository.getToken())
         rxHttp2.buildRequest()
       }
     } else {
