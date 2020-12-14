@@ -495,6 +495,7 @@ class AliVideoView @JvmOverloads constructor(
       if (!hasAudioFocus) requestAudioFocusByVideo()
     } else if (state == PlayState.PAUSE || state == PlayState.COMPLETE || state == PlayState.ERROR || state == PlayState.STOP) {
       if (hasAudioFocus) releaseAudioFocusByVideo()
+      if (state != PlayState.PAUSE) needResumePlay = false
     }
     mPlayState = state
     changeScreenOn(state)
