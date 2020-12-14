@@ -330,6 +330,14 @@ open class VideoOverView @JvmOverloads constructor(
     callController?.callUiState(uiState)
   }
 
+  override fun callEnterPIP() {
+    callController?.callEnterPIP()
+  }
+
+  override fun callOutPIP() {
+    callController?.callOutPIP()
+  }
+
   override fun callPlayState(playState: PlayState) {
     "PlayState=${playState}".logE()
     mPlayState = playState

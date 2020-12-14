@@ -429,6 +429,17 @@ class AliVideoView @JvmOverloads constructor(
     canUserMobile = true
     startVideo()
   }
+
+  //进入画中画
+  fun enterPIP() {
+    onResumeVideo()
+    callOutInfo?.callEnterPIP()
+  }
+
+  //退出画中画
+  fun outPIP() {
+    callOutInfo?.callOutPIP()
+  }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="Lifecycle生命周期">

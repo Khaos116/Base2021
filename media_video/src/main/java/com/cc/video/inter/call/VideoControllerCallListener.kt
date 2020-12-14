@@ -17,5 +17,7 @@ interface VideoControllerCallListener {
   fun callDuration(duration: Long)
   fun callPlayProgress(progress: Long)
   fun callBufferProgress(progress: Long)
+  fun callEnterPIP()
+  fun callOutPIP()
   fun setCall(call: VideoControllerListener?)
 }

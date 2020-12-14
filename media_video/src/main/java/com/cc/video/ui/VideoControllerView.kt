@@ -212,6 +212,7 @@ class VideoControllerView @JvmOverloads constructor(
 
   //隐藏锁图标
   private fun showLock() {
+    if (isPIP) return
     jobLock?.cancel()
     controller_lock_state?.animate()?.alpha(1f)?.start()
   }
@@ -372,6 +373,27 @@ class VideoControllerView @JvmOverloads constructor(
       } else if (!controller_bottom_play_pause.isSelected) { //显示了控制器，没有处于暂停状态
         hiddenControllerView()
         hiddenLock()
+      }
+    }
+  }
+
+  private var isPIP = false
+  override fun callEnterPIP() {
+    isPIP = true
+    if (!isLocked && !controller_bottom_play_pause.isSelected) { //显示了控制器，没有处于暂停状态
+      hiddenControllerView()
+      hiddenLock()
+    }
+  }
+
+  override fun callOutPIP() {
+    isPIP = false
+    if (!isLocked && controller_bottom_container.alpha == 0f) { //没有显示控制器
+      showControllerView()
+      showLock()
+      if (!controller_bottom_play_pause.isSelected) {
+        countDownHidden()
+        countDownHiddenLock()
       }
     }
   }

@@ -21,4 +21,6 @@ interface VideoOverCallListener {
   fun callBufferPercent(percent: Int, kbps: Float)
   fun callSnapShot(bm: Bitmap, width: Int, height: Int)
   fun callUiState(uiState: PlayUiState)
+  fun callEnterPIP()
+  fun callOutPIP()
 }
