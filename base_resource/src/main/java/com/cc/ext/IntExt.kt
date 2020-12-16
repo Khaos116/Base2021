@@ -20,11 +20,11 @@ fun Int.xmlToast() {
   StringUtils.getString(this).toast()
 }
 
-fun Int.dp2Px(): Int {
+fun Number.dp2Px(): Int {
   return SizeUtils.dp2px(this.toFloat())
 }
 
-fun Int.sp2Px(): Int {
+fun Number.sp2Px(): Int {
   return SizeUtils.sp2px(this.toFloat())
 }
 
