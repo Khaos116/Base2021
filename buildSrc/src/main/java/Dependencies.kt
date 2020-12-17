@@ -3,7 +3,7 @@ object Versions {
   internal const val sdkTarget = 30
   internal const val kotlin = "1.4.21"
   internal const val okHttp = "4.9.0"
-  internal const val rxHttp = "2.4.4"
+  internal const val rxHttp = "2.5.1"
   internal const val coil = "1.1.0"
 }
 
@@ -20,9 +20,9 @@ object Deps {
   //系统相关 https://maven.aliyun.com/mvn/search
   const val appcompat = "androidx.appcompat:appcompat:1.3.0-alpha02"
   const val core_ktx = "androidx.core:core-ktx:1.5.0-alpha05"
-  const val activity_ktx = "androidx.activity:activity-ktx:1.2.0-beta01"
-  const val fragment = "androidx.fragment:fragment:1.3.0-beta01"
-  const val material = "com.google.android.material:material:1.3.0-alpha03"
+  const val activity_ktx = "androidx.activity:activity-ktx:1.2.0-beta02"
+  const val fragment = "androidx.fragment:fragment:1.3.0-rc01"
+  const val material = "com.google.android.material:material:1.3.0-beta01"
   const val constraint = "androidx.constraintlayout:constraintlayout:2.1.0-alpha1"
 
   //启动初始化 https://developer.android.google.cn/topic/libraries/app-startup
@@ -55,7 +55,7 @@ object Deps {
   const val immersionbar_ktx = "com.gyf.immersionbar:immersionbar-ktx:3.0.0"
 
   //数据存储 https://github.com/Tencent/MMKV
-  const val mmkv = "com.tencent:mmkv-static:1.2.5"
+  const val mmkv = "com.tencent:mmkv-static:1.2.6"
 
   //数据解析 https://github.com/google/gson
   const val gson = "com.google.code.gson:gson:2.8.6"
@@ -67,8 +67,8 @@ object Deps {
   const val okhttp_log = "com.ayvytr:okhttploginterceptor:3.0.3"
 
   //协程 https://github.com/Kotlin/kotlinx.coroutines
-  const val coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1"
-  const val coroutine_android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1"
+  const val coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1" //在Kotlin中使用协程的主要接口
+  const val coroutine_android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2" //支持协同程序中的Android主线程
 
   //RxHttp https://github.com/liujingxing/okhttp-RxHttp
   const val rxhttp = "com.ljx.rxhttp:rxhttp:${Versions.rxHttp}"
@@ -79,10 +79,10 @@ object Deps {
   const val rxandroid = "io.reactivex.rxjava2:rxandroid:2.1.1"
 
   //动态权限请求 https://github.com/getActivity/XXPermissions
-  const val permissions = "com.hjq:xxpermissions:9.2"
+  const val permissions = "com.hjq:xxpermissions:9.6"
 
   //EventBus https://github.com/JeremyLiao/LiveEventBus
-  const val eventBus = "com.jeremyliao:live-event-bus-x:1.7.2"
+  const val eventBus = "com.jeremyliao:live-event-bus-x:1.7.3"
 
   //WebView https://github.com/Justson/AgentWeb
   const val agentweb = "com.just.agentweb:agentweb:4.1.4"
@@ -105,7 +105,7 @@ object Deps {
   const val multitype = "com.drakeet.multitype:multitype:4.2.0"
 
   //SVGA动画 https://github.com/svga/SVGAPlayer-Android/blob/master/readme.zh.md
-  const val svga = "com.github.yyued:SVGAPlayer-Android:2.5.13"
+  const val svga = "com.github.yyued:SVGAPlayer-Android:2.5.14"
 
   //图片选择器 https://github.com/LuckSiege/PictureSelector
   const val pic_select = "com.github.LuckSiege.PictureSelector:picture_library:v2.6.0"
