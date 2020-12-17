@@ -1,13 +1,13 @@
 package com.cc.base2021.rxhttp.interceptor
 
 import com.blankj.utilcode.util.EncryptUtils
-import com.cc.ext.logE
 import com.cc.base2021.config.AppConfig
 import com.cc.base2021.config.GlobalErrorHandle
 import com.cc.base2021.constants.ErrorCode
 import com.cc.base2021.constants.WanUrls
 import com.cc.base2021.rxhttp.repository.UserRepository
 import com.cc.base2021.utils.MMkvUtils
+import com.cc.ext.logE
 import okhttp3.*
 import org.json.JSONObject
 import rxhttp.wrapper.param.RxHttp
@@ -77,7 +77,9 @@ class TokenInterceptor : Interceptor {
     }
     //同步刷新token
     //3、发请求前需要add("request_time",System.currentTimeMillis())
-    val requestTime = if (post) rxHttp1.queryValue("request_time")
+
+    //val requestTime = if (post) rxHttp1.queryValue("request_time")
+    val requestTime = if (post) rxHttp1.param.bodyParam.first { p -> p.key == "request_time" }.value
     else rxHttp2.param.toString().split("&").first { it.contains("request_time") }.split("=")[1]
     val success: Boolean = refreshToken(requestTime)
     val newRequest: Request
@@ -113,9 +115,9 @@ class TokenInterceptor : Interceptor {
       return if (requestTime <= SESSION_KEY_REFRESH_TIME) true else try {
         //获取到最新的token，这里需要同步请求token,千万不能异步  5、根据自己的业务修改
         RxHttp.postForm(WanUrls.User.LOGIN)
-          .add("username", MMkvUtils.instance.getAccount())
-          .add("password", EncryptUtils.encryptMD5ToString(MMkvUtils.instance.getPassword()))
-          .execute(SimpleParser.get(String::class.java))
+            .add("username", MMkvUtils.instance.getAccount())
+            .add("password", EncryptUtils.encryptMD5ToString(MMkvUtils.instance.getPassword()))
+            .execute(SimpleParser[String::class.java])
         "自动登录登录刷新Token".logE()
         SESSION_KEY_REFRESH_TIME = System.currentTimeMillis()
         true
