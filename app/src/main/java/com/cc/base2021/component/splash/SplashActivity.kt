@@ -107,8 +107,8 @@ class SplashActivity : CommActivity() {
       if (!hasSDPermission) {
         XXPermissions.with(this)
             .permission(Permission.MANAGE_EXTERNAL_STORAGE)
-            .request(object : OnPermission {
-              override fun hasPermission(granted: MutableList<String>, all: Boolean) {
+            .request(object : OnPermissionCallback {
+              override fun onGranted(permissions: MutableList<String>, all: Boolean) {
                 if (PermissionUtils.instance.hasSDPermission()) {
                   hasSDPermission = true
                   goNextPage()
@@ -118,11 +118,11 @@ class SplashActivity : CommActivity() {
                 }
               }
 
-              override fun noPermission(denied: MutableList<String>, quick: Boolean) {
-                if (quick) {
+              override fun onDenied(permissions: MutableList<String>, never: Boolean) {
+                if (never) {
                   StringUtils.getString(R.string.permission_sdcard_never).toast()
                   // 如果是被永久拒绝就跳转到应用权限系统设置页面
-                  XXPermissions.startPermissionActivity(mActivity, denied)
+                  XXPermissions.startPermissionActivity(mActivity, permissions)
                 } else {
                   StringUtils.getString(R.string.permission_sdcard_must).toast()
                 }
