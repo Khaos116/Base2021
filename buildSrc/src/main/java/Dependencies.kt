@@ -67,7 +67,7 @@ object Deps {
   const val okhttp_log = "com.ayvytr:okhttploginterceptor:3.0.3"
 
   //协程 https://github.com/Kotlin/kotlinx.coroutines
-  const val coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1" //在Kotlin中使用协程的主要接口
+  const val coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2" //在Kotlin中使用协程的主要接口
   const val coroutine_android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2" //支持协同程序中的Android主线程
 
   //RxHttp https://github.com/liujingxing/okhttp-RxHttp
