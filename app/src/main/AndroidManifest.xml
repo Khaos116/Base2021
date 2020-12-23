@@ -5,8 +5,12 @@
     package="com.cc.base2021">
   <!--SD卡读写权限-->
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-  <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+  <uses-permission
+      android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+      tools:ignore="ScopedStorage"/>
+  <uses-permission
+      android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+      tools:ignore="ScopedStorage"/>
   <!--网络访问权限-->
   <uses-permission android:name="android.permission.INTERNET"/>
   <!--手机信息权限-->
@@ -21,9 +25,9 @@
   <application
       android:name=".app.MyApplication"
       android:allowBackup="true"
-      android:requestLegacyExternalStorage="true"
       android:icon="@mipmap/ic_launcher"
       android:label="@string/app_name"
+      android:requestLegacyExternalStorage="true"
       android:supportsRtl="true"
       android:theme="@style/AppTheme"
       tools:ignore="AllowBackup">
