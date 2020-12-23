@@ -26,7 +26,7 @@ object Deps {
   const val constraint = "androidx.constraintlayout:constraintlayout:2.1.0-alpha1"
 
   //启动初始化 https://developer.android.google.cn/topic/libraries/app-startup
-  const val startup = "androidx.startup:startup-runtime:1.0.0-rc01"
+  const val startup = "androidx.startup:startup-runtime:1.0.0"
 
   //分包 https://developer.android.google.cn/studio/build/multidex?hl=zh_cn#mdex-gradle
   const val multidex = "androidx.multidex:multidex:2.0.1"
