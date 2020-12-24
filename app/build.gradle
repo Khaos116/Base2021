@@ -21,7 +21,7 @@ android {
     minSdkVersion Versions.sdkMin
     targetSdkVersion Versions.sdkTarget
     versionCode 1
-    versionName "1.0"
+    versionName "1.0.0"
     resValue "string", "build_time", new Date().format("yyyy-MM-dd HH:mm")
     multiDexEnabled true
     resConfigs "zh", "en" //保留中文和英文资源
@@ -140,13 +140,44 @@ android.applicationVariants.all { variant ->
     String flavorsName = variant.productFlavors[0].name
     //应用名称
     String apkName = appName
+    //是否不包含测试工具
+    boolean noTestTools = rootProject.ext.needCreateDebug == "true"
+    //渠道名称改为中文
+    String typeZH = ""
+    if (flavorsName.toLowerCase().contains("release")) {
+      typeZH = "正式渠道"
+    } else {
+      if (noTestTools) {
+        typeZH = "测试渠道"
+      } else {
+        typeZH = "开发专用"
+      }
+    }
+    //修改默认apk名称
+    String errorApkName = ""
+    if (flavorsName.toLowerCase().contains("developer") && typeName == "Release") {
+      delete("${output.outputFile}")
+      errorApkName = "禁止构建测试渠道的正式包.apk"
+      outputFileName = errorApkName
+    } else if (flavorsName.toLowerCase().contains("release") && typeName == "Debug") {
+      delete("${output.outputFile}")
+      errorApkName = "禁止构建正式渠道的测试包.apk"
+      outputFileName = errorApkName
+    } else {
+      outputFileName = "${apkName}${typeZH}.apk"
+    }
     //打包完成后的重命名和拷贝
     assemble.doLast {
       //编译完成的时间
-      String buildEndTime = "${new Date().format("yyyyMMddHHmm")}"
-      String fileName = "${apkName}${typeName}_${versionName}_${buildEndTime}.apk"
+      String buildEndTime = "${new Date().format("MMddHHmm")}"
+      String fileName = ""
+      if (errorApkName.isBlank()) {
+        fileName = "${apkName}${typeZH}${versionName}_${buildEndTime}.apk"
+      } else {
+        fileName = errorApkName
+      }
       //把正式版拷贝到项目APK目录
-      if (typeName == "Release" || rootProject.ext.needCreateDebug == "true") {
+      if (typeName == "Release" || noTestTools) {
         //创建APK目录(APK+渠道名称)
         File apkFile = new File("${getProjectDir().getParentFile().getPath()}/APK/${flavorsName}/${typeName}")
         if (!apkFile.exists()) apkFile.mkdirs()
