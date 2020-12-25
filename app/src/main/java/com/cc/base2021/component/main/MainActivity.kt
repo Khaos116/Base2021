@@ -83,7 +83,7 @@ class MainActivity : CommActivity() {
     //先关闭之前显示的
     currentFragment?.let {
       FragmentUtils.hide(it)
-      supportFragmentManager.beginTransaction().setMaxLifecycle(it, Lifecycle.State.STARTED).commitAllowingStateLoss() //触发Fragment的onPause
+      if (it.isAdded) supportFragmentManager.beginTransaction().setMaxLifecycle(it, Lifecycle.State.STARTED).commitAllowingStateLoss() //触发Fragment的onPause
     }
     //设置现在需要显示的
     currentFragment = f
@@ -91,7 +91,7 @@ class MainActivity : CommActivity() {
       FragmentUtils.add(supportFragmentManager, f, mainContainer.id, "${f::class.java.simpleName}_${f.hashCode()}", false)
     } else { //添加了就直接显示
       FragmentUtils.show(f)
-      supportFragmentManager.beginTransaction().setMaxLifecycle(f, Lifecycle.State.RESUMED).commitAllowingStateLoss() //触发Fragment的onResume
+      if (f.isAdded) supportFragmentManager.beginTransaction().setMaxLifecycle(f, Lifecycle.State.RESUMED).commitAllowingStateLoss() //触发Fragment的onResume
     }
   }
   //</editor-fold>
