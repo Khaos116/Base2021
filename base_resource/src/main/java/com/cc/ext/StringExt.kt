@@ -1,10 +1,12 @@
 package com.cc.ext
 
 import android.net.Uri
-import com.blankj.utilcode.util.*
+import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.ToastUtils
+import com.blankj.utilcode.util.UriUtils
 import timber.log.Timber
 import java.io.File
-import java.util.Locale
+import java.util.*
 import java.util.regex.Pattern
 
 /**
@@ -13,25 +15,25 @@ import java.util.regex.Pattern
  * Date:2020/8/11
  * Time:17:19
  */
-fun String?.logE() {
+inline fun String?.logE() {
   if (!this.isNullOrBlank()) {
     Timber.e("CASE-$this")
   }
 }
 
-fun String?.logW() {
+inline fun String?.logW() {
   if (!this.isNullOrBlank()) {
     Timber.w("CASE-$this")
   }
 }
 
-fun String?.logI() {
+inline fun String?.logI() {
   if (!this.isNullOrBlank()) {
     Timber.i("CASE-$this")
   }
 }
 
-fun String?.logD() {
+inline fun String?.logD() {
   if (!this.isNullOrBlank()) {
     Timber.d("CASE-$this")
   }
