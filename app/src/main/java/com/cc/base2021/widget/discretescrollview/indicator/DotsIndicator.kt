@@ -98,6 +98,7 @@ class DotsIndicator : LinearLayout {
   fun initDots(dotsCount: Int) {
     this.dotsCount = dotsCount
     removeAllViews()
+    if (dotsCount <= 1) return
     for (i: Int in 0 until dotsCount) {
       val dot = ImageView(context)
       dot.id = i
