@@ -446,7 +446,7 @@ class AliVideoView @JvmOverloads constructor(
   private var mLifecycle: Lifecycle? = null
 
   //通过Lifecycle内部自动管理暂停和播放(如果不需要后台播放)
-  fun setLifecycleOwner(owner: LifecycleOwner?) {
+  private fun setLifecycleOwner(owner: LifecycleOwner?) {
     if (owner == null) {
       mLifecycle?.removeObserver(this)
       mLifecycle = null
@@ -653,6 +653,18 @@ class AliVideoView @JvmOverloads constructor(
     }
     hasAudioFocus = false
     "释放音频焦点".logI()
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="自感应生命周期">
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    setLifecycleOwner(getMyLifecycleOwner())
+  }
+
+  override fun onDetachedFromWindow() {
+    super.onDetachedFromWindow()
+    setLifecycleOwner(null)
   }
   //</editor-fold>
 }

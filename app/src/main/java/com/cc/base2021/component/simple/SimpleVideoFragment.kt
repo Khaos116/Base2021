@@ -1,6 +1,5 @@
 package com.cc.base2021.component.simple
 
-import com.blankj.utilcode.util.FileUtils
 import com.cc.base2021.R
 import com.cc.base2021.comm.CommFragment
 import com.cc.base2021.ext.loadNetVideoCover
@@ -35,8 +34,6 @@ class SimpleVideoFragment : CommFragment() {
 
   //<editor-fold defaultstate="collapsed" desc="初始化">
   override fun lazyInit() {
-    //自动感应生命周期
-    simpleVideoView.setLifecycleOwner(this)
     //视频数据
     val videoBean = VideoRandomUtils.instance.randomVideo()
     //视频控制器
