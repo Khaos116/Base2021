@@ -13,8 +13,11 @@ import com.cc.base2021.R
 import com.cc.base2021.R.layout
 import com.cc.base2021.comm.CommActivity
 import com.cc.base2021.component.main.fragment.HomeFragment
-import com.cc.base2021.component.simple.*
-import com.cc.ext.*
+import com.cc.base2021.component.simple.SimpleMusicFragment
+import com.cc.base2021.component.simple.SimpleVideoFragment
+import com.cc.ext.mContentView
+import com.cc.ext.mStatusBarHeight
+import com.cc.ext.toast
 import com.gyf.immersionbar.BarHide
 import com.gyf.immersionbar.ktx.immersionBar
 import kotlinx.android.synthetic.main.activity_main.*
@@ -82,8 +85,8 @@ class MainActivity : CommActivity() {
     }
     //先关闭之前显示的
     currentFragment?.let {
-      FragmentUtils.hide(it)
       if (it.isAdded) supportFragmentManager.beginTransaction().setMaxLifecycle(it, Lifecycle.State.STARTED).commitAllowingStateLoss() //触发Fragment的onPause
+      FragmentUtils.hide(it)
     }
     //设置现在需要显示的
     currentFragment = f
