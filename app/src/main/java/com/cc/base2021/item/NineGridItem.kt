@@ -10,12 +10,10 @@ import com.blankj.utilcode.util.SizeUtils
 import com.cc.base.ui.BaseItemView
 import com.cc.base2021.R
 import com.cc.base2021.bean.local.GridImageBean
+import com.cc.base2021.widget.drag.GridItemTouchHelperCallback
 import com.cc.decoration.GridSpaceItemDecoration
-import com.cc.drag.ItemTouchMoveListener
-import com.cc.drag.MyItemTouchHelperCallback
 import com.drakeet.multitype.MultiTypeAdapter
-import kotlinx.android.synthetic.main.item_nine_grid.view.itemNineGridRecycler
-import java.util.Collections
+import kotlinx.android.synthetic.main.item_nine_grid.view.*
 
 /**
  * Author:CASE
@@ -59,21 +57,8 @@ class NineGridItem(
     //itemView.click { onItemClick?.invoke(item.url) }
     //拖拽开始---->>>先置空，防止复用的时候一样的RecyclerView导致不执行attachToRecyclerView
     mapHelper[recyclerView.hashCode()]?.attachToRecyclerView(null)
-    ItemTouchHelper(MyItemTouchHelperCallback(object : ItemTouchMoveListener {
-      override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-        //1.数据交换；2.刷新
-        Collections.swap(list, fromPosition, toPosition)
-        multiTypeAdapter.notifyItemMoved(fromPosition, toPosition)
-        return true
-      }
-
-      override fun onItemRemove(position: Int): Boolean {
-        //不需要侧滑删除
-        //item.removeAt(position)
-        //multiTypeAdapter.notifyItemRemoved(position)
-        return false
-      }
-    }, false)).apply { attachToRecyclerView(recyclerView) }
+    ItemTouchHelper(GridItemTouchHelperCallback(multiTypeAdapter))
+        .apply { attachToRecyclerView(recyclerView) }
         .let { mapHelper[recyclerView.hashCode()] = it }
     //拖拽结束---<<<
   }
