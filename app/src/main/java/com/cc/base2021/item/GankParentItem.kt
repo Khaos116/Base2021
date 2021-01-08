@@ -42,7 +42,6 @@ class GankParentItem(
     multiTypeAdapter.register(GankItem())
     multiTypeAdapter.register(NineGridItem(parentView = itemView) { url, p, iv, list -> onImgClick?.invoke(url, p, iv, list) })
     recyclerView.adapter = multiTypeAdapter
-
     multiTypeAdapter.items = items
     multiTypeAdapter.notifyDataSetChanged()
   }

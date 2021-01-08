@@ -12,8 +12,9 @@ import com.cc.base2021.R
 import com.cc.base2021.bean.local.GridImageBean
 import com.cc.base2021.widget.drag.GridItemTouchHelperCallback
 import com.cc.decoration.GridSpaceItemDecoration
+import com.cc.ext.click2Parent
 import com.drakeet.multitype.MultiTypeAdapter
-import kotlinx.android.synthetic.main.item_nine_grid.view.*
+import kotlinx.android.synthetic.main.item_nine_grid.view.itemNineGridRecycler
 
 /**
  * Author:CASE
@@ -21,15 +22,16 @@ import kotlinx.android.synthetic.main.item_nine_grid.view.*
  * Time:15:46
  */
 class NineGridItem(
+    private var parentView: View? = null,
     private val onItemImgClick: ((url: String, position: Int, iv: ImageView, list: MutableList<String>) -> Unit)? = null,
-    private val onItemClick: ((url: String) -> Unit)? = null,
 ) : BaseItemView<GridImageBean>() {
   //<editor-fold defaultstate="collapsed" desc="变量">
   //Item间距
   private val spaceItem = SizeUtils.dp2px(6f)
 
   //拖拽效果
-  private var mapHelper: MutableMap<Int, ItemTouchHelper> = hashMapOf()
+  private var helper: ItemTouchHelper? = null
+  private var helperCallback: GridItemTouchHelperCallback? = null
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="XML">
@@ -40,27 +42,38 @@ class NineGridItem(
   @SuppressLint("ClickableViewAccessibility")
   override fun fillData(holder: ViewHolder, itemView: View, item: GridImageBean) {
     val recyclerView = itemView.itemNineGridRecycler
-    recyclerView.setOnTouchListener { _, event -> itemView.onTouchEvent(event) }
+    val urlSize = item.list.size
+    val canDrag = urlSize != 5 && urlSize != 7 && urlSize != 8
+    //拖动和外部点击不能兼容，所以只能适配一个
+    if (!canDrag) recyclerView.click2Parent(parentView)
     val list = item.list
     val count = if (list.size == 1) 1 else if (list.size == 2 || list.size == 4) 2 else 3
     recyclerView.layoutManager = GridLayoutManager(itemView.context, count)
     if (recyclerView.itemDecorationCount > 0) recyclerView.removeItemDecorationAt(0)
     recyclerView.addItemDecoration(GridSpaceItemDecoration(spaceItem).setDragGridEdge(false))
     val multiTypeAdapter = MultiTypeAdapter()
-    multiTypeAdapter.register(NineImgItem { url, position, iv ->
-      onItemImgClick?.invoke(url, position, iv, list)
-    })
+    multiTypeAdapter.register(NineImgItem { url, position, iv -> onItemImgClick?.invoke(url, position, iv, list) })
     recyclerView.adapter = multiTypeAdapter
     multiTypeAdapter.items = list
     multiTypeAdapter.notifyDataSetChanged()
-    //点击事件会导致拖拽无法触发
-    //itemView.click { onItemClick?.invoke(item.url) }
-    //拖拽开始---->>>先置空，防止复用的时候一样的RecyclerView导致不执行attachToRecyclerView
-    mapHelper[recyclerView.hashCode()]?.attachToRecyclerView(null)
-    ItemTouchHelper(GridItemTouchHelperCallback(multiTypeAdapter))
-        .apply { attachToRecyclerView(recyclerView) }
-        .let { mapHelper[recyclerView.hashCode()] = it }
-    //拖拽结束---<<<
+    helper = null
+    helperCallback = null
+    if (canDrag) {
+      //拖拽开始---->>>先置空，防止复用的时候一样的RecyclerView导致不执行attachToRecyclerView
+      ItemTouchHelper(GridItemTouchHelperCallback(multiTypeAdapter).also { call -> helperCallback = call })
+          .apply { attachToRecyclerView(recyclerView) }
+          .let { helper = it }
+      //拖拽结束---<<<
+    }
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="移出去后解除拖拽">
+  override fun onViewDetachedFromWindow(holder: ViewHolder) {
+    super.onViewDetachedFromWindow(holder)
+    helper?.attachToRecyclerView(null)
+    helper = null
+    helperCallback = null
   }
   //</editor-fold>
 }
