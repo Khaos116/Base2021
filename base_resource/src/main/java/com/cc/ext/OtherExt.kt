@@ -1,6 +1,8 @@
 package com.cc.ext
 
+import android.annotation.SuppressLint
 import android.graphics.Color
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.*
@@ -21,6 +23,15 @@ fun RecyclerView.stopInertiaRolling() {
   } catch (e: Exception) {
     e.printStackTrace()
     "RecyclerView惯性滚动停止失败:${e.message}".logI()
+  }
+}
+
+//RecyclerView点击事件传递给父控件
+@SuppressLint("ClickableViewAccessibility")
+inline fun RecyclerView.click2Parent(parentView: View? = null) {
+  val recyclerView = this
+  (parentView ?: (recyclerView.parent as? View))?.let { p ->
+    recyclerView.setOnTouchListener { _, event -> p.onTouchEvent(event) }
   }
 }
 
