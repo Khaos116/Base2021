@@ -40,8 +40,7 @@ class GankParentItem(
     recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
     val multiTypeAdapter = MultiTypeAdapter()
     multiTypeAdapter.register(GankItem())
-    multiTypeAdapter.register(NineGridItem(canDrag = items.size != 5 && items.size != 7 && items.size != 8,
-        parentView = itemView) { url, p, iv, list -> onImgClick?.invoke(url, p, iv, list) })
+    multiTypeAdapter.register(NineGridItem(parentView = itemView) { url, p, iv, list -> onImgClick?.invoke(url, p, iv, list) })
     recyclerView.adapter = multiTypeAdapter
 
     multiTypeAdapter.items = items
