@@ -8,12 +8,10 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.cc.base2021.widget.discretescrollview.transform.DiscreteScrollItemTransformer;
 import java.util.Locale;
 
@@ -357,7 +355,7 @@ public class DiscreteScrollLayoutManager extends RecyclerView.LayoutManager {
 
   @Override
   public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
-    if (currentPosition == position || pendingPosition != NO_POSITION) {
+    if (currentPosition == position || pendingPosition != NO_POSITION || state.getItemCount() == 0) {
       return;
     }
     checkTargetPosition(state, position);
