@@ -7,7 +7,6 @@ import android.view.*
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import com.cc.ext.logI
-import com.cc.utils.CleanLeakUtils
 import com.cc.ext.removeParent
 
 /**
@@ -74,14 +73,6 @@ abstract class BaseFragment : Fragment() {
     "Fragment:UI销毁：${this.javaClass.simpleName}${this.hashCode()}".logI()
   }
 
-  //</editor-fold>
-
-  //<editor-fold defaultstate="collapsed" desc="页面销毁释放输入法">
-  override fun onDestroy() {
-    CleanLeakUtils.instance.fixInputMethodManagerLeak(mActivity)
-    "Fragment完全销毁，释放输入法：${this.javaClass.simpleName}${this.hashCode()}".logI()
-    super.onDestroy()
-  }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="子类需要重新的方法">

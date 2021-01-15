@@ -4,8 +4,6 @@ import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import com.cc.base.R
-import com.cc.ext.logI
-import com.cc.utils.CleanLeakUtils
 import com.gyf.immersionbar.ktx.immersionBar
 
 /**
@@ -22,14 +20,6 @@ abstract class BaseActivity : AppCompatActivity() {
     setContentView(layoutResId())
     initView()
     initData()
-  }
-  //</editor-fold>
-
-  //<editor-fold defaultstate="collapsed" desc="页面销毁-释放输入法内存泄漏">
-  override fun onDestroy() {
-    CleanLeakUtils.instance.fixInputMethodManagerLeak(this)
-    "${this.javaClass.simpleName}销毁，释放输入法".logI()
-    super.onDestroy()
   }
   //</editor-fold>
 
