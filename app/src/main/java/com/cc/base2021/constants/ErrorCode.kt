@@ -2,7 +2,7 @@ package com.cc.base2021.constants
 
 /**
  * Description:接口业务错误码
- * @author: caiyoufei
+ * @author: Khaos
  * @date: 2019/10/13 16:33
  */
 interface ErrorCode {
