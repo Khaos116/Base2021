@@ -4,7 +4,7 @@ import com.cc.base2021.bean.local.PicEntity
 
 /**
  * Description:随时图片模拟地址
- * @author: caiyoufei
+ * @author: Khaos
  * @date: 2019/9/29 18:12
  */
 class ImageUrls private constructor() {
@@ -17,9 +17,9 @@ class ImageUrls private constructor() {
   }
 
   //码云
-//  val prefix = "https://gitee.com/CASE_CAI/img/raw/master/"
+//  val prefix = "https://gitee.com/khaos116/img/raw/master/"
   //gitlab
-  private val prefix = "https://gitlab.com/case2578/img/raw/master/"
+  private val prefix = "https://gitlab.com/khaos116/img/raw/master/"
   //图片分组
   private val imageUrls1 = mutableListOf(
       "${prefix}menghuanxiyou.jpg",
