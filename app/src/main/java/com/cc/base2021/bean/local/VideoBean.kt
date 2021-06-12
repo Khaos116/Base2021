@@ -2,7 +2,7 @@ package com.cc.base2021.bean.local
 
 /**
  * Description:
- * @author: caiyoufei
+ * @author: Khaos
  * @date: 2019/12/12 11:45
  */
 class VideoBean(
