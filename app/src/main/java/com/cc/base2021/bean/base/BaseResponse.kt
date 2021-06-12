@@ -2,7 +2,7 @@ package com.cc.base2021.bean.base
 
 /**
  * Description:网络请求返回的基类
- * @author: caiyoufei
+ * @author: Khaos
  * @date: 2019/9/22 18:54
  */
 data class BaseResponse<out T>(
