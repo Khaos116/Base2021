@@ -2,7 +2,7 @@ package com.cc.base2021.bean.base
 
 /**
  * Description:
- * @author: caiyoufei
+ * @author: Khaos
  * @date: 2020/3/5 19:12
  */
 data class BasePageList<out T>(
