@@ -11,7 +11,7 @@ import rxhttp.wrapper.param.toResponseGank
 
 /**
  * Description:
- * @author: caiyoufei
+ * @author: Khaos
  * @date: 2020/3/5 18:09
  */
 object GankRepository {
