@@ -1,7 +1,7 @@
 package com.cc.base2021.bean.wan
 /**
  * Description:
- * @author: caiyoufei
+ * @author: Khaos
  * @date: 2019/10/13 18:08
  */
 data class ArticleDataBean(
