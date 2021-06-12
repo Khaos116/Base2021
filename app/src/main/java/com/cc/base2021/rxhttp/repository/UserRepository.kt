@@ -17,7 +17,7 @@ import rxhttp.wrapper.param.RxHttp
 
 /**
  * Description:
- * @author: caiyoufei
+ * @author: Khaos
  * @date: 2020/3/4 16:03
  */
 object UserRepository {
