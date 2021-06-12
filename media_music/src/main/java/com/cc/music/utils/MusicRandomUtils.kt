@@ -3,7 +3,7 @@ package com.cc.music.utils
 import com.cc.music.bean.MusicBean
 
 /**
- * Author:CASE
+ * Author:Khaos
  * Date:2020-10-2
  * Time:15:13
  */

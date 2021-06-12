@@ -7,7 +7,7 @@ import com.cc.music.utils.MusicRandomUtils
 import kotlinx.android.synthetic.main.fragment_simple_music.musicView
 
 /**
- * Author:CASE
+ * Author:Khaos
  * Date:2020-10-1
  * Time:15:47
  */

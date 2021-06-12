@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 
 /**
  * Description:
- * @author: caiyoufei
+ * @author: Khaos
  * @date: 2019/9/29 22:24
  */
 class RxUtils private constructor() {

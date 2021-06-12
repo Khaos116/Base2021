@@ -12,7 +12,7 @@ import com.cc.music.service.MusicPlayService
 
 /**
  * APP最后一个初始化，添加新的放到本初始化的依赖里面即可
- * Author:CASE
+ * Author:Khaos
  * Date:2020-9-17
  * Time:13:49
  */

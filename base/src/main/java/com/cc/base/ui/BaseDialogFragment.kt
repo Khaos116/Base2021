@@ -12,7 +12,7 @@ import androidx.fragment.app.DialogFragment
 import com.cc.ext.removeParent
 
 /**
- * Author:case
+ * Author:Khaos
  * Date:2020/8/11
  * Time:18:02
  */

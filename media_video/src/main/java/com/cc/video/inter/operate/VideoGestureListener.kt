@@ -5,7 +5,7 @@ import androidx.annotation.IntRange
 
 /**
  * 播放手势相关操作
- * Author:CASE
+ * Author:Khaos
  * Date:2020-9-19
  * Time:18:01
  */

@@ -4,7 +4,7 @@ import com.cc.video.enu.PlayState
 import com.cc.video.inter.operate.VideoCoverListener
 
 /**
- * Author:CASE
+ * Author:Khaos
  * Date:2020-9-23
  * Time:10:09
  */

@@ -9,7 +9,7 @@ import android.view.MotionEvent
  * 3.左右滑动：控制播放进度
  * 4.左边上下滑动：控制亮度
  * 5.右边上下滑动：控制音量
- * Author:CASE
+ * Author:Khaos
  * Date:2020-9-21
  * Time:15:56
  */

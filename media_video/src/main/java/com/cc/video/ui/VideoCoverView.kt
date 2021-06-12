@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.layout_video_cover.view.cover_btn
 
 /**
  * 视频封面展示View
- * Author:CASE
+ * Author:Khaos
  * Date:2020-9-23
  * Time:10:07
  */

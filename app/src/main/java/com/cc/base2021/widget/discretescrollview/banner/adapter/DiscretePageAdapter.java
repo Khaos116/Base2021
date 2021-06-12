@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * 参考：https://github.com/saiwu-bigkoo/Android-ConvenientBanner/blob/master/convenientbanner/src/main/java/com/bigkoo/convenientbanner/adapter/CBPageAdapter.java
- * @author: CASE
+ * Author:Khaos
  * @date: 2019/10/14 12:09
  */
 public class DiscretePageAdapter<T> extends RecyclerView.Adapter<DiscreteHolder<T>> {

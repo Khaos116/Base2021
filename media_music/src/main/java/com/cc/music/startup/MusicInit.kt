@@ -13,7 +13,7 @@ import com.cc.music.service.MusicPlayService
 import com.cc.startup.UtilsInit
 
 /**
- * Author:CASE
+ * Author:Khaos
  * Date:2020-10-1
  * Time:16:30
  */

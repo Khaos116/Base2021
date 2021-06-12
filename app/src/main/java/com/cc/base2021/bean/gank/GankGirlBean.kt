@@ -1,7 +1,7 @@
 package com.cc.base2021.bean.gank
 
 /**
- * Author:case
+ * Author:Khaos
  * Date:2020/8/13
  * Time:10:40
  */

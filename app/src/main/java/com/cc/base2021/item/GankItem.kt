@@ -8,7 +8,7 @@ import com.cc.ext.setNumberNo00
 import kotlinx.android.synthetic.main.item_gank.view.*
 
 /**
- * Author:CASE
+ * Author:Khaos
  * Date:2020-11-25
  * Time:15:39
  */

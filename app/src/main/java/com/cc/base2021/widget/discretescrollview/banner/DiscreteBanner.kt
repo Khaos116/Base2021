@@ -21,7 +21,7 @@ import kotlin.math.abs
 
 /**
  * Description:参考 https://github.com/saiwu-bigkoo/Android-ConvenientBanner/blob/master/convenientbanner/src/main/java/com/bigkoo/convenientbanner/ConvenientBanner.java
- * @author: CASE
+ * Author:Khaos
  * @date: 2019/10/14 11:44
  */
 class DiscreteBanner<T> @JvmOverloads constructor(

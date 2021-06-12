@@ -14,7 +14,7 @@ import com.cc.base2021.comm.CommViewModel
 import com.cc.base2021.rxhttp.repository.GankRepository
 
 /**
- * Author:case
+ * Author:Khaos
  * Date:2020/8/21
  * Time:9:52
  */

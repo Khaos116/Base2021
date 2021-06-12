@@ -4,7 +4,7 @@ import android.app.Application
 import android.graphics.Bitmap
 
 /**
- * Author:CASE
+ * Author:Khaos
  * Date:2020-10-5
  * Time:15:58
  */

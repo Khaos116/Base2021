@@ -15,7 +15,7 @@ import com.cc.base2021.widget.discretescrollview.banner.holder.DiscreteHolderCre
 import kotlinx.android.synthetic.main.item_banner_img.view.itemBannerImg
 
 /**
- * Author:CASE
+ * Author:Khaos
  * Date:2020-11-25
  * Time:15:49
  */

@@ -8,7 +8,7 @@ import com.cc.base.app.BaseApplication
 import com.cc.ext.logE
 
 /**
- * Author:case
+ * Author:Khaos
  * Date:2020/8/11
  * Time:15:05
  */

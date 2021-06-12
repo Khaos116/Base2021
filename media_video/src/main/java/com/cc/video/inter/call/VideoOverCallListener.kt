@@ -6,7 +6,7 @@ import com.cc.video.enu.PlayUiState
 
 /**
  * 播放器统一对外回调
- * Author:CASE
+ * Author:Khaos
  * Date:2020-9-25
  * Time:13:20
  */

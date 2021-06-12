@@ -5,7 +5,7 @@ import com.cc.base2021.bean.local.VideoBean
 
 /**
  * Description:
- * @author: caiyoufei
+ * @author: Khaos
  * @date: 2019/12/12 11:49
  */
 class VideoRandomUtils private constructor() {

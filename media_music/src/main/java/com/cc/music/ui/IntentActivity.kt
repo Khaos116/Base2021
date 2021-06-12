@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.cc.music.enu.PlayController
 
 /**
- * Author:CASE
+ * Author:Khaos
  * Date:2020-10-5
  * Time:19:24
  */

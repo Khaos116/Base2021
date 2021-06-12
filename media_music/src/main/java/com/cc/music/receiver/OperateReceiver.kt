@@ -5,7 +5,7 @@ import android.content.*
 /**
  * 1.在MusicPlayService中监听音乐控制器相关命令
  * 2.在MusicInit中监听关闭播放服务功能
- * Author:CASE
+ * Author:Khaos
  * Date:2020-10-5
  * Time:18:59
  */

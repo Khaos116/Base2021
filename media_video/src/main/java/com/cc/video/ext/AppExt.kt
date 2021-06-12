@@ -3,7 +3,7 @@ package com.cc.video.ext
 import android.app.Application
 
 /**
- * Author:CASE
+ * Author:Khaos
  * Date:2020-9-19
  * Time:16:13
  */

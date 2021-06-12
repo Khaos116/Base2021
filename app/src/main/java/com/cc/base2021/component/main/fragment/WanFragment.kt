@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.fragment_wan.wanRecycler
 import kotlinx.android.synthetic.main.fragment_wan.wanRefreshLayout
 
 /**
- * Author:case
+ * Author:Khaos
  * Date:2020/8/12
  * Time:20:48
  */

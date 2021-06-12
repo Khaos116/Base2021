@@ -16,7 +16,7 @@ import java.io.File
 
 /**
  * Description:
- * @author: caiyoufei
+ * @author: Khaos
  * @date: 2019/11/11 21:40
  */
 class PermissionUtils private constructor() {

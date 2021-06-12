@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
  * @author jingbin
  * 原文地址：https://github.com/youlookwhat/ByRecyclerView
  *
- * 修改By CASE 2020年11月21日17:52:11(注意拖拽"上"+"下"会有1/2的间距)
+ * 修改By Khaos 2020年11月21日17:52:11(注意拖拽"上"+"下"会有1/2的间距)
  * 是否处于第一行和最后一行参考：https://github.com/airbnb/epoxy/blob/master/epoxy-adapter/src/main/java/com/airbnb/epoxy/EpoxyItemSpacingDecorator.java
  */
 public class GridSpaceItemDecoration extends RecyclerView.ItemDecoration {

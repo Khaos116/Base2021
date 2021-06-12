@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.activity_splash.splashTv
 import java.util.concurrent.TimeUnit
 
 /**
- * Author:case
+ * Author:Khaos
  * Date:2020/8/12
  * Time:13:56
  */

@@ -6,7 +6,7 @@ import kotlinx.android.synthetic.main.fragment_simple.simpleTv
 
 /**
  * 简单Fragment，方便使用时占位
- * Author:case
+ * Author:Khaos
  * Date:2020/8/11
  * Time:20:29
  */

@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * 原lib：https://github.com/yarolegovich/DiscreteScrollView
- * 更新源文件，版本1.5.1，2020年8月31日10:49:52 by CASE
+ * 更新源文件，版本1.5.1，2020年8月31日10:49:52 by Khaos
  * Created by yarolegovich on 18.02.2017.
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })

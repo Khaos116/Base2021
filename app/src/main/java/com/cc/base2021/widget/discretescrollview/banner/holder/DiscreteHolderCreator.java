@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * 参考：https://github.com/saiwu-bigkoo/Android-ConvenientBanner/blob/master/convenientbanner/src/main/java/com/bigkoo/convenientbanner/holder/CBViewHolderCreator.java
  *NineGridItem
- * @author: CASE
+ * Author:Khaos
  * @date: 2019/10/14 11:37
  */
 public interface DiscreteHolderCreator {

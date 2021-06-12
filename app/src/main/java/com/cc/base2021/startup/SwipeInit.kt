@@ -14,7 +14,7 @@ import com.cc.base2021.component.main.MainActivity
 import com.cc.base2021.component.splash.SplashActivity
 
 /**
- * Author:case
+ * Author:Khaos
  * Date:2020/8/19
  * Time:17:11
  */

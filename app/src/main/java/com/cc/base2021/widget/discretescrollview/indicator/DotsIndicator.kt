@@ -12,7 +12,7 @@ import com.cc.base2021.R
 
 /**
  * ViewPager选中圆点效果 参考：https://github.com/mazenrashed/DotsIndicatorWithoutViewpager/blob/master/dotsindicator/src/main/java/com/mazenrashed/dotsindicator/DotsIndicator.kt
- * Author:CASE
+ * Author:Khaos
  * Date:2020/8/31
  * Time:9:51
  */

@@ -9,7 +9,7 @@ import com.cc.music.enu.PlayController
 
 /**
  *
- * Author:CASE
+ * Author:Khaos
  * Date:2020-10-5
  * Time:18:33
  */

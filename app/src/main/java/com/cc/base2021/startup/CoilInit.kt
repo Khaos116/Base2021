@@ -15,7 +15,7 @@ import com.cc.ext.logI
 
 /**
  * //图片加载配置 https://coil-kt.github.io/coil/getting_started/
- * Author:CASE
+ * Author:Khaos
  * Date:2020-12-9
  * Time:14:01
  */

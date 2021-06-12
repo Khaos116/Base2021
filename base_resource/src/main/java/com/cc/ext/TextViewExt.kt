@@ -5,7 +5,7 @@ import java.text.DecimalFormat
 import kotlin.math.max
 
 /**
- * Author:case
+ * Author:Khaos
  * Date:2020/8/21
  * Time:11:00
  */

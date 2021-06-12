@@ -7,7 +7,7 @@ import com.cc.base2021.comm.CommActivity
 import com.cc.base2021.component.main.MainActivity
 
 /**
- * Author:case
+ * Author:Khaos
  * Date:2020/8/12
  * Time:17:27
  */

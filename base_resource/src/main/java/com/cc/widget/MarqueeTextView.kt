@@ -8,7 +8,7 @@ import androidx.appcompat.widget.AppCompatTextView
 
 /**
  * Description:
- * @author: caiyoufei
+ * @author: Khaos
  * @date: 2020/3/23 18:02
  */
 class MarqueeTextView @JvmOverloads constructor(

@@ -10,7 +10,7 @@ import java.util.*
 
 /**
  * 参考：https://github.com/CuiChenbo/DragRecyclerViewDemo/blob/master/app/src/main/java/com/ccb/pactera/dragrecyclerviewdemo/MainActivity.java
- * Author:CASE
+ * Author:Khaos
  * Date:2021/1/5
  * Time:13:38
  */

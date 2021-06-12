@@ -35,7 +35,7 @@ import java.io.File
  * 基于阿里播放器的视频播放控件，实现视频播放和各种回调、控制等。由内部添加的VideoOverView控件管理各种相关控制器
  *
  * https://help.aliyun.com/document_detail/124714.html?spm=a2c4g.11186623.6.1084.5eddd8e76YpCGt
- * Author:CASE
+ * Author:Khaos
  * Date:2020-9-16
  * Time:15:37
  */

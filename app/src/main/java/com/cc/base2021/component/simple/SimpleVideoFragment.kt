@@ -9,7 +9,7 @@ import com.cc.video.utils.VideoOverUtils
 import kotlinx.android.synthetic.main.fragment_simple_video.simpleVideoView
 
 /**
- * Author:CASE
+ * Author:Khaos
  * Date:2020-9-16
  * Time:17:00
  */

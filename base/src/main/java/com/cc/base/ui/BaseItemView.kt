@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.drakeet.multitype.ItemViewBinder
 
 /**
- * Author:CASE
+ * Author:Khaos
  * Date:2020-11-25
  * Time:14:53
  */

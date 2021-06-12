@@ -10,7 +10,7 @@ import com.cc.ext.*
 import kotlinx.android.synthetic.main.item_article.view.*
 
 /**
- * Author:CASE
+ * Author:Khaos
  * Date:2020-11-25
  * Time:15:05
  */

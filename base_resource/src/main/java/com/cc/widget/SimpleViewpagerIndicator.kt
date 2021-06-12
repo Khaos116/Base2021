@@ -16,7 +16,7 @@ import com.cc.ext.toast
 
 /**
  * description: 自定义ViewPager指示器.
- * Author:case
+ * Author:Khaos
  * Date:2020/8/12
  * Time:20:41
  */

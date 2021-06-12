@@ -7,7 +7,7 @@ import com.cc.base2021.R
 import com.cc.base2021.bean.local.DividerBean
 
 /**
- * Author:CASE
+ * Author:Khaos
  * Date:2020-11-25
  * Time:15:35
  */

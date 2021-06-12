@@ -4,7 +4,7 @@ import com.blankj.utilcode.util.Utils
 import com.cc.base.app.BaseApplication
 
 /**
- * Author:CASE
+ * Author:Khaos
  * Date:2020-9-22
  * Time:18:21
  */

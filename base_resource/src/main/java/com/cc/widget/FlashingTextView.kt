@@ -8,7 +8,7 @@ import androidx.appcompat.widget.AppCompatTextView
 /**
  * https://www.jianshu.com/p/a9d09cb7577f
  * description: 闪动的TextView,滑动解锁用.
- * Author:case
+ * Author:Khaos
  * Date:2020/8/11
  * Time:19:41
  */

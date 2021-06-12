@@ -9,7 +9,7 @@ import timber.log.Timber.DebugTree
 
 /**
  * 由于有依赖关系，所以Manifest中编写最后初始化的即可
- * Author:case
+ * Author:Khaos
  * Date:2020/8/11
  * Time:17:11
  */

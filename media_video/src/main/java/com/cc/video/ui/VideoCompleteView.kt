@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.layout_video_complete.view.*
 
 /**
  * 视频播放结束后的回调
- * Author:CASE
+ * Author:Khaos
  * Date:2020-9-22
  * Time:18:44
  */

@@ -4,7 +4,7 @@ import android.os.Bundle
 import com.cc.base.ui.BaseActivity
 
 /**
- * Author:case
+ * Author:Khaos
  * Date:2020/8/11
  * Time:18:29
  */

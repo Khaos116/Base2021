@@ -6,7 +6,7 @@ import com.cc.video.inter.operate.VideoControllerListener
 
 /**
  * 播放控制器接收播放器相关回调
- * Author:CASE
+ * Author:Khaos
  * Date:2020-9-18
  * Time:16:51
  */

@@ -11,7 +11,7 @@ import com.cc.base2021.widget.discretescrollview.banner.DiscreteBanner
 import com.gyf.immersionbar.ktx.immersionBar
 
 /**
- * Author:case
+ * Author:Khaos
  * Date:2020/8/12
  * Time:15:20
  */

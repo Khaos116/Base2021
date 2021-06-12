@@ -8,7 +8,7 @@ import com.cc.ext.toast
 
 /**
  * Description:
- * @author: caiyoufei
+ * @author: Khaos
  * @date: 2019/11/19 19:33
  */
 class GlobalErrorHandle private constructor() {

@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * 参考： https://github.com/saiwu-bigkoo/Android-ConvenientBanner/blob/master/convenientbanner/src/main/java/com/bigkoo/convenientbanner/holder/Holder.java
- * Author:CASE
+ * Author:Khaos
  * Date:2020/8/31
  * Time:10:12
  */

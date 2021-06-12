@@ -8,7 +8,7 @@ import com.cc.base2021.bean.local.LoadingBean
 import kotlinx.android.synthetic.main.item_loading.view.itemLoadingTv
 
 /**
- * Author:CASE
+ * Author:Khaos
  * Date:2020-11-25
  * Time:15:43
  */

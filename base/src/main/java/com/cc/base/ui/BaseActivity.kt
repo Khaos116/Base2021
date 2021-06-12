@@ -7,7 +7,7 @@ import com.cc.base.R
 import com.gyf.immersionbar.ktx.immersionBar
 
 /**
- * Author:case
+ * Author:Khaos
  * Date:2020/8/11
  * Time:18:01
  */

@@ -17,7 +17,7 @@ import com.drakeet.multitype.MultiTypeAdapter
 import kotlinx.android.synthetic.main.item_nine_grid.view.itemNineGridRecycler
 
 /**
- * Author:CASE
+ * Author:Khaos
  * Date:2020-11-25
  * Time:15:46
  */

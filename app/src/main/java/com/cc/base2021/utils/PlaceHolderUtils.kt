@@ -11,7 +11,7 @@ import com.cc.base2021.R
 
 /**
  * 动态生成loading和error占位图
- * Author:CASE
+ * Author:Khaos
  * Date:2020-12-8
  * Time:14:30
  */

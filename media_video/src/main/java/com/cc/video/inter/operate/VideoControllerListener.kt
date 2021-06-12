@@ -2,7 +2,7 @@ package com.cc.video.inter.operate
 
 /**
  * 播放控制器发送相关操作
- * Author:CASE
+ * Author:Khaos
  * Date:2020-9-18
  * Time:16:28
  */

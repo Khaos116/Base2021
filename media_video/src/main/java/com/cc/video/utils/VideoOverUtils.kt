@@ -4,7 +4,7 @@ import android.widget.ImageView
 import com.cc.video.ui.*
 
 /**
- * Author:CASE
+ * Author:Khaos
  * Date:2020-9-23
  * Time:10:44
  */

@@ -5,7 +5,7 @@ import com.cc.video.inter.operate.VideoErrorListener
 
 /**
  * 播放器回调播放状态
- * Author:CASE
+ * Author:Khaos
  * Date:2020-9-19
  * Time:10:21
  */

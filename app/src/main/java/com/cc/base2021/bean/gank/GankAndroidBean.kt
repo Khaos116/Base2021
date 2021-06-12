@@ -5,7 +5,7 @@ import com.cc.base2021.bean.local.PicBean
 
 /**
  * Description:
- * @author: caiyoufei
+ * @author: Khaos
  * @date: 2019/9/30 20:28
  */
 data class GankAndroidBean(

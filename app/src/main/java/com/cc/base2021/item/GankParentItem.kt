@@ -15,7 +15,7 @@ import com.drakeet.multitype.MultiTypeAdapter
 import kotlinx.android.synthetic.main.item_gank_parent.view.itemGankParentRecycler
 
 /**
- * @Author:CASE
+ * @Author:Khaos
  * @Date:2021年1月8日
  * @Time:16:23:13
  */

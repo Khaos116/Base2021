@@ -3,7 +3,7 @@ package com.cc.base2021.utils
 import com.tencent.mmkv.MMKV
 
 /**
- * Author:case
+ * Author:Khaos
  * Date:2020/8/12
  * Time:15:12
  */

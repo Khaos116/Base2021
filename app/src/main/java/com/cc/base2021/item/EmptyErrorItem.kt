@@ -12,7 +12,7 @@ import com.cc.utils.NetUtils
 import kotlinx.android.synthetic.main.item_empty_error.view.itemEmptyErrorTv
 
 /**
- * Author:CASE
+ * Author:Khaos
  * Date:2020-11-25
  * Time:15:37
  */

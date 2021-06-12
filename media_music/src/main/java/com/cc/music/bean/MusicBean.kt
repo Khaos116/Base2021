@@ -5,7 +5,7 @@ import com.blankj.utilcode.util.GsonUtils
 import kotlinx.android.parcel.Parcelize
 
 /**
- * Author:CASE
+ * Author:Khaos
  * Date:2020-10-1
  * Time:12:39
  */

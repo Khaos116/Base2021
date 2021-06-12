@@ -8,7 +8,7 @@ import com.blankj.utilcode.util.Utils;
 
 /**
  * https://github.com/Blankj/AndroidUtilCode/issues/1287
- * Author:CASE
+ * Author:Khaos
  * Date:2020-9-21
  * Time:18:01
  */

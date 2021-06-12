@@ -21,7 +21,7 @@ import kotlin.math.min
 
 /**
  * 所有控制器相关View添加到这个父容器，最主要的目的是分发手势操作
- * Author:CASE
+ * Author:Khaos
  * Date:2020-9-21
  * Time:14:51
  */

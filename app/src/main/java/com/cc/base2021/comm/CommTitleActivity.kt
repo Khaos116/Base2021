@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.layout_comm_title.commTitleBack
 import kotlinx.android.synthetic.main.layout_comm_title.commTitleText
 
 /**
- * Author:case
+ * Author:Khaos
  * Date:2020/8/21
  * Time:9:34
  */

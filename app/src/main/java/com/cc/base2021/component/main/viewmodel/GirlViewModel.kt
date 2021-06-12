@@ -15,7 +15,7 @@ import com.cc.base2021.rxhttp.repository.GankRepository
 
 /**
  * https://juejin.im/post/6844904100090347528#heading-1
- * Author:case
+ * Author:Khaos
  * Date:2020/8/13
  * Time:9:48
  */

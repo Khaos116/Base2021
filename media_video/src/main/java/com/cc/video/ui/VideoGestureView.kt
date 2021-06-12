@@ -22,7 +22,7 @@ import kotlin.math.*
  * 1.左右滑动控制播放进度
  * 2.左边上下滑动控制亮度
  * 3.右边上下滑动控制音量
- * Author:CASE
+ * Author:Khaos
  * Date:2020-9-19
  * Time:18:22
  */

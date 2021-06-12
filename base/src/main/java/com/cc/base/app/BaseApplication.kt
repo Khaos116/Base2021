@@ -6,7 +6,7 @@ import com.cc.ResourceApplication
 import me.jessyan.autosize.AutoSizeConfig
 
 /**
- * Author:case
+ * Author:Khaos
  * Date:2020/8/11
  * Time:14:29
  */

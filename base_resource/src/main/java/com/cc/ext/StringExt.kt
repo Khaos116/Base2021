@@ -11,31 +11,31 @@ import java.util.regex.Pattern
 
 /**
  * inline报警告暂不处理，否则打印的地方始终是StringExt不好根据log找到相应的类
- * Author:case
+ * Author:Khaos
  * Date:2020/8/11
  * Time:17:19
  */
 inline fun String?.logE() {
   if (!this.isNullOrBlank()) {
-    Timber.e("CASE-$this")
+    Timber.e("Khaos-$this")
   }
 }
 
 inline fun String?.logW() {
   if (!this.isNullOrBlank()) {
-    Timber.w("CASE-$this")
+    Timber.w("Khaos-$this")
   }
 }
 
 inline fun String?.logI() {
   if (!this.isNullOrBlank()) {
-    Timber.i("CASE-$this")
+    Timber.i("Khaos-$this")
   }
 }
 
 inline fun String?.logD() {
   if (!this.isNullOrBlank()) {
-    Timber.d("CASE-$this")
+    Timber.d("Khaos-$this")
   }
 }
 

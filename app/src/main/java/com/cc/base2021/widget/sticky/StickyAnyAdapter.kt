@@ -8,7 +8,7 @@ import com.cc.sticky.StickyHeaderCallbacks
 import com.drakeet.multitype.*
 
 /**
- * Author:case
+ * Author:Khaos
  * Date:2020/8/31
  * Time:16:00
  */

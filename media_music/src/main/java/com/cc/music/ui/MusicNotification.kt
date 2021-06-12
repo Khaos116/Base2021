@@ -18,7 +18,7 @@ import com.cc.music.utils.MusicTimeUtils
 
 /**
  * https://github.com/still-soul/LockDemo/blob/master/app/src/main/java/com/ztk/demo/lockdemo/notification/NotificationUtil.java
- * Author:CASE
+ * Author:Khaos
  * Date:2020-10-3
  * Time:18:45
  */

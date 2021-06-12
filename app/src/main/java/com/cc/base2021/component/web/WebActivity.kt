@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_web.webRootView
 
 /**
  * Description: 如果需要js对接，参考添加BridgeWebView https://github.com/lzyzsd/JsBridge
- * Author:case
+ * Author:Khaos
  * Date:2020/8/21
  * Time:9:34
  */

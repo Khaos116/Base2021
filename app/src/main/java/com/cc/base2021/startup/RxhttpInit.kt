@@ -7,7 +7,7 @@ import com.cc.startup.UtilsInit
 import com.cc.base2021.config.RxHttpConfig
 
 /**
- * Author:case
+ * Author:Khaos
  * Date:2020/8/13
  * Time:13:36
  */
