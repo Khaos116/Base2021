@@ -102,14 +102,14 @@ class SplashActivity : CommActivity() {
     super.onResume()
     if (isFirstOnResume) {
       isFirstOnResume = false
-      hasSDPermission = PermissionUtils.instance.hasSDPermission()
+      hasSDPermission = XXPermissions.isGranted(this,Permission.MANAGE_EXTERNAL_STORAGE)
       //请求SD卡权限
       if (!hasSDPermission) {
         XXPermissions.with(this)
             .permission(Permission.MANAGE_EXTERNAL_STORAGE)
             .request(object : OnPermissionCallback {
               override fun onGranted(permissions: MutableList<String>, all: Boolean) {
-                if (PermissionUtils.instance.hasSDPermission()) {
+                if (XXPermissions.isGranted(mContext, Permission.MANAGE_EXTERNAL_STORAGE)) {
                   hasSDPermission = true
                   goNextPage()
                 } else {

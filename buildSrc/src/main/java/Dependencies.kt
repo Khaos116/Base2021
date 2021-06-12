@@ -79,7 +79,7 @@ object Deps {
   const val rxandroid = "io.reactivex.rxjava2:rxandroid:2.1.1"
 
   //动态权限请求 https://github.com/getActivity/XXPermissions
-  const val permissions = "com.hjq:xxpermissions:9.6"
+  const val permissions = "com.github.getActivity:XXPermissions:11.5"
 
   //EventBus https://github.com/JeremyLiao/LiveEventBus
   const val eventBus = "com.jeremyliao:live-event-bus-x:1.7.3"
