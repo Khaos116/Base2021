@@ -3,7 +3,7 @@ package com.cc.base2021.bean.local
 import io.reactivex.internal.operators.maybe.MaybeIsEmpty
 
 /**
- * Author:case
+ * Author:Khaos
  * Date:2020/8/21
  * Time:19:49
  */
