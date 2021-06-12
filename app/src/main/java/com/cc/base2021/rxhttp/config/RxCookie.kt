@@ -8,7 +8,7 @@ import rxhttp.wrapper.cookie.ICookieJar
 
 /**
  * Description:
- * @author: caiyoufei
+ * @author: Khaos
  * @date: 2020/3/4 18:08
  */
 class RxCookie private constructor() {
