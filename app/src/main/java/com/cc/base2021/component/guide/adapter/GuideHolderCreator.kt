@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.layout_guide.view.guideIV
 
 /**
  * Description:
- * @author: caiyoufei
+ * @author: Khaos
  * @date: 2019/10/14 14:30
  */
 class GuideHolderCreator : DiscreteHolderCreator {
