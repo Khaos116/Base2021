@@ -1,7 +1,7 @@
 package com.cc.base2021.bean.local
 
 /**
- * Author:CASE
+ * Author:Khaos
  * Date:2020-11-20
  * Time:18:10
  */
