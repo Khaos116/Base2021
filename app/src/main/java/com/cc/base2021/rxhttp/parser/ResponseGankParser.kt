@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets
 
 /**
  * Description:
- * @author: caiyoufei
+ * @author: Khaos
  * @date: 2020/6/26 11:13
  */
 @Parser(name = "ResponseGank", wrappers = [MutableList::class])
