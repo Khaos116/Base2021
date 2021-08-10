@@ -1,4 +1,4 @@
-# Base2021(AndroidX + MVVM + LiveData + Kotlin协程)，在[Abase](https://github.com/khaos116/ABase)的基础上进一步优化  
+# 已移植到[Abase](https://github.com/khaos116/ABase)
 
 新的三方库|描述  
 :---------------------------:|:---------------------------:
