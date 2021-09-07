@@ -13,7 +13,7 @@ import rxhttp.wrapper.cahce.CacheMode
 import rxhttp.wrapper.param.RxHttp
 
 /**
- * Author:Khaos
+ * Author:Khaos https://blog.lanluo.cn/9787
  * Date:2020/8/18
  * Time:14:51
  */
@@ -22,9 +22,11 @@ class RxTimeUtils private constructor() {
   //<editor-fold defaultstate="collapsed" desc="内部变量">
   //苏宁易购
   private val suNing = "https://f.m.suning.com/api/ct.do"
+  private val suNing2 = "http://quan.suning.com/getSysTime.do"
 
   //京东
   private val jingDong = "https://a.jd.com//ajax/queryServerData.html"
+  private val jingDong2 = "https://api.m.jd.com/client.action?functionId=queryMaterialProducts&client=wh5"
 
   //淘宝
   private val taoBao = "http://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp"
